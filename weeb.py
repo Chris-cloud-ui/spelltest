@@ -134,6 +134,7 @@ else:
             result += audio + silence
 
     result.export(temp_filename, format="mp3")
+    os.remove("newtemp.mp3")
 
     display(Audio(temp_filename, autoplay=True))
 
@@ -345,6 +346,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
