@@ -7,7 +7,7 @@ import random
 
 st.set_page_config(
     page_title="Slay Spells",
-    page_icon="🧸",
+    page_icon="🧙‍♀️",
     layout="centered",
     initial_sidebar_state="expanded"
 )
@@ -61,7 +61,7 @@ if "words" not in st.session_state:
 # ------------------ HEADER ------------------------
 st.markdown("""
     <h1 style='text-align:center; color:#ff66a6;'>
-        🧸 Slay Spells
+        🧙‍♀️ Slay Spells
     </h1>
     <p style='text-align:center; font-size:20px; color:#555;'>
         Practise your spells
@@ -91,7 +91,7 @@ else:
     st.markdown(f"### 🔊 Listen and spell the word:")
     st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
 
-    answer = st.text_input("Type your spelling here:")
+    answer = st.text_input("Cast your spell here:")
 
     if st.button("Submit"):
         if answer.lower().strip() == current_word:
@@ -121,4 +121,5 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
