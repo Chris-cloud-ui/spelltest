@@ -164,27 +164,27 @@ else:
 
 
     keyboard_html = f"""
-<div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-width: 400px; margin:auto;">
-  {"".join([
-    f'<button style="flex:1 0 20%; padding:10px; margin:2px; font-size:20px;" '
-    f'onclick="window.clicked=\'{c}\'; document.getElementById(\'hidden_input\').value+=\'{c}\'">{c}</button>'
-    for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  ])}
-  
-  <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#f99;" 
-          onclick="window.clicked='BACK'; document.getElementById('hidden_input').value = document.getElementById('hidden_input').value.slice(0,-1)">
-      ⬅️ Backspace
-  </button>
-
-  <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#9f9;" 
-          onclick="window.clicked='SUBMIT'; document.getElementById('hidden_input').dispatchEvent(new Event('change'))">
-      Submit
-  </button>
-</div>
-
-<input type="text" id="hidden_input" style="display:none;" value="{st.session_state.answer}" 
-       onchange="window.parent.postMessage({{letter:this.value}}, '*')">
-"""
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-width: 400px; margin:auto;">
+      {"".join([
+        f'<button style="flex:1 0 20%; padding:10px; margin:2px; font-size:20px;" '
+        f'onclick="window.clicked=\'{c}\'; document.getElementById(\'hidden_input\').value+=\'{c}\'">{c}</button>'
+        for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      ])}
+      
+      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#f99;" 
+              onclick="window.clicked='BACK'; document.getElementById('hidden_input').value = document.getElementById('hidden_input').value.slice(0,-1)">
+          ⬅️ Backspace
+      </button>
+    
+      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#9f9;" 
+              onclick="window.clicked='SUBMIT'; document.getElementById('hidden_input').dispatchEvent(new Event('change'))">
+          Submit
+      </button>
+    </div>
+    
+    <input type="text" id="hidden_input" style="display:none;" value="{st.session_state.answer}" 
+           onchange="window.parent.postMessage({{letter:this.value}}, '*')">
+    """
     
     
 
@@ -194,8 +194,15 @@ else:
 
     letter = st_javascript("window.clicked")
     if letter:
-        st.write("aubergine")
-        st.session_state.answer = letter
+        if letter == "BACK":
+            st.session_state.answer = st.session_state.answer[:-1]
+        elif letter == "SUBMIT":
+            st.success(f"Submitted: {st.session_state.answer}")
+            st.session_state.answer = ""
+        else:
+            st.session_state.answer += letter
+
+    st.write("Your spelling:", st.session_state.answer)
     
     st.write("Your spelling:", st.session_state.answer)
 
@@ -254,6 +261,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
