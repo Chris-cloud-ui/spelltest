@@ -173,6 +173,48 @@ else:
         st.session_state.answer += letter
 
 
+    # Install message listener
+    st_javascript("""
+    if (!window.hasInputListener) {
+        window.hasInputListener = true;
+        window.addEventListener("message", (event) => {
+            if (event.data.answer !== undefined) {
+                localStorage.setItem("typedAnswer", event.data.answer);
+            }
+        });
+    }
+    """)
+    
+    html = """
+    <input id="spellinput"
+           type="text"
+           autocomplete="off"
+           autocorrect="off"
+           autocapitalize="off"
+           spellcheck="false"
+           inputmode="none"
+           style="font-size:24px; padding:10px; width:90%;">
+    
+    <button onclick="
+        const val = document.getElementById('spellinput').value;
+        window.parent.postMessage({answer: val}, '*');
+    " style="margin-top:10px; padding:10px; font-size:20px;">
+        Submit
+    </button>
+    """
+    
+    components.html(html, height=150)
+    
+    typed = st_javascript("localStorage.getItem('typedAnswer');")
+    
+    if typed and typed != "null":
+        st.write("You typed:", typed)
+    
+        # Clear the stored value so it doesn't repeat
+        st_javascript("localStorage.setItem('typedAnswer','');")
+
+
+    
     if "keyboard_letter" not in st.session_state:
         st.session_state.keyboard_letter = ""
 
@@ -287,3 +329,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
