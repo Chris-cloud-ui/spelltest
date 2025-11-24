@@ -176,7 +176,7 @@ else:
     field_id = f"spellinput_{randint(0,1000000)}"  # random ID each render
     html = f"""
     <input id="{field_id}"
-           type="text"
+           type="password"
            name="no_autocomplete_{randint(0,1000000)}"
            inputmode="text"
            autocomplete="off"
@@ -320,6 +320,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
