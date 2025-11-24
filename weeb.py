@@ -22,6 +22,7 @@ with open("words.yaml", "r") as f:
 # ------------------ HISTORY ---------------------
 HISTORY_FILE = "history.json"
 
+
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -162,6 +163,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
