@@ -208,17 +208,13 @@ else:
         help="Your typing will appear below"
     )
 
-    if user_input != st.session_state.answer:
-        st.session_state.answer = user_input
-        st.experimental_rerun()  # refresh to update the label instantly
-
     # Update session state
     #if user_input:
     #    st.write(user_input)
     #    st.session_state.answer = user_input
     
     # Label showing typed letters
-    st.markdown(f"**You typed:** {st.session_state.answer}")
+    #st.markdown(f"**You typed:** {st.session_state.answer}")
 
 
     
@@ -347,6 +343,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
