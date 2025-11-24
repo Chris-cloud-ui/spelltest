@@ -156,6 +156,15 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
 
+
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    row_length = 6
+    for i in range(0, len(letters), row_length):
+        cols = st.columns(row_length)
+        for col, letter in zip(cols, letters[i:i+row_length]):
+            if col.button(letter):
+                st.session_state.answer += letter
+
     st.markdown("""
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
       <button onclick="window.parent.postMessage({func:'add_letter', letter:'A'}, '*')">A</button>
@@ -257,6 +266,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
