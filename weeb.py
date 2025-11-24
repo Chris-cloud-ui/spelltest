@@ -231,15 +231,7 @@ else:
 
     st.write("Your spelling:", st.session_state.answer)
     
-    st.write("Your spelling:", st.session_state.answer)
 
-    
-    clicked_letter = st.experimental_get_query_params().get("letter")
-    if clicked_letter:
-        st.write("cl")
-        st.session_state.answer += clicked_letter[0]
-    
-    st.write("Your spelling:", st.session_state.answer)
 
     # Backspace
     cols = st.columns([1,1,1,1])
@@ -288,6 +280,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
