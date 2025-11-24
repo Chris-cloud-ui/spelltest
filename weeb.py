@@ -155,6 +155,10 @@ else:
     </script>
     """, height=50)
 
+    answer2 = st.text_input("Type the spelling here:", key="spell_input", placeholder="", help="Disable autocomplete hack")
+
+    answer3 = st.text_input("Type the spelling here:", placeholder="", key="spell_input")
+
     if answer:
         if answer.lower().strip() == current_word.lower():
             st.success("🌟 Correct!")
@@ -186,6 +190,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
