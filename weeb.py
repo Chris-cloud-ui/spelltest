@@ -173,46 +173,9 @@ else:
     <input type="text" id="hidden_input" style="display:none;" value="{st.session_state.answer}" onchange="window.parent.postMessage({{letter:this.value}}, '*')">
     """
     
-    # --- Define JS keyboard HTML ---
-    keyboard_htmlold = """
-    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
-      <button onclick="sendLetter('A')">A</button>
-      <button onclick="sendLetter('B')">B</button>
-      <button onclick="sendLetter('C')">C</button>
-      <button onclick="sendLetter('D')">D</button>
-      <button onclick="sendLetter('E')">E</button>
-      <button onclick="sendLetter('F')">F</button>
-      <button onclick="sendLetter('G')">G</button>
-      <button onclick="sendLetter('H')">H</button>
-      <button onclick="sendLetter('I')">I</button>
-      <button onclick="sendLetter('J')">J</button>
-      <button onclick="sendLetter('K')">K</button>
-      <button onclick="sendLetter('L')">L</button>
-      <button onclick="sendLetter('M')">M</button>
-      <button onclick="sendLetter('N')">N</button>
-      <button onclick="sendLetter('O')">O</button>
-      <button onclick="sendLetter('P')">P</button>
-      <button onclick="sendLetter('Q')">Q</button>
-      <button onclick="sendLetter('R')">R</button>
-      <button onclick="sendLetter('S')">S</button>
-      <button onclick="sendLetter('T')">T</button>
-      <button onclick="sendLetter('U')">U</button>
-      <button onclick="sendLetter('V')">V</button>
-      <button onclick="sendLetter('W')">W</button>
-      <button onclick="sendLetter('X')">X</button>
-      <button onclick="sendLetter('Y')">Y</button>
-      <button onclick="sendLetter('Z')">Z</button>
-    </div>
     
-    <script>
-    function sendLetter(letter) {
-        const msg = { letter: letter };
-        window.parent.postMessage({func:'add_letter', data: msg}, '*');
-    }
-    </script>
-    """
 
-    components.html(keyboard_html, height=350)
+    components.html(keyboard_html, height=400)
 
     
 
@@ -231,59 +194,6 @@ else:
     
     st.write("Your spelling:", st.session_state.answer)
 
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="window.parent.postMessage({func:'add_letter', letter:'A'}, '*')">A</button>
-      <button onclick="Streamlit.setComponentValue('B')">B</button>
-      <button onclick="Streamlit.setComponentValue('C')">C</button>
-      <button onclick="Streamlit.setComponentValue('D')">D</button>
-      <button onclick="Streamlit.setComponentValue('E')">E</button>
-      <button onclick="Streamlit.setComponentValue('F')">F</button>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('G')">G</button>
-      <button onclick="Streamlit.setComponentValue('H')">H</button>
-      <button onclick="Streamlit.setComponentValue('I')">I</button>
-      <button onclick="Streamlit.setComponentValue('J')">J</button>
-      <button onclick="Streamlit.setComponentValue('K')">K</button>
-      <button onclick="Streamlit.setComponentValue('L')">L</button>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('M')">M</button>
-      <button onclick="Streamlit.setComponentValue('N')">N</button>
-      <button onclick="Streamlit.setComponentValue('O')">O</button>
-      <button onclick="Streamlit.setComponentValue('P')">P</button>
-      <button onclick="Streamlit.setComponentValue('Q')">Q</button>
-      <button onclick="Streamlit.setComponentValue('R')">R</button>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('S')">S</button>
-      <button onclick="Streamlit.setComponentValue('T')">T</button>
-      <button onclick="Streamlit.setComponentValue('U')">U</button>
-      <button onclick="Streamlit.setComponentValue('V')">V</button>
-      <button onclick="Streamlit.setComponentValue('W')">W</button>
-      <button onclick="Streamlit.setComponentValue('X')">X</button>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('Y')">Y</button>
-      <button onclick="Streamlit.setComponentValue('Z')">Z</button>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    
-    
     # Backspace
     cols = st.columns([1,1,1,1])
     if cols[0].button("⬅️ Backspace"):
@@ -331,6 +241,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
