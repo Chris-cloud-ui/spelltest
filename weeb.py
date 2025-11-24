@@ -163,44 +163,52 @@ else:
         st.session_state.keyboard_letter = ""
 
 
-    keyboard_html = f"""
-    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-width: 400px; margin:auto;">
-      {"".join([
-        f'<button style="flex:1 0 20%; padding:10px; margin:2px; font-size:20px;" '
-        f'onclick="window.clicked=\'{c}\'; document.getElementById(\'hidden_input\').value+=\'{c}\'">{c}</button>'
-        for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      ])}
-      
-      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#f99;" 
-              onclick="window.clicked='BACK'; document.getElementById('hidden_input').value = document.getElementById('hidden_input').value.slice(0,-1)">
-          ⬅️ Backspace
-      </button>
+    keyboard_html = """
+    <script>
+    function sendLetter(letter) {
+        window.parent.postMessage({letter: letter}, "*");
+    }
+    </script>
     
-      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#9f9;" 
-              onclick="window.clicked='SUBMIT'; document.getElementById('hidden_input').dispatchEvent(new Event('change'))">
-          Submit
-      </button>
-    </div>
-    
-    <input type="text" id="hidden_input" style="display:none;" value="{st.session_state.answer}" 
-           onchange="window.parent.postMessage({{letter:this.value}}, '*')">
+    <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:400px;">
     """
     
+    # Add letter buttons
+    for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+        keyboard_html += f"""
+            <button onclick="sendLetter('{c}')" 
+                style="flex:1 0 20%; padding:12px; font-size:20px;">
+                {c}
+            </button>
+        """
     
+    keyboard_html += """
+        <button onclick="sendLetter('BACK')" style="flex:1 0 45%; padding:12px; background:#f88;">⬅️ Backspace</button>
+        <button onclick="sendLetter('SUBMIT')" style="flex:1 0 45%; padding:12px; background:#9f9;">Submit</button>
+    </div>
+    """
+    
+    clicked = st_javascript("""
+    return await new Promise((resolve) => {
+        window.addEventListener("message", (event) => {
+            resolve(event.data.letter);
+        }, { once: true });
+    });
+    """)
 
     components.html(keyboard_html, height=500)
 
     
 
-    letter = st_javascript("window.clicked")
-    if letter:
-        if letter == "BACK":
+    #letter = st_javascript("window.clicked")
+    if clicked:
+        if clicked == "BACK":
             st.session_state.answer = st.session_state.answer[:-1]
-        elif letter == "SUBMIT":
+        elif clicked == "SUBMIT":
             st.success(f"Submitted: {st.session_state.answer}")
             st.session_state.answer = ""
         else:
-            st.session_state.answer += letter
+            st.session_state.answer += clicked
 
     st.write("Your spelling:", st.session_state.answer)
     
@@ -261,6 +269,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
