@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import random
 from gtts import gTTS
+import pyphen
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -91,7 +92,14 @@ else:
 
     st.markdown(f"### 🔊 Listen and spell the word:")
     # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
-    st.write(f"Spell: {current_word}")
+    #  st.write(f"Spell: {current_word}")
+
+    dic = pyphen.Pyphen(lang='en')
+
+    syllables = dic.inserted(current_word).split('-')
+    st.write(f"Spell: {syllables}")
+
+    
     tts = gTTS(text=current_word, lang='en')
     audio_file = f"{current_word}.mp3"
     tts.save(audio_file)
@@ -126,6 +134,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
