@@ -172,7 +172,8 @@ else:
 
     # Function to check the answer
     def submit_answer():
-        if st.session_state.answer.upper() == current_word.upper():
+        user_word = st.session_state.user_input  # grab text_input value
+        if user_word.upper() == current_word.upper():
             st.success("🌟 Correct!")
             st.session_state.score += 1
         else:
@@ -182,11 +183,12 @@ else:
     
     user_input = st.text_input(
         "Type the word:", 
-        value="", 
+        key="user_input", 
         on_change=submit_answer, 
-        help="Your typing will appear below"
+        help="Your typing will appear below", 
+        autocomplete="off"
     )
-
+    st.write("Your spelling:", st.session_state.answer)
     # Update session state
     #if user_input:
     #    st.session_state.answer = user_input
@@ -320,6 +322,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
