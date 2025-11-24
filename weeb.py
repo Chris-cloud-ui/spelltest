@@ -291,7 +291,7 @@ else:
         st.session_state.index += 1
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
-        #st.rerun()  # refresh the app with next word
+        st.rerun()  # refresh the app with next word
        
     
     # Show current spelling
@@ -322,6 +322,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
