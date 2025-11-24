@@ -8,6 +8,7 @@ from gtts import gTTS
 import pyphen
 import io
 import whisper
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -141,10 +142,20 @@ else:
         question.save(f"{current_word}.mp3")
         st.audio(f"{current_word}.mp3")
 
-    answer = st.text_input("Cast your spell here:")
+    answer = st.write("Cast your spell here:")
+    components.html("""
+    <input type="text" id="spell_input" autocomplete="off" style="font-size:16px; padding:5px; width: 100%;">
+    <script>
+    const input = document.getElementById('spell_input');
+    input.addEventListener('change', function() {
+        // Send value back to Streamlit
+        const value = input.value;
+        window.parent.postMessage({type: 'SPELL_INPUT', value: value}, '*');
+    });
+    </script>
+    """, height=50)
 
     if answer:
-        allowed = [current_word.lower()] + [m.lower() for m in misspellings]
         if answer.lower().strip() == current_word.lower():
             st.success("🌟 Correct!")
             st.session_state.score += 1
@@ -175,6 +186,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
