@@ -6,7 +6,7 @@ from datetime import datetime
 import random
 
 st.set_page_config(
-    page_title="Kid Spelling Test",
+    page_title="Slay Spells",
     page_icon="🧸",
     layout="centered",
     initial_sidebar_state="expanded"
@@ -61,10 +61,10 @@ if "words" not in st.session_state:
 # ------------------ HEADER ------------------------
 st.markdown("""
     <h1 style='text-align:center; color:#ff66a6;'>
-        🧸 Kid Spelling Test
+        🧸 Slay Spells
     </h1>
     <p style='text-align:center; font-size:20px; color:#555;'>
-        Fun & friendly spelling practice!
+        Practise your spells
     </p>
 """, unsafe_allow_html=True)
 
@@ -121,3 +121,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
