@@ -125,7 +125,7 @@ else:
     question = gTTS(text="Spell: " + current_word, lang='en', tld='co.uk', slow=False)
     # question_file = f"{current_word}.mp3"
     # question.save(question_file)
-
+    st.write(question)
     if len(syllables)>1:
         help_text = " ".join(syllables)
         
@@ -294,6 +294,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
