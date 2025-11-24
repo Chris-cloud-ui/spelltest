@@ -142,24 +142,15 @@ else:
         question.save(f"{current_word}.mp3")
         st.audio(f"{current_word}.mp3")
 
-    answer = st.write("Cast your spell here:")
-    components.html("""
-    <input type="text" 
-           id="spell_input" 
-           autocomplete="off" 
-           autocorrect="off" 
-           autocapitalize="off" 
-           spellcheck="false" 
-           style="font-size:20px; padding:5px; width: 100%;">
-    <script>
-    const input = document.getElementById('spell_input');
-    input.addEventListener('change', function() {
-        // Send value back to Streamlit via window.postMessage
-        const value = input.value;
-        window.parent.postMessage({type: 'SPELL_INPUT', value: value}, '*');
-    });
-    </script>
-    """, height=60)
+    #answer = st.write("Cast your spell here:")
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    answer = ""
+    
+    cols = st.columns(len(letters)//6 + 1)
+    for i, letter in enumerate(letters):
+        if cols[i % len(cols)].button(letter):
+            answer += letter
+    st.write("Your spelling:", answer)
 
     if answer:
         if answer.lower().strip() == current_word.lower():
@@ -192,6 +183,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
