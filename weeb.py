@@ -137,7 +137,7 @@ else:
         # Use the combined file
         # st.audio(combined_file)
     else:
-        question_tts.save(f"{current_word}.mp3")
+        question.save(f"{current_word}.mp3")
         st.audio(f"{current_word}.mp3")
         
     answer = st.text_input("Cast your spell here:")
@@ -170,6 +170,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
