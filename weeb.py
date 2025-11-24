@@ -156,14 +156,51 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
 
+    # --- Define JS keyboard HTML ---
+    keyboard_html = """
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+      <button onclick="sendLetter('A')">A</button>
+      <button onclick="sendLetter('B')">B</button>
+      <button onclick="sendLetter('C')">C</button>
+      <button onclick="sendLetter('D')">D</button>
+      <button onclick="sendLetter('E')">E</button>
+      <button onclick="sendLetter('F')">F</button>
+      <button onclick="sendLetter('G')">G</button>
+      <button onclick="sendLetter('H')">H</button>
+      <button onclick="sendLetter('I')">I</button>
+      <button onclick="sendLetter('J')">J</button>
+      <button onclick="sendLetter('K')">K</button>
+      <button onclick="sendLetter('L')">L</button>
+      <button onclick="sendLetter('M')">M</button>
+      <button onclick="sendLetter('N')">N</button>
+      <button onclick="sendLetter('O')">O</button>
+      <button onclick="sendLetter('P')">P</button>
+      <button onclick="sendLetter('Q')">Q</button>
+      <button onclick="sendLetter('R')">R</button>
+      <button onclick="sendLetter('S')">S</button>
+      <button onclick="sendLetter('T')">T</button>
+      <button onclick="sendLetter('U')">U</button>
+      <button onclick="sendLetter('V')">V</button>
+      <button onclick="sendLetter('W')">W</button>
+      <button onclick="sendLetter('X')">X</button>
+      <button onclick="sendLetter('Y')">Y</button>
+      <button onclick="sendLetter('Z')">Z</button>
+    </div>
+    
+    <script>
+    function sendLetter(letter) {
+        const msg = { letter: letter };
+        window.parent.postMessage({func:'add_letter', data: msg}, '*');
+    }
+    </script>
+    """
 
-    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    row_length = 6
-    for i in range(0, len(letters), row_length):
-        cols = st.columns(row_length)
-        for col, letter in zip(cols, letters[i:i+row_length]):
-            if col.button(letter):
-                st.session_state.answer += letter
+    components.html(keyboard_html, height=200)
+    clicked_letter = st.experimental_get_query_params().get("letter")
+    if clicked_letter:
+        st.session_state.answer += clicked_letter[0]
+    
+    st.write("Your spelling:", st.session_state.answer)
 
     st.markdown("""
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
@@ -266,6 +303,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
