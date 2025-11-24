@@ -123,13 +123,13 @@ else:
         syllables = current_word_details["syll"]
 
     tts = gTTS("Can you spell " + current_word + " ", lang="en", tld="co.uk", slow=False)
-    tts.save("./temp.mp3")
+    tts.save("newtemp.mp3")
     result = AudioSegment.from_mp3("temp.mp3")
     if len(syllables)>1:
         
         for s in syllables:
             tts = gTTS(s, lang="en", tld="co.uk", slow=True)
-            tts.save("./temp.mp3")
+            tts.save("newtemp.mp3")
             audio = AudioSegment.from_mp3("temp.mp3")
             result += audio + silence
 
@@ -345,6 +345,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
