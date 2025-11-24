@@ -154,6 +154,7 @@ else:
     
     # Function to add a letter
     def add_letter(letter):
+        st.write("al")
         st.session_state.answer += letter
 
     # --- Define JS keyboard HTML ---
@@ -198,7 +199,7 @@ else:
     components.html(keyboard_html, height=250)
     clicked_letter = st.experimental_get_query_params().get("letter")
     if clicked_letter:
-        print("hi")
+        st.write("cl")
         st.session_state.answer += clicked_letter[0]
     
     st.write("Your spelling:", st.session_state.answer)
@@ -304,6 +305,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
