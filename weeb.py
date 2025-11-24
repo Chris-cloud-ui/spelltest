@@ -193,6 +193,22 @@ else:
     </button>
     """
 
+    # Initialize session state
+    if "answer" not in st.session_state:
+        st.session_state.answer = ""
+    
+    # Password input to block mobile autocomplete
+    user_input = st.text_input(
+        "Type the word:", 
+        value="", 
+        key="hidden_input", 
+        type="password",  # hides text, disables autocomplete on mobile
+        autocomplete="new-password", 
+        autocorrect="off", 
+        spellcheck=False, 
+        help="Your typing will appear below"
+    )
+
     # Update session state
     if user_input:
         st.session_state.answer = user_input
@@ -327,6 +343,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
