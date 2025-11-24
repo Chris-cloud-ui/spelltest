@@ -1,7 +1,8 @@
-streamlit
+i-streamlit
 gtts
 pyyaml
 pyphen
 pydub 
 streamlit_webrtc
-whisper
+openai-whisper
+
