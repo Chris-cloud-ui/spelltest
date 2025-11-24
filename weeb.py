@@ -172,6 +172,7 @@ else:
     user_input = st.text_input(
         "Type the word:", 
         value="", 
+        on_change=submit_answer,
         key="hidden_input", 
         help="Your typing will appear below"
     )
@@ -182,6 +183,24 @@ else:
     
     # Label showing typed letters
     # st.markdown(f"**You typed:** {st.session_state.answer}")
+    if "answer" not in st.session_state:
+        st.session_state.answer = ""
+    
+    # Function to check the answer
+    def submit_answer():
+        current_word = st.session_state.current_word
+        if st.session_state.answer.upper() == current_word.upper():
+            st.success("🌟 Correct!")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ Not quite. It was **{current_word}**.")
+        st.session_state.answer = ""  # reset input
+        st.session_state.index += 1
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
+    
+    # Set current word in session_state so the callback can access it
+    st.session_state.current_word = st.session_state.words[st.session_state.index]["word"]
 
 
     
@@ -251,20 +270,20 @@ else:
 
 
     # Backspace
-    cols = st.columns([1,1,1,1])
-    if cols[0].button("⬅️ Backspace"):
-        st.session_state.answer = st.session_state.answer[:-1]
-    if cols[1].button("Submit"):
-        if st.session_state.answer.upper() == current_word.upper():
-            st.success("🌟 Correct!")
-            st.session_state.score += 1
-        else:
-            st.error(f"❌ Not quite. It was **{current_word}**.")
-        st.session_state.answer = ""  # reset
-        st.session_state.index += 1
+    # cols = st.columns([1,1,1,1])
+    # if cols[0].button("⬅️ Backspace"):
+    #     st.session_state.answer = st.session_state.answer[:-1]
+    # if cols[1].button("Submit"):
+    #    if st.session_state.answer.upper() == current_word.upper():
+    #        st.success("🌟 Correct!")
+    #        st.session_state.score += 1
+    #    else:
+    #        st.error(f"❌ Not quite. It was **{current_word}**.")
+    #    st.session_state.answer = ""  # reset
+    #    st.session_state.index += 1
     
-        if st.session_state.index >= len(st.session_state.words):
-            st.session_state.done = True
+    #    if st.session_state.index >= len(st.session_state.words):
+    #        st.session_state.done = True
 
     if st.button("Next Word"):
         st.rerun()  # refresh the app with next word
@@ -298,6 +317,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
