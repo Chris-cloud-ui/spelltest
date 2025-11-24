@@ -143,7 +143,7 @@ else:
         st.audio(f"{current_word}.mp3")
 
     st.write("Spell the word by tapping letters:")
-
+    query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
     # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
@@ -258,6 +258,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
