@@ -190,8 +190,8 @@ else:
     )
 
     # Update session state
-    if user_input:
-        st.session_state.answer = user_input
+    #if user_input:
+    #    st.session_state.answer = user_input
     
     # Label showing typed letters
     # st.markdown(f"**You typed:** {st.session_state.answer}")
@@ -322,6 +322,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
