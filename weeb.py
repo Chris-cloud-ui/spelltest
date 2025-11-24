@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import random
 from gtts import gTTS
+from pydub import AudioSegment
 import pyphen
 
 st.set_page_config(
@@ -99,11 +100,35 @@ else:
     syllables = dic.inserted(current_word).split('-')
     st.write(f"Spell: {syllables}")
 
+    question = gTTS(text="Spell: " + current_word, lang='en', tld='co.uk', slow=False)
+    question_file = f"{current_word}.mp3"
+    question.save(question_file)
+
+    if len(syllables)>1:
+        help = ""
+
+        for i in syllables:
+            help = help + " "
+        helptext = gTTS(text=help, lang='en', tld='co.uk', slow=True)
+        helptext_file = f"{current_word}_help.mp3"
+        helptext.save(helptext_file)
+
+        # -----------------------------
+        # Combine both audio files
+        # -----------------------------
+        audio_question = AudioSegment.from_file(question_file)
+        audio_help = AudioSegment.from_file(help_file)
     
-    tts = gTTS(text=current_word, lang='en')
-    audio_file = f"{current_word}.mp3"
-    tts.save(audio_file)
-    st.audio(audio_file)
+        combined = audio_question + audio_help
+        combined_file = f"{current_word}_combined.mp3"
+        combined.export(combined_file, format="mp3")
+    
+        # Use the combined file
+        st.audio(combined_file)
+    else:
+        # tts.save(audio_file)
+        st.audio(question_file)
+        
     answer = st.text_input("Cast your spell here:")
 
     if st.button("Submit"):
@@ -134,6 +159,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
