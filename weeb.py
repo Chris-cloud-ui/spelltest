@@ -183,9 +183,10 @@ else:
     
     user_input = st.text_input(
         "Type the word:", 
+        key="answer",
         value="", 
-        on_change=submit_answer,
-        key="hidden_input", 
+        on_change=submit_answer, 
+        args=(),
         help="Your typing will appear below"
     )
 
@@ -322,6 +323,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
