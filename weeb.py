@@ -168,7 +168,7 @@ else:
     # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
-    st.write("Your spelling:", st.session_state.answer)
+    # st.write("Your spelling:", st.session_state.answer)
     user_input = st.text_input(
         "Type the word:", 
         value="", 
@@ -218,9 +218,9 @@ else:
     #components.html(keyboard_html, height=500)
     
     # --- LISTEN FOR POSTMESSAGES ---
-    clicked = st_javascript("""
-    return localStorage.getItem("lastLetter");
-    """)
+    #clicked = st_javascript("""
+    #return localStorage.getItem("lastLetter");
+    #""")
     
     
 
@@ -265,7 +265,10 @@ else:
     
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
-            
+
+    if st.button("Next Word"):
+        st.rerun()  # refresh the app with next word
+       
     
     # Show current spelling
     # st.write("Your spelling:", st.session_state.answer)
@@ -279,9 +282,7 @@ else:
     
    
     # --- Optional: Button to show next word ---
-    if st.button("Next Word"):
-        st.rerun()  # refresh the app with next word
-
+    
 
 # ------------------ HISTORY PANEL ----------------------
 st.markdown("---")
@@ -297,6 +298,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
