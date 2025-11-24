@@ -112,7 +112,7 @@ else:
         help = ""
 
         for i in syllables:
-            help = help + " "
+            help = help + i + " "
         helptext = gTTS(text=help, lang='en', tld='co.uk', slow=True)
         # helptext_file = f"{current_word}_help.mp3"
         # helptext.save(helptext_file)
@@ -170,6 +170,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
