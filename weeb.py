@@ -212,12 +212,13 @@ else:
     </script>
     """
 
-    components.html(keyboard_html, height=250)
+    components.html(keyboard_html, height=350)
 
     
 
     letter = st_javascript("window.clicked")
     if letter:
+        st.write("aubergine")
         st.session_state.answer = letter
     
     st.write("Your spelling:", st.session_state.answer)
@@ -331,6 +332,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
