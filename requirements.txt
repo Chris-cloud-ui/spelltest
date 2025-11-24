@@ -4,3 +4,4 @@ pyyaml
 pyphen
 pydub 
 streamlit_webrtc
+whisper
