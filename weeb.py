@@ -216,7 +216,7 @@ else:
 
     
 
-    letter = st_javascript.eval_js("window.clicked")
+    letter = st_javascript("window.clicked")
     if letter:
         st.session_state.answer = letter
     
@@ -331,6 +331,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
