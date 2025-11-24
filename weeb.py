@@ -156,17 +156,21 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
 
-    # Row 1
-    row1 = st.columns(3)
-    if row1[0].button("A"): add_letter("A")
-    if row1[1].button("B"): add_letter("B")
-    if row1[2].button("C"): add_letter("C")
-    
-    # Row 2
-    row2 = st.columns(3)
-    if row2[0].button("D"): add_letter("D")
-    if row2[1].button("E"): add_letter("E")
-    if row2[2].button("F"): add_letter("F")
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+      <button onclick="Streamlit.setComponentValue('A')">A</button>
+      <button onclick="Streamlit.setComponentValue('B')">B</button>
+      <button onclick="Streamlit.setComponentValue('C')">C</button>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+      <button onclick="Streamlit.setComponentValue('C')">C</button>
+      <button onclick="Streamlit.setComponentValue('D')">D</button>
+      <button onclick="Streamlit.setComponentValue('E')">E</button>
+    </div>
+    """, unsafe_allow_html=True)
     
     # --- Row 2 ---
     c1, c2, c3, c4, c5, c6 = st.columns(6)
@@ -250,6 +254,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
