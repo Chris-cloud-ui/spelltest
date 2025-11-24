@@ -128,39 +128,39 @@ else:
     if len(syllables)>1:
         help_text = " ".join(syllables)
         
-        helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
+        #helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
         # 
         # --- Save to BytesIO ---
-        question_fp = io.BytesIO()
-        question.write_to_fp(question_fp)
-        quest=question_fp.seek(0)
+        #question_fp = io.BytesIO()
+        #question.write_to_fp(question_fp)
+        #quest=question_fp.seek(0)
 
-        help_fp = io.BytesIO()
-        helptext.write_to_fp(help_fp)
-        hell=help_fp.seek(0)
+        #help_fp = io.BytesIO()
+        #helptext.write_to_fp(help_fp)
+        #hell=help_fp.seek(0)
         
         
-        help_fp.seek(0)
+        #help_fp.seek(0)
     
         # # --- Load as AudioSegment and combine ---
-        audio_question = AudioSegment.from_file(quest, format="mp3")
-        audio_help = AudioSegment.from_file(hell, format="mp3")
-        combined = audio_question + audio_help
+        #audio_question = AudioSegment.from_file(quest, format="mp3")
+        #audio_help = AudioSegment.from_file(hell, format="mp3")
+        #combined = audio_question + audio_help
     
         # --- Export combined to BytesIO ---
-        combined_buffer = io.BytesIO()
-        combined.export(combined_buffer, format="mp3")
-        combined_buffer.seek(0)
+        #combined_buffer = io.BytesIO()
+        #combined.export(combined_buffer, format="mp3")
+        #combined_buffer.seek(0)
     
         # --- Play in Streamlit ---
-        st.audio(combined_buffer, format='audio/mp3')
+        #st.audio(combined_buffer, format='audio/mp3')
         
     else:
-        
-        question_fp = io.BytesIO()
-        question.save(question_fp)
-        question_fp.seek(0)
-        st.audio(question_fp, format='audio/mp3')
+        st.write(current_word)
+        #question_fp = io.BytesIO()
+        #question.save(question_fp)
+        #question_fp.seek(0)
+        #st.audio(question_fp, format='audio/mp3')
         
 
     # st.write("Spell the word by tapping letters:")
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
