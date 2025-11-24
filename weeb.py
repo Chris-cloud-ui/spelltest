@@ -91,7 +91,7 @@ if st.session_state.done:
 
 else:
     current_word_details = st.session_state.words[st.session_state.index]
-    current_word=current_word_details.word
+    current_word=current_word_details["word"]
 
     st.markdown(f"### 🔊 Listen and spell the word:")
     # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
@@ -170,6 +170,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
