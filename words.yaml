@@ -1,27 +1,39 @@
 thisweek:
-  - handbag
-  - handsome
-  - handkerchief
-  - government
-  - environment
-  - castle
-  - raspberry
-  - sign
-  - cupboard
-  - February
-  - wrapper
-  - answer
-  - doubt
-  - crumb
-  - thumb
+  - word: handbag
+  - word: handsome
+  - word: handkerchief
+    syll: ["hand","ker","chief"]
+    spell: ["hankerchief","hankachief"]
+  - word: government
+    spell: ["guverment","goverment"]
+  - word: environment
+    spell: ["endviroment","enviroment"]
+  - word: castle
+    spell: ["cassle","cassel"]
+  - word: raspberry
+    spell: ["razzberry","rasberry"]
+  - word: sign
+  - word: cupboard
+    spell: ["cubboard","cuboard"]
+  - word: February
+    syll: ["february"]
+    spell: ["febuary","februay"]
+  - word: wrapper
+  - word: answer
+    syll: ["answer"]
+  - word: doubt
+    spell: ["dowt","dought"]
+  - word: crumb
+    spell: ["crum","crumm"]
+  - word: thumb
+  - word: accompany
+  - word: criticise
 
 grade2:
-  - elephant
-  - giraffe
-  - chocolate
-  - butterfly
+  - word: elephant
+  - word: giraffe
+  - word: chocolate
+  - word: butterfly
 
-custom:
-  - accompany
-  - criticise
+
 
