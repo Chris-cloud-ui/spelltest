@@ -144,20 +144,22 @@ else:
 
     answer = st.write("Cast your spell here:")
     components.html("""
-    <input type="text" id="spell_input" autocomplete="off" style="font-size:16px; padding:5px; width: 100%;">
+    <input type="text" 
+           id="spell_input" 
+           autocomplete="off" 
+           autocorrect="off" 
+           autocapitalize="off" 
+           spellcheck="false" 
+           style="font-size:20px; padding:5px; width: 100%;">
     <script>
     const input = document.getElementById('spell_input');
     input.addEventListener('change', function() {
-        // Send value back to Streamlit
+        // Send value back to Streamlit via window.postMessage
         const value = input.value;
         window.parent.postMessage({type: 'SPELL_INPUT', value: value}, '*');
     });
     </script>
-    """, height=50)
-
-    answer2 = st.text_input("Type the spelling here:", key="spell_input3", placeholder="", help="Disable autocomplete hack")
-
-    answer3 = st.text_input("Type the spelling here:", placeholder="", key="spell_input4")
+    """, height=60)
 
     if answer:
         if answer.lower().strip() == current_word.lower():
@@ -190,6 +192,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
