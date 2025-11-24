@@ -219,6 +219,8 @@ else:
     
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
+        else:
+            st.rerun()  # refresh the app with next word
     
     # Show current spelling
     st.write("Your spelling:", st.session_state.answer)
@@ -229,7 +231,7 @@ else:
         st.success("🎉 All words completed! Restarting...")
         st.session_state.current_word_index = 0
         random.shuffle(st.session_state.words)
-    st.rerun()  # refresh the app with next word
+    
    
     # --- Optional: Button to show next word ---
     #if st.button("Next Word"):
@@ -250,6 +252,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
