@@ -129,7 +129,7 @@ else:
 
         combined_audio = io.BytesIO()
         question.write_to_fp(combined_audio)
-        help.write_to_fp(combined_audio)
+        helptext.write_to_fp(combined_audio)
         combined_audio.seek(0)
 
         st.audio(combined_audio, format='audio/mp3')
@@ -170,6 +170,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
