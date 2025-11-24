@@ -178,10 +178,7 @@ else:
             st.session_state.score += 1
         else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
-        st.session_state.answer = ""  # reset input
-        st.session_state.index += 1
-        if st.session_state.index >= len(st.session_state.words):
-            st.session_state.done = True
+        
 
     
     user_input = st.text_input(
@@ -290,7 +287,11 @@ else:
     #        st.session_state.done = True
 
     if st.button("Next Word"):
-        st.rerun()  # refresh the app with next word
+        st.session_state.answer = ""  # reset input
+        st.session_state.index += 1
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
+        #st.rerun()  # refresh the app with next word
        
     
     # Show current spelling
@@ -321,6 +322,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
