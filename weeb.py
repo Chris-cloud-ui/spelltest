@@ -151,6 +151,47 @@ else:
     # Function to add a letter
     def add_letter(letter):
         st.session_state.answer += letter
+
+    # --- Row 1 ---
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    if c1.button("A"): add_letter("A")
+    if c2.button("B"): add_letter("B")
+    if c3.button("C"): add_letter("C")
+    if c4.button("D"): add_letter("D")
+    if c5.button("E"): add_letter("E")
+    if c6.button("F"): add_letter("F")
+    
+    # --- Row 2 ---
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    if c1.button("G"): add_letter("G")
+    if c2.button("H"): add_letter("H")
+    if c3.button("I"): add_letter("I")
+    if c4.button("J"): add_letter("J")
+    if c5.button("K"): add_letter("K")
+    if c6.button("L"): add_letter("L")
+    
+    # --- Row 3 ---
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    if c1.button("M"): add_letter("M")
+    if c2.button("N"): add_letter("N")
+    if c3.button("O"): add_letter("O")
+    if c4.button("P"): add_letter("P")
+    if c5.button("Q"): add_letter("Q")
+    if c6.button("R"): add_letter("R")
+    
+    # --- Row 4 ---
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    if c1.button("S"): add_letter("S")
+    if c2.button("T"): add_letter("T")
+    if c3.button("U"): add_letter("U")
+    if c4.button("V"): add_letter("V")
+    if c5.button("W"): add_letter("W")
+    if c6.button("X"): add_letter("X")
+    
+    # --- Row 5 ---
+    c1, c2 = st.columns(2)
+    if c1.button("Y"): add_letter("Y")
+    if c2.button("Z"): add_letter("Z")
     
     # Keyboard layout
     keyboard_rows = [
@@ -208,6 +249,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
