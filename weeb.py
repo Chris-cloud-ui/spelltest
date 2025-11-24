@@ -196,8 +196,7 @@ else:
     if "answer" not in st.session_state:
         st.session_state.answer = ""
 
-    def update_answer():
-        st.session_state.answer = user_input
+    
     
     # Password input to block mobile autocomplete
     user_input = st.text_input(
@@ -206,9 +205,12 @@ else:
         key="hidden_input", 
         type="password",  # hides text, disables autocomplete on mobile
         autocomplete="new-password", 
-        on_change=update_answer,
         help="Your typing will appear below"
     )
+
+    if user_input != st.session_state.answer:
+        st.session_state.answer = user_input
+        st.experimental_rerun()  # refresh to update the label instantly
 
     # Update session state
     #if user_input:
@@ -345,6 +347,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
