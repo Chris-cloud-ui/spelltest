@@ -157,9 +157,23 @@ else:
         st.write("al")
         st.session_state.answer += letter
 
-    st.write("help")
+
+    if "keyboard_letter" not in st.session_state:
+    st.session_state.keyboard_letter = ""
+
+
+    keyboard_html = f"""
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-width: 400px; margin:auto;">
+      {"".join([f'<button style="flex:1 0 20%; padding:10px; margin:2px; font-size:20px;" onclick="document.getElementById(\'hidden_input\').value+=\'{c}\'">{c}</button>' for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])}
+      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#f99;" onclick="document.getElementById('hidden_input').value = document.getElementById('hidden_input').value.slice(0,-1)">⬅️ Backspace</button>
+      <button style="flex:1 0 45%; padding:10px; margin:2px; font-size:18px; background-color:#9f9;" onclick="document.getElementById('hidden_input').dispatchEvent(new Event('change'))">Submit</button>
+    </div>
+    
+    <input type="text" id="hidden_input" style="display:none;" value="{st.session_state.answer}" onchange="window.parent.postMessage({{letter:this.value}}, '*')">
+    """
+    
     # --- Define JS keyboard HTML ---
-    keyboard_html = """
+    keyboard_htmlold = """
     <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
       <button onclick="sendLetter('A')">A</button>
       <button onclick="sendLetter('B')">B</button>
@@ -198,6 +212,16 @@ else:
     """
 
     components.html(keyboard_html, height=250)
+
+    import streamlit_javascript as st_js
+
+    letter = st_js.get("letter")  # You'll need streamlit-javascript to capture JS
+    if letter:
+        st.session_state.answer = letter
+    
+    st.write("Your spelling:", st.session_state.answer)
+
+    
     clicked_letter = st.experimental_get_query_params().get("letter")
     if clicked_letter:
         st.write("cl")
@@ -306,6 +330,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
