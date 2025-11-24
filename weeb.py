@@ -153,7 +153,7 @@ else:
         st.session_state.answer += letter
 
 
-    col1, col2, col3 = st.columns([1,1,1,12])
+    col1, col2, col3 = st.columns([1,1,12])
 
     with col1:
         st.button('AA')
@@ -258,6 +258,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
