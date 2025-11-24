@@ -9,6 +9,7 @@ import pyphen
 import io
 import whisper
 import streamlit.components.v1 as components
+import streamlit_javascript as st_js
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -213,7 +214,7 @@ else:
 
     components.html(keyboard_html, height=250)
 
-    import streamlit_javascript as st_js
+    
 
     letter = st_js.get("letter")  # You'll need streamlit-javascript to capture JS
     if letter:
@@ -330,6 +331,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
