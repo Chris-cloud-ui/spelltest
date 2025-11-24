@@ -175,7 +175,7 @@ else:
     
     
 
-    components.html(keyboard_html, height=400)
+    components.html(keyboard_html, height=500)
 
     
 
@@ -241,6 +241,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
