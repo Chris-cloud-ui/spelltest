@@ -157,6 +157,7 @@ else:
         st.write("al")
         st.session_state.answer += letter
 
+    st.write("help")
     # --- Define JS keyboard HTML ---
     keyboard_html = """
     <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
@@ -305,6 +306,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
