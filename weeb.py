@@ -172,7 +172,7 @@ else:
 
     # Function to check the answer
     def submit_answer():
-        current_word = st.session_state.current_word
+        current_word = st.session_state.answer
         if st.session_state.answer.upper() == current_word.upper():
             st.success("🌟 Correct!")
             st.session_state.score += 1
@@ -322,6 +322,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
