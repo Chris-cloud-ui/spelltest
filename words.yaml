@@ -26,14 +26,19 @@ thisweek:
   - word: crumb
     spell: ["crum","crumm"]
   - word: thumb
+    spell: ["thum","thump"]
   - word: accompany
+    spell: ["acompany","accumpany"]
   - word: criticise
+    syll: ["crit","ee","size"]
+    spell: ["crittisize","critticise"]
 
 grade2:
   - word: elephant
   - word: giraffe
   - word: chocolate
   - word: butterfly
+
 
 
 
