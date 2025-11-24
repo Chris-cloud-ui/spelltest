@@ -132,16 +132,19 @@ else:
         # 
         # --- Save to BytesIO ---
         question_fp = io.BytesIO()
+        tts.write_to_fp(question_fp)
+        quest=question_fp.seek(0)
+
         help_fp = io.BytesIO()
-        question.save(question_fp)
-        helptext.save(help_fp)
+        tts.write_to_fp(help_fp)
+        hell=help_fp.seek(0)
         
-        question_fp.seek(0)
+        
         help_fp.seek(0)
     
         # # --- Load as AudioSegment and combine ---
-        audio_question = AudioSegment.from_file(question_fp, format="mp3")
-        audio_help = AudioSegment.from_file(help_fp, format="mp3")
+        audio_question = AudioSegment.from_file(quest, format="mp3")
+        audio_help = AudioSegment.from_file(hell, format="mp3")
         combined = audio_question + audio_help
     
         # --- Export combined to BytesIO ---
@@ -294,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
