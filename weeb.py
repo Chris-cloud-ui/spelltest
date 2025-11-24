@@ -222,7 +222,14 @@ else:
     
     # Show current spelling
     st.write("Your spelling:", st.session_state.answer)
+    st.session_state.answer = ""
+    st.session_state.current_word_index += 1
 
+    if st.session_state.current_word_index >= len(st.session_state.shuffled_words):
+        st.success("🎉 All words completed! Restarting...")
+        st.session_state.current_word_index = 0
+        random.shuffle(st.session_state.shuffled_words)
+    st.experimental_rerun()  # refresh the app with next word
    
     # --- Optional: Button to show next word ---
     #if st.button("Next Word"):
@@ -243,6 +250,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
