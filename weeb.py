@@ -208,6 +208,7 @@ else:
 
     # Update session state
     if user_input:
+        st.write(user_input)
         st.session_state.answer = user_input
     
     # Label showing typed letters
@@ -340,6 +341,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
