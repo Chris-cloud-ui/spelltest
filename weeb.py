@@ -4,6 +4,7 @@ import json
 import os
 from datetime import datetime
 import random
+from gtts import gTTS
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -89,8 +90,12 @@ else:
     current_word = st.session_state.words[st.session_state.index]
 
     st.markdown(f"### 🔊 Listen and spell the word:")
-    st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
-
+    # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
+    st.write(f"Spell: {word}")
+    tts = gTTS(text=word, lang='en')
+    audio_file = f"{word}.mp3"
+    tts.save(audio_file)
+    st.audio(audio_file)
     answer = st.text_input("Cast your spell here:")
 
     if st.button("Submit"):
@@ -121,5 +126,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
