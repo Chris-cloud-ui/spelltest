@@ -125,7 +125,6 @@ else:
     question = gTTS(text="Spell: " + current_word, lang='en', tld='co.uk', slow=False)
     # question_file = f"{current_word}.mp3"
     # question.save(question_file)
-    st.write(question)
     if len(syllables)>1:
         help_text = " ".join(syllables)
         
@@ -134,8 +133,9 @@ else:
         # --- Save to BytesIO ---
         question_fp = io.BytesIO()
         help_fp = io.BytesIO()
-        question.write_to_fp(question_fp)
-        helptext.write_to_fp(help_fp)
+        question.save(question_fp)
+        helptext.save(help_fp)
+        
         question_fp.seek(0)
         help_fp.seek(0)
     
@@ -155,7 +155,7 @@ else:
     else:
         
         question_fp = io.BytesIO()
-        question.write_to_fp(question_fp)
+        question.save(question_fp)
         question_fp.seek(0)
         st.audio(question_fp, format='audio/mp3')
         
@@ -294,6 +294,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
