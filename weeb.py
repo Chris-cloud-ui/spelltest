@@ -190,32 +190,32 @@ else:
     
 
 
-    keyboard_html = """
-    <script>
-    function sendLetter(letter) {
-        window.top.postMessage({letter: letter}, "*");
-    }
-    </script>
+    #keyboard_html = """
+    #<script>
+    #function sendLetter(letter) {
+    #    window.top.postMessage({letter: letter}, "*");
+    #}
+    #</script>
     
-    <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:400px;">
-    """
+    #<div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:400px;">
+    #"""
     
     # Add letter buttons
-    for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-        keyboard_html += f"""
-            <button onclick="sendLetter('{c}')" 
-                style="flex:1 0 20%; padding:12px; font-size:20px;">
-                {c}
-            </button>
-        """
+    #for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+    #    keyboard_html += f"""
+    #        <button onclick="sendLetter('{c}')" 
+    #            style="flex:1 0 20%; padding:12px; font-size:20px;">
+    #            {c}
+    #        </button>
+    #    """
     
-    keyboard_html += """
-        <button onclick="sendLetter('BACK')" style="flex:1 0 45%; padding:12px; background:#f88;">⬅️ Backspace</button>
-        <button onclick="sendLetter('SUBMIT')" style="flex:1 0 45%; padding:12px; background:#9f9;">Submit</button>
-    </div>
-    """
+    #keyboard_html += """
+    #    <button onclick="sendLetter('BACK')" style="flex:1 0 45%; padding:12px; background:#f88;">⬅️ Backspace</button>
+    #    <button onclick="sendLetter('SUBMIT')" style="flex:1 0 45%; padding:12px; background:#9f9;">Submit</button>
+    #</div>
+    #"""
 
-    components.html(keyboard_html, height=500)
+    #components.html(keyboard_html, height=500)
     
     # --- LISTEN FOR POSTMESSAGES ---
     clicked = st_javascript("""
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
