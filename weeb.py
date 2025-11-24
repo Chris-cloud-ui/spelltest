@@ -159,7 +159,7 @@ else:
 
 
     if "keyboard_letter" not in st.session_state:
-    st.session_state.keyboard_letter = ""
+        st.session_state.keyboard_letter = ""
 
 
     keyboard_html = f"""
@@ -330,6 +330,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
