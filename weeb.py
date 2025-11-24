@@ -182,7 +182,6 @@ else:
            autocomplete="off"
            autocorrect="off"
            autocapitalize="off"
-           spellcheck="false"
            style="font-size:24px; padding:10px; width:90%;">
     
     <button onclick="
@@ -342,6 +341,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
