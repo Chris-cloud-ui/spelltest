@@ -158,7 +158,7 @@ else:
 
     st.markdown("""
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('A')">A</button>
+      <button onclick="add_letter('A')">A</button>
       <button onclick="Streamlit.setComponentValue('B')">B</button>
       <button onclick="Streamlit.setComponentValue('C')">C</button>
       <button onclick="Streamlit.setComponentValue('D')">D</button>
@@ -257,6 +257,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
