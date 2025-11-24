@@ -180,7 +180,7 @@ else:
     keyboard_html = """
     <script>
     function sendLetter(letter) {
-        window.parent.postMessage({letter: letter}, "*");
+        window.top.postMessage({letter: letter}, "*");
     }
     </script>
     
@@ -287,6 +287,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
