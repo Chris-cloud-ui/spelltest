@@ -161,48 +161,51 @@ else:
       <button onclick="Streamlit.setComponentValue('A')">A</button>
       <button onclick="Streamlit.setComponentValue('B')">B</button>
       <button onclick="Streamlit.setComponentValue('C')">C</button>
+      <button onclick="Streamlit.setComponentValue('D')">D</button>
+      <button onclick="Streamlit.setComponentValue('E')">E</button>
+      <button onclick="Streamlit.setComponentValue('F')">F</button>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      <button onclick="Streamlit.setComponentValue('C')">C</button>
-      <button onclick="Streamlit.setComponentValue('D')">D</button>
-      <button onclick="Streamlit.setComponentValue('E')">E</button>
+      <button onclick="Streamlit.setComponentValue('G')">G</button>
+      <button onclick="Streamlit.setComponentValue('H')">H</button>
+      <button onclick="Streamlit.setComponentValue('I')">I</button>
+      <button onclick="Streamlit.setComponentValue('J')">J</button>
+      <button onclick="Streamlit.setComponentValue('K')">K</button>
+      <button onclick="Streamlit.setComponentValue('L')">L</button>
     </div>
     """, unsafe_allow_html=True)
-    
-    # --- Row 2 ---
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
-    if c1.button("G"): add_letter("G")
-    if c2.button("H"): add_letter("H")
-    if c3.button("I"): add_letter("I")
-    if c4.button("J"): add_letter("J")
-    if c5.button("K"): add_letter("K")
-    if c6.button("L"): add_letter("L")
-    
-    # --- Row 3 ---
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
-    if c1.button("M"): add_letter("M")
-    if c2.button("N"): add_letter("N")
-    if c3.button("O"): add_letter("O")
-    if c4.button("P"): add_letter("P")
-    if c5.button("Q"): add_letter("Q")
-    if c6.button("R"): add_letter("R")
-    
-    # --- Row 4 ---
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
-    if c1.button("S"): add_letter("S")
-    if c2.button("T"): add_letter("T")
-    if c3.button("U"): add_letter("U")
-    if c4.button("V"): add_letter("V")
-    if c5.button("W"): add_letter("W")
-    if c6.button("X"): add_letter("X")
-    
-    # --- Row 5 ---
-    c1, c2 = st.columns(2)
-    if c1.button("Y"): add_letter("Y")
-    if c2.button("Z"): add_letter("Z")
+
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+      <button onclick="Streamlit.setComponentValue('M')">M</button>
+      <button onclick="Streamlit.setComponentValue('N')">N</button>
+      <button onclick="Streamlit.setComponentValue('O')">O</button>
+      <button onclick="Streamlit.setComponentValue('P')">P</button>
+      <button onclick="Streamlit.setComponentValue('Q')">Q</button>
+      <button onclick="Streamlit.setComponentValue('R')">R</button>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+      <button onclick="Streamlit.setComponentValue('S')">S</button>
+      <button onclick="Streamlit.setComponentValue('T')">T</button>
+      <button onclick="Streamlit.setComponentValue('U')">U</button>
+      <button onclick="Streamlit.setComponentValue('V')">V</button>
+      <button onclick="Streamlit.setComponentValue('W')">W</button>
+      <button onclick="Streamlit.setComponentValue('X')">X</button>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+      <button onclick="Streamlit.setComponentValue('Y')">Y</button>
+      <button onclick="Streamlit.setComponentValue('Z')">Z</button>
+    </div>
+    """, unsafe_allow_html=True)
     
     
     
@@ -254,6 +257,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
