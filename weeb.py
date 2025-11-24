@@ -142,15 +142,30 @@ else:
         question.save(f"{current_word}.mp3")
         st.audio(f"{current_word}.mp3")
 
-    #answer = st.write("Cast your spell here:")
-    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    answer = ""
+    st.write("Spell the word by tapping letters:")
+
+    # Current answer
+    if "answer" not in st.session_state:
+        st.session_state.answer = ""
     
-    cols = st.columns(len(letters)//6 + 1)
-    for i, letter in enumerate(letters):
-        if cols[i % len(cols)].button(letter):
-            answer += letter
-    st.write("Your spelling:", answer)
+    # Function to add a letter
+    def add_letter(letter):
+        st.session_state.answer += letter
+    
+    # Keyboard layout: 3 rows (like a simplified keyboard)
+    rows = ["ABCDEF", "GHIJKL", "MNOPQR", "STUVWX", "YZ"]
+    
+    for row in rows:
+        cols = st.columns(len(row))
+        for i, letter in enumerate(row):
+            if cols[i].button(letter):
+                add_letter(letter)
+    
+    st.write("Your spelling:", st.session_state.answer)
+    
+    # Optional: Backspace button
+    if st.button("⬅️ Backspace"):
+        st.session_state.answer = st.session_state.answer[:-1]
 
     if answer:
         if answer.lower().strip() == current_word.lower():
@@ -183,6 +198,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
