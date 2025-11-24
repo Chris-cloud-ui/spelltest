@@ -1,0 +1,123 @@
+import streamlit as st
+import yaml
+import json
+import os
+from datetime import datetime
+import random
+
+st.set_page_config(
+    page_title="Kid Spelling Test",
+    page_icon="🧸",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
+
+# ------------------ LOAD WORDS ------------------
+with open("words.yaml", "r") as f:
+    WORD_LISTS = yaml.safe_load(f)
+
+# ------------------ HISTORY ---------------------
+HISTORY_FILE = "history.json"
+
+if not os.path.exists(HISTORY_FILE):
+    with open(HISTORY_FILE, "w") as f:
+        json.dump([], f)
+
+with open(HISTORY_FILE, "r") as f:
+    history = json.load(f)
+
+def save_history(entry):
+    history.append(entry)
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=2)
+
+# ------------------ SIDEBAR ----------------------
+st.sidebar.title("⚙️ Settings")
+list_choice = st.sidebar.selectbox(
+    "Choose a word list:",
+    list(WORD_LISTS.keys())
+)
+
+shuffle = st.sidebar.checkbox("Shuffle words", value=True)
+
+st.sidebar.markdown("---")
+if st.sidebar.button("🔄 Reset Test"):
+    st.session_state.clear()
+    st.rerun()
+
+# ------------------ SESSION STATE INIT ------------------
+if "index" not in st.session_state:
+    st.session_state.index = 0
+if "score" not in st.session_state:
+    st.session_state.score = 0
+if "done" not in st.session_state:
+    st.session_state.done = False
+if "words" not in st.session_state:
+    words = WORD_LISTS[list_choice][:]
+    if shuffle:
+        random.shuffle(words)
+    st.session_state.words = words
+
+# ------------------ HEADER ------------------------
+st.markdown("""
+    <h1 style='text-align:center; color:#ff66a6;'>
+        🧸 Kid Spelling Test
+    </h1>
+    <p style='text-align:center; font-size:20px; color:#555;'>
+        Fun & friendly spelling practice!
+    </p>
+""", unsafe_allow_html=True)
+
+# ------------------ MAIN APP ----------------------
+if st.session_state.done:
+    total = len(st.session_state.words)
+    score = st.session_state.score
+
+    st.success(f"🎉 All done! You scored **{score} / {total}**")
+
+    # Save to history
+    save_history({
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "list": list_choice,
+        "score": score,
+        "total": total
+    })
+
+    st.balloons()
+
+else:
+    current_word = st.session_state.words[st.session_state.index]
+
+    st.markdown(f"### 🔊 Listen and spell the word:")
+    st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
+
+    answer = st.text_input("Type your spelling here:")
+
+    if st.button("Submit"):
+        if answer.lower().strip() == current_word:
+            st.success("🌟 Correct!")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ Not quite. It was **{current_word}**.")
+
+        st.session_state.index += 1
+
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
+
+        st.rerun()
+
+# ------------------ HISTORY PANEL ----------------------
+st.markdown("---")
+st.subheader("📊 Past Results")
+
+if len(history) == 0:
+    st.info("No history yet. Complete a test to see stats!")
+else:
+    for entry in reversed(history[-10:]):
+        st.markdown(f"""
+            🗓 **{entry['date']}**  
+            📚 List: *{entry['list']}*  
+            ⭐ Score: **{entry['score']} / {entry['total']}**
+            <br><br>
+        """, unsafe_allow_html=True)
