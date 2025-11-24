@@ -185,7 +185,7 @@ else:
 
 
     
-    components.html(html, height=150)
+    # components.html(html, height=150)
     
     
 
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
