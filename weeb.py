@@ -152,6 +152,15 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
 
+
+    col1, col2, col3 = st.columns([1,1,1])
+
+    with col1:
+        st.button('AA')
+    with col2:
+        st.button('BB')
+    with col3:
+        st.button('CC')
     # --- Row 1 ---
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     if c1.button("A"): add_letter("A")
@@ -249,6 +258,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
