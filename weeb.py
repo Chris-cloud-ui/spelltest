@@ -188,11 +188,11 @@ else:
     html = """
     <input id="spellinput"
            type="text"
+           inputmode="text"
            autocomplete="off"
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
-           inputmode="none"
            style="font-size:24px; padding:10px; width:90%;">
     
     <button onclick="
@@ -209,8 +209,7 @@ else:
     
     if typed and typed != "null":
         st.write("You typed:", typed)
-    
-        # Clear the stored value so it doesn't repeat
+        # Clear after reading
         st_javascript("localStorage.setItem('typedAnswer','');")
 
 
@@ -329,4 +328,5 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
