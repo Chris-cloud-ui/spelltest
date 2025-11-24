@@ -1,4 +1,4 @@
-import streamlit as st
+aiimport streamlit as st
 import yaml
 import json
 import os
@@ -7,9 +7,7 @@ import random
 from gtts import gTTS
 import pyphen
 import io
-from streamlit_webrtc import webrtc_streamer
 import whisper
-import tempfile
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -143,36 +141,25 @@ else:
         question.save(f"{current_word}.mp3")
         st.audio(f"{current_word}.mp3")
 
-    model = whisper.load_model("tiny")  # fast model
-    # answer = st.text_input("Cast your spell here:")
-    webrtc_ctx = webrtc_streamer(key="spell-voice")
+    answer = st.text_input("Cast your spell here:")
 
-    if webrtc_ctx.audio_receiver:
-        audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=1)
-        if audio_frames:
-            # Save audio to a temp WAV file
-            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-                f.write(audio_frames[0].to_bytes())
-                audio_file = f.name
-    
-            # Recognize speech
-            result = model.transcribe(audio_file)
-            st.write("You said:", result["text"])
-            
-            # Check spelling
-            if result["text"].strip().lower() == word_to_spell.lower():
-                st.success("🌟 Correct!")
-                st.session_state.score += 1
-            else:
-                st.error(f"❌ Not quite. It was **{current_word}**.")
-    
+    if answer:
+        allowed = [current_word.lower()] + [m.lower() for m in misspellings]
+        if answer.lower().strip() == current_word.lower():
+            st.success("🌟 Correct!")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ Not quite. It was **{current_word}**.")
 
-            st.session_state.index += 1
+        st.session_state.index += 1
     
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
     
-            st.rerun()
+    # --- Optional: Button to show next word ---
+    if st.button("Next Word"):
+        st.experimental_rerun()
+
 
 # ------------------ HISTORY PANEL ----------------------
 st.markdown("---")
@@ -188,6 +175,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
