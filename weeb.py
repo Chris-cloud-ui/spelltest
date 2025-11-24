@@ -9,7 +9,7 @@ import pyphen
 import io
 import whisper
 import streamlit.components.v1 as components
-import streamlit_javascript as st_js
+import streamlit_javascript as st_javascript
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -216,7 +216,14 @@ else:
 
     
 
-    letter = st_js.get("letter")  # You'll need streamlit-javascript to capture JS
+    letter = st_javascript(
+        f"""
+        const buttons = document.querySelectorAll('button');
+        let clicked = null;
+        buttons.forEach(b => b.onclick = () => clicked = b.textContent);
+        clicked;
+        """
+    )
     if letter:
         st.session_state.answer = letter
     
@@ -331,6 +338,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
