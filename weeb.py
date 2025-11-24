@@ -181,7 +181,7 @@ else:
         st.session_state.answer = user_input
     
     # Label showing typed letters
-    st.markdown(f"**You typed:** {st.session_state.answer}")
+    # st.markdown(f"**You typed:** {st.session_state.answer}")
 
 
     
@@ -225,26 +225,26 @@ else:
     
 
     #letter = st_javascript("window.clicked")
-    if clicked:
-        if clicked == "BACK":
-            st.session_state.answer = st.session_state.answer[:-1]
-        elif clicked == "SUBMIT":
-            if st.session_state.answer.upper() == current_word.upper():
-                st.success("🌟 Correct!")
-                st.session_state.score += 1
-            else:
-                st.error(f"❌ Not quite. It was **{current_word}**.")
-            
-            st.session_state.answer = ""
-            st.session_state.index += 1
-            
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
-    
-            st.rerun()
-    
-        else:  # a letter
-            st.session_state.answer += clicked
+    #if clicked:
+    #     if clicked == "BACK":
+    #        st.session_state.answer = st.session_state.answer[:-1]
+    #    elif clicked == "SUBMIT":
+    #        if st.session_state.answer.upper() == current_word.upper():
+    #            st.success("🌟 Correct!")
+    #            st.session_state.score += 1
+    #        else:
+    #            st.error(f"❌ Not quite. It was **{current_word}**.")
+    #        
+    #        st.session_state.answer = ""
+    #        st.session_state.index += 1
+    #        
+    #        if st.session_state.index >= len(st.session_state.words):
+    #            st.session_state.done = True
+   
+    #        st.rerun()
+    #
+    #    else:  # a letter
+    #        st.session_state.answer += clicked
 
     st.write("Your spelling:", st.session_state.answer)
     
@@ -268,7 +268,7 @@ else:
             
     
     # Show current spelling
-    st.write("Your spelling:", st.session_state.answer)
+    # st.write("Your spelling:", st.session_state.answer)
     #st.session_state.answer = ""
     
 
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
