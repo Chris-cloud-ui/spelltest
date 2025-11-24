@@ -209,7 +209,8 @@ else:
     return localStorage.getItem("lastLetter");
     """)
     
-        
+    if clicked:
+        st_javascript("localStorage.setItem('lastLetter','');")    
 
     
 
@@ -286,6 +287,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
