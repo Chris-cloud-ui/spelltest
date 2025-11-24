@@ -202,22 +202,7 @@ else:
     if c1.button("Y"): add_letter("Y")
     if c2.button("Z"): add_letter("Z")
     
-    # Keyboard layout
-    keyboard_rows = [
-        ["A","B","C","D","E","F"],
-        ["G","H","I","J","K","L"],
-        ["M","N","O","P","Q","R"],
-        ["S","T","U","V","W","X"],
-        ["Y","Z"]
-    ]
     
-    # Display buttons row by row
-    for row in keyboard_rows:
-        cols = st.columns(len(row))
-        for i, letter in enumerate(row):
-            # Place a button in each column
-            if cols[i].button(letter):
-                add_letter(letter)
     
     # Backspace
     cols = st.columns([1,1,1,1])
@@ -258,6 +243,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
