@@ -299,8 +299,7 @@ else:
     
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
-        else:
-            st.rerun()  # refresh the app with next word
+            
     
     # Show current spelling
     st.write("Your spelling:", st.session_state.answer)
@@ -314,8 +313,8 @@ else:
     
    
     # --- Optional: Button to show next word ---
-    #if st.button("Next Word"):
-    #    st.experimental_rerun()
+    if st.button("Next Word"):
+        st.rerun()  # refresh the app with next word
 
 
 # ------------------ HISTORY PANEL ----------------------
@@ -332,6 +331,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
