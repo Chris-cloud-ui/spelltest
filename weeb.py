@@ -197,7 +197,7 @@ else:
         st.session_state.answer = ""
 
     def update_answer():
-        st.session_state.answer = st.session_state.user_input
+        st.session_state.answer = user_input
     
     # Password input to block mobile autocomplete
     user_input = st.text_input(
@@ -345,6 +345,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
