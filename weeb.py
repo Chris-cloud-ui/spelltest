@@ -189,8 +189,8 @@ else:
 
    
     # --- Optional: Button to show next word ---
-    if st.button("Next Word"):
-        st.experimental_rerun()
+    #if st.button("Next Word"):
+    #    st.experimental_rerun()
 
 
 # ------------------ HISTORY PANEL ----------------------
@@ -207,6 +207,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
