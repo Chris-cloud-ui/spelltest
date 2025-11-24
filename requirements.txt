@@ -3,3 +3,4 @@ gtts
 pyyaml
 pyphen
 pydub 
+streamlit_webrtc
