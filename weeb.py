@@ -113,38 +113,38 @@ else:
     if len(syllables)>1:
         help_text = " ".join(syllables)
         print (help_text)
-        '''
-        helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
+        
+        # helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
+        # 
+        # # --- Save to BytesIO ---
+        # question_fp = io.BytesIO()
+        # help_fp = io.BytesIO()
+        # question.write_to_fp(question_fp)
+        # helptext.write_to_fp(help_fp)
+        # question_fp.seek(0)
+        # help_fp.seek(0)
     
-        # --- Save to BytesIO ---
-        question_fp = io.BytesIO()
-        help_fp = io.BytesIO()
-        question.write_to_fp(question_fp)
-        helptext.write_to_fp(help_fp)
-        question_fp.seek(0)
-        help_fp.seek(0)
+        # # --- Load as AudioSegment and combine ---
+        # audio_question = AudioSegment.from_file(question_fp, format="mp3")
+        # audio_help = AudioSegment.from_file(help_fp, format="mp3")
+        # combined = audio_question + audio_help
     
-        # --- Load as AudioSegment and combine ---
-        audio_question = AudioSegment.from_file(question_fp, format="mp3")
-        audio_help = AudioSegment.from_file(help_fp, format="mp3")
-        combined = audio_question + audio_help
+        # # --- Export combined to BytesIO ---
+        # combined_buffer = io.BytesIO()
+        # combined.export(combined_buffer, format="mp3")
+        # combined_buffer.seek(0)
     
-        # --- Export combined to BytesIO ---
-        combined_buffer = io.BytesIO()
-        combined.export(combined_buffer, format="mp3")
-        combined_buffer.seek(0)
-    
-        # --- Play in Streamlit ---
-        st.audio(combined_buffer, format='audio/mp3')
-        '''
+        # # --- Play in Streamlit ---
+        # st.audio(combined_buffer, format='audio/mp3')
+        
     else:
         print ("single syllable")
-        '''
-        question_fp = io.BytesIO()
-        question.write_to_fp(question_fp)
-        question_fp.seek(0)
-        st.audio(question_fp, format='audio/mp3')
-        '''
+        
+        # question_fp = io.BytesIO()
+        # question.write_to_fp(question_fp)
+        # question_fp.seek(0)
+        # st.audio(question_fp, format='audio/mp3')
+        
 
     st.write("Spell the word by tapping letters:")
     # query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
@@ -247,6 +247,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
