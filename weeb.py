@@ -203,7 +203,6 @@ else:
         key="hidden_input", 
         type="password",  # hides text, disables autocomplete on mobile
         autocomplete="new-password", 
-        spellcheck=False, 
         help="Your typing will appear below"
     )
 
@@ -341,6 +340,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
