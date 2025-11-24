@@ -132,11 +132,11 @@ else:
         # 
         # --- Save to BytesIO ---
         question_fp = io.BytesIO()
-        tts.write_to_fp(question_fp)
+        question.write_to_fp(question_fp)
         quest=question_fp.seek(0)
 
         help_fp = io.BytesIO()
-        tts.write_to_fp(help_fp)
+        helptext.write_to_fp(help_fp)
         hell=help_fp.seek(0)
         
         
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
