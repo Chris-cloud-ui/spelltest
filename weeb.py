@@ -169,6 +169,21 @@ else:
     if "answer" not in st.session_state:
         st.session_state.answer = ""
     # st.write("Your spelling:", st.session_state.answer)
+
+    # Function to check the answer
+    def submit_answer():
+        current_word = st.session_state.current_word
+        if st.session_state.answer.upper() == current_word.upper():
+            st.success("🌟 Correct!")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ Not quite. It was **{current_word}**.")
+        st.session_state.answer = ""  # reset input
+        st.session_state.index += 1
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
+
+    
     user_input = st.text_input(
         "Type the word:", 
         value="", 
@@ -186,18 +201,7 @@ else:
     if "answer" not in st.session_state:
         st.session_state.answer = ""
     
-    # Function to check the answer
-    def submit_answer():
-        current_word = st.session_state.current_word
-        if st.session_state.answer.upper() == current_word.upper():
-            st.success("🌟 Correct!")
-            st.session_state.score += 1
-        else:
-            st.error(f"❌ Not quite. It was **{current_word}**.")
-        st.session_state.answer = ""  # reset input
-        st.session_state.index += 1
-        if st.session_state.index >= len(st.session_state.words):
-            st.session_state.done = True
+    
     
     # Set current word in session_state so the callback can access it
     st.session_state.current_word = st.session_state.words[st.session_state.index]["word"]
@@ -317,6 +321,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
