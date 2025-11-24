@@ -144,7 +144,7 @@ else:
 
     st.write("Spell the word by tapping letters:")
 
-    # Current answer
+    # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
     
@@ -152,20 +152,38 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
     
-    # Keyboard layout: 3 rows (like a simplified keyboard)
-    rows = ["ABCDEF", "GHIJKL", "MNOPQR", "STUVWX", "YZ"]
+    # Keyboard layout
+    keyboard_rows = [
+        ["A","B","C","D","E","F"],
+        ["G","H","I","J","K","L"],
+        ["M","N","O","P","Q","R"],
+        ["S","T","U","V","W","X"],
+        ["Y","Z"]
+    ]
     
-    for row in rows:
+    # Display buttons row by row
+    for row in keyboard_rows:
         cols = st.columns(len(row))
-        for i, letter in enumerate(row):
-            if cols[i].button(letter):
+        for col, letter in zip(cols, row):
+            if col.button(letter):
                 add_letter(letter)
     
-    st.write("Your spelling:", st.session_state.answer)
-    
-    # Optional: Backspace button
-    if st.button("⬅️ Backspace"):
+    # Backspace
+    cols = st.columns([1,1,1,1])
+    if cols[0].button("⬅️ Backspace"):
         st.session_state.answer = st.session_state.answer[:-1]
+    if cols[1].button("Submit"):
+        current_word = "CAT"
+        misspellings = ["KAT", "CATT"]
+        allowed = [current_word.upper()] + [m.upper() for m in misspellings]
+        if st.session_state.answer.upper() in allowed:
+            st.success("Correct!")
+        else:
+            st.error(f"Incorrect. The word was: {current_word}")
+        st.session_state.answer = ""  # reset
+    
+    # Show current spelling
+    st.write("Your spelling:", st.session_state.answer)
 
     if answer:
         if answer.lower().strip() == current_word.lower():
@@ -198,6 +216,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
