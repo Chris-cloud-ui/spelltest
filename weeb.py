@@ -195,6 +195,9 @@ else:
     # Initialize session state
     if "answer" not in st.session_state:
         st.session_state.answer = ""
+
+    def update_answer():
+        st.session_state.answer = st.session_state.user_input
     
     # Password input to block mobile autocomplete
     user_input = st.text_input(
@@ -203,13 +206,14 @@ else:
         key="hidden_input", 
         type="password",  # hides text, disables autocomplete on mobile
         autocomplete="new-password", 
+        on_change=update_answer,
         help="Your typing will appear below"
     )
 
     # Update session state
-    if user_input:
-        st.write(user_input)
-        st.session_state.answer = user_input
+    #if user_input:
+    #    st.write(user_input)
+    #    st.session_state.answer = user_input
     
     # Label showing typed letters
     st.markdown(f"**You typed:** {st.session_state.answer}")
@@ -341,6 +345,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
