@@ -184,17 +184,7 @@ else:
     
     components.html(html, height=150)
     
-    typed = st_javascript("localStorage.getItem('typedAnswer');")
     
-    if typed and typed != "null":
-        st.write("You typed:", typed)
-        # Clear after reading
-        st_javascript("localStorage.setItem('typedAnswer','');")
-
-
-    
-    if "keyboard_letter" not in st.session_state:
-        st.session_state.keyboard_letter = ""
 
 
     keyboard_html = """
@@ -229,9 +219,6 @@ else:
     return localStorage.getItem("lastLetter");
     """)
     
-    if clicked:
-        st_javascript("localStorage.setItem('lastLetter','');")    
-
     
 
     #letter = st_javascript("window.clicked")
@@ -307,6 +294,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
