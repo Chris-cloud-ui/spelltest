@@ -9,14 +9,6 @@ import pyphen
 import io
 import whisper
 import streamlit.components.v1 as components
-import glob
-
-# ------------------ DELETE OLD MP3 FILES ------------------
-for mp3_file in glob.glob("*.mp3"):
-    try:
-        os.remove(mp3_file)
-    except Exception as e:
-        print(f"Error deleting {mp3_file}: {e}")
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -120,6 +112,8 @@ else:
 
     if len(syllables)>1:
         help_text = " ".join(syllables)
+        print (help_text)
+        '''
         helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
     
         # --- Save to BytesIO ---
@@ -142,11 +136,15 @@ else:
     
         # --- Play in Streamlit ---
         st.audio(combined_buffer, format='audio/mp3')
+        '''
     else:
+        print ("single syllable")
+        '''
         question_fp = io.BytesIO()
         question.write_to_fp(question_fp)
         question_fp.seek(0)
         st.audio(question_fp, format='audio/mp3')
+        '''
 
     st.write("Spell the word by tapping letters:")
     # query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
@@ -249,6 +247,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
