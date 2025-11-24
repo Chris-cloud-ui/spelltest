@@ -2,3 +2,4 @@ streamlit
 gtts
 pyyaml
 pyphen
+pydub 
