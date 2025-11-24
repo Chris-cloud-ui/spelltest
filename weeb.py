@@ -143,7 +143,7 @@ else:
         st.audio(f"{current_word}.mp3")
 
     st.write("Spell the word by tapping letters:")
-    query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
+    # query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
     # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
@@ -152,15 +152,6 @@ else:
     def add_letter(letter):
         st.session_state.answer += letter
 
-
-    col1, col2, col3 = st.columns([0.33,0.33,1])
-
-    with col1:
-        st.button('AA')
-    with col2:
-        st.button('BB')
-    with col3:
-        st.button('CC')
     # --- Row 1 ---
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     if c1.button("A"): add_letter("A")
@@ -224,7 +215,7 @@ else:
     
     # Show current spelling
     st.write("Your spelling:", st.session_state.answer)
-    st.session_state.answer = ""
+    #st.session_state.answer = ""
     
 
     if st.session_state.index >= len(st.session_state.words):
@@ -252,6 +243,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
