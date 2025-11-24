@@ -187,16 +187,23 @@ else:
         <button onclick="sendLetter('SUBMIT')" style="flex:1 0 45%; padding:12px; background:#9f9;">Submit</button>
     </div>
     """
-    
-    clicked = st_javascript("""
-    return await new Promise((resolve) => {
-        window.addEventListener("message", (event) => {
-            resolve(event.data.letter);
-        }, { once: true });
-    });
-    """)
 
     components.html(keyboard_html, height=500)
+    
+    # --- LISTEN FOR POSTMESSAGES ---
+    clicked = st_javascript("""
+    var value;
+    
+    window.addEventListener("message", (event) => {
+        if (event.data.letter) {
+            value = event.data.letter;
+        }
+    });
+    
+    return value;
+    """)
+    
+        
 
     
 
@@ -205,9 +212,21 @@ else:
         if clicked == "BACK":
             st.session_state.answer = st.session_state.answer[:-1]
         elif clicked == "SUBMIT":
-            st.success(f"Submitted: {st.session_state.answer}")
+            if st.session_state.answer.upper() == current_word.upper():
+                st.success("🌟 Correct!")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Not quite. It was **{current_word}**.")
+            
             st.session_state.answer = ""
-        else:
+            st.session_state.index += 1
+            
+            if st.session_state.index >= len(st.session_state.words):
+                st.session_state.done = True
+    
+            st.rerun()
+    
+        else:  # a letter
             st.session_state.answer += clicked
 
     st.write("Your spelling:", st.session_state.answer)
@@ -269,6 +288,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
