@@ -171,23 +171,28 @@ else:
     # st.write("Your spelling:", st.session_state.answer)
 
     # Function to check the answer
-    def submit_answer():
-        user_word = st.session_state.user_input  # grab text_input value
+    if "score" not in st.session_state:
+        st.session_state.score = 0
+    
+    if "answer" not in st.session_state:
+        st.session_state.answer = ""
+    
+    with st.form(key="spell_form"):
+        user_word = st.text_input(
+            "Type the word:", 
+            value="", 
+            placeholder="Type here", 
+            autocomplete="off"
+        )
+        submitted = st.form_submit_button("Submit")
+    
+    if submitted:
         if user_word.upper() == current_word.upper():
             st.success("🌟 Correct!")
             st.session_state.score += 1
         else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
-        
-
-    
-    user_input = st.text_input(
-        "Type the word:", 
-        key="user_input", 
-        on_change=submit_answer, 
-        help="Your typing will appear below", 
-        autocomplete="off"
-    )
+        st.session_state.answer = user_word
     st.write("Your spelling:", st.session_state.answer)
     # Update session state
     #if user_input:
@@ -322,6 +327,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
