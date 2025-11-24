@@ -11,18 +11,12 @@ import whisper
 import streamlit.components.v1 as components
 import glob
 
-folder = "."  # current folder, change if needed
-
-# Find all .mp3 files
-mp3_files = glob.glob(os.path.join(folder, "*.mp3"))
-
-# Delete them
-for file in mp3_files:
+# ------------------ DELETE OLD MP3 FILES ------------------
+for mp3_file in glob.glob("*.mp3"):
     try:
-        os.remove(file)
-        print(f"Deleted: {file}")
+        os.remove(mp3_file)
     except Exception as e:
-        print(f"Error deleting {file}: {e}")
+        print(f"Error deleting {mp3_file}: {e}")
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -125,36 +119,34 @@ else:
     # question.save(question_file)
 
     if len(syllables)>1:
-        help = ""
-
-        for i in syllables:
-            help = help + i + " "
-        helptext = gTTS(text=help, lang='en', tld='co.uk', slow=True)
-        # helptext_file = f"{current_word}_help.mp3"
-        # helptext.save(helptext_file)
-
-        # -----------------------------
-        # Combine both audio files
-        # -----------------------------
-        # audio_question = AudioSegment.from_file(question_file)
-        # audio_help = AudioSegment.from_file(help_file)
-        
-        # combined = audio_question + audio_help
-        # combined_file = f"{current_word}_combined.mp3"
-        #  combined.export(combined_file, format="mp3")
-
-        combined_audio = io.BytesIO()
-        question.write_to_fp(combined_audio)
-        helptext.write_to_fp(combined_audio)
-        combined_audio.seek(0)
-
-        st.audio(combined_audio, format='audio/mp3')
-        
-        # Use the combined file
-        # st.audio(combined_file)
+        help_text = " ".join(syllables)
+        helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
+    
+        # --- Save to BytesIO ---
+        question_fp = io.BytesIO()
+        help_fp = io.BytesIO()
+        question.write_to_fp(question_fp)
+        helptext.write_to_fp(help_fp)
+        question_fp.seek(0)
+        help_fp.seek(0)
+    
+        # --- Load as AudioSegment and combine ---
+        audio_question = AudioSegment.from_file(question_fp, format="mp3")
+        audio_help = AudioSegment.from_file(help_fp, format="mp3")
+        combined = audio_question + audio_help
+    
+        # --- Export combined to BytesIO ---
+        combined_buffer = io.BytesIO()
+        combined.export(combined_buffer, format="mp3")
+        combined_buffer.seek(0)
+    
+        # --- Play in Streamlit ---
+        st.audio(combined_buffer, format='audio/mp3')
     else:
-        question.save(f"{current_word}.mp3")
-        st.audio(f"{current_word}.mp3")
+        question_fp = io.BytesIO()
+        question.write_to_fp(question_fp)
+        question_fp.seek(0)
+        st.audio(question_fp, format='audio/mp3')
 
     st.write("Spell the word by tapping letters:")
     # query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
@@ -257,6 +249,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
