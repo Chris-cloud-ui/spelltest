@@ -168,7 +168,7 @@ else:
     # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
-
+    st.write("Your spelling:", st.session_state.answer)
     user_input = st.text_input(
         "Type the word:", 
         value="", 
@@ -246,7 +246,7 @@ else:
     #    else:  # a letter
     #        st.session_state.answer += clicked
 
-    st.write("Your spelling:", st.session_state.answer)
+    
     
 
 
@@ -297,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
