@@ -9,6 +9,20 @@ import pyphen
 import io
 import whisper
 import streamlit.components.v1 as components
+import glob
+
+folder = "."  # current folder, change if needed
+
+# Find all .mp3 files
+mp3_files = glob.glob(os.path.join(folder, "*.mp3"))
+
+# Delete them
+for file in mp3_files:
+    try:
+        os.remove(file)
+        print(f"Deleted: {file}")
+    except Exception as e:
+        print(f"Error deleting {file}: {e}")
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -243,6 +257,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
