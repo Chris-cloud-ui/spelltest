@@ -11,6 +11,20 @@ import whisper
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 
+st_javascript("""
+if (!window.hasKeyboardListener) {
+    window.hasKeyboardListener = true;
+    window.lastLetter = null;
+
+    window.addEventListener("message", (event) => {
+        if (event.data.letter) {
+            window.lastLetter = event.data.letter;
+            localStorage.setItem("lastLetter", event.data.letter);
+        }
+    });
+}
+""")
+
 st.set_page_config(
     page_title="Slay Spells",
     page_icon="🧙‍♀️",
@@ -192,15 +206,7 @@ else:
     
     # --- LISTEN FOR POSTMESSAGES ---
     clicked = st_javascript("""
-    var value;
-    
-    window.addEventListener("message", (event) => {
-        if (event.data.letter) {
-            value = event.data.letter;
-        }
-    });
-    
-    return value;
+    return localStorage.getItem("lastLetter");
     """)
     
         
@@ -280,6 +286,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
