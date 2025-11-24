@@ -91,9 +91,9 @@ else:
 
     st.markdown(f"### 🔊 Listen and spell the word:")
     # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
-    st.write(f"Spell: {word}")
-    tts = gTTS(text=word, lang='en')
-    audio_file = f"{word}.mp3"
+    st.write(f"Spell: {current_word}")
+    tts = gTTS(text=current_word, lang='en')
+    audio_file = f"{current_word}.mp3"
     tts.save(audio_file)
     st.audio(audio_file)
     answer = st.text_input("Cast your spell here:")
@@ -126,6 +126,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
