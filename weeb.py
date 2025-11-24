@@ -164,8 +164,9 @@ else:
     # Display buttons row by row
     for row in keyboard_rows:
         cols = st.columns(len(row))
-        for col, letter in zip(cols, row):
-            if col.button(letter):
+        for i, letter in enumerate(row):
+            # Place a button in each column
+            if cols[i].button(letter):
                 add_letter(letter)
     
     # Backspace
@@ -207,6 +208,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
