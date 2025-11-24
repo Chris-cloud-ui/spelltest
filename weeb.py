@@ -10,6 +10,7 @@ import io
 import whisper
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
+from random import randint
 
 st_javascript("""
 if (!window.hasKeyboardListener) {
@@ -172,6 +173,26 @@ else:
         st.write("al")
         st.session_state.answer += letter
 
+    field_id = f"spellinput_{randint(0,1000000)}"  # random ID each render
+    html = f"""
+    <input id="{field_id}"
+           type="text"
+           name="no_autocomplete_{randint(0,1000000)}"
+           inputmode="text"
+           autocomplete="off"
+           autocorrect="off"
+           autocapitalize="off"
+           spellcheck="false"
+           style="font-size:24px; padding:10px; width:90%;">
+    
+    <button onclick="
+        const val = document.getElementById('{field_id}').value;
+        window.parent.postMessage({{answer: val}}, '*');
+    " style="margin-top:10px; padding:10px; font-size:20px;">
+        Submit
+    </button>
+    """
+    
 
     # Install message listener
     st_javascript("""
@@ -328,5 +349,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
