@@ -173,30 +173,21 @@ else:
     if cols[0].button("⬅️ Backspace"):
         st.session_state.answer = st.session_state.answer[:-1]
     if cols[1].button("Submit"):
-        current_word = "CAT"
-        misspellings = ["KAT", "CATT"]
-        allowed = [current_word.upper()] + [m.upper() for m in misspellings]
-        if st.session_state.answer.upper() in allowed:
-            st.success("Correct!")
-        else:
-            st.error(f"Incorrect. The word was: {current_word}")
-        st.session_state.answer = ""  # reset
-    
-    # Show current spelling
-    st.write("Your spelling:", st.session_state.answer)
-
-    if answer:
-        if answer.lower().strip() == current_word.lower():
+        if st.session_state.answer.upper() == current_word.upper():
             st.success("🌟 Correct!")
             st.session_state.score += 1
         else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
-
+        st.session_state.answer = ""  # reset
         st.session_state.index += 1
     
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
     
+    # Show current spelling
+    st.write("Your spelling:", st.session_state.answer)
+
+   
     # --- Optional: Button to show next word ---
     if st.button("Next Word"):
         st.experimental_rerun()
@@ -216,6 +207,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
