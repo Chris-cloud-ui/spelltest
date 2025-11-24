@@ -1,8 +1,19 @@
-grade1:
-  - cat
-  - dog
-  - sun
-  - hat
+thisweek:
+  - handbag
+  - handsome
+  - handkerchief
+  - government
+  - environment
+  - castle
+  - raspberry
+  - sign
+  - cupboard
+  - February
+  - wrapper
+  - answer
+  - doubt
+  - crumb
+  - thumb
 
 grade2:
   - elephant
@@ -11,6 +22,6 @@ grade2:
   - butterfly
 
 custom:
-  - amazing
-  - rainbow
-  - astronaut
+  - accompany
+  - criticise
+
