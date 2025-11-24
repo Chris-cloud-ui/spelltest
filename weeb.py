@@ -89,7 +89,8 @@ if st.session_state.done:
     st.balloons()
 
 else:
-    current_word = st.session_state.words[st.session_state.index]
+    current_word_details = st.session_state.words[st.session_state.index]
+    current_word=current_word_details.word
 
     st.markdown(f"### 🔊 Listen and spell the word:")
     # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
@@ -98,7 +99,9 @@ else:
     dic = pyphen.Pyphen(lang='en')
 
     syllables = dic.inserted(current_word).split('-')
-    st.write(f"Spell: {syllables}")
+    # st.write(f"Spell: {syllables}")
+    if "syll" in current_word_details:
+        syllables = current_word_details["syll"]
 
     question = gTTS(text="Spell: " + current_word, lang='en', tld='co.uk', slow=False)
     question_file = f"{current_word}.mp3"
@@ -159,6 +162,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
