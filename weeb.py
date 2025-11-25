@@ -220,7 +220,7 @@ else:
                 else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
-                    st.toast("It was " + current_word, icon="❌")
+                    st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
@@ -303,6 +303,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
