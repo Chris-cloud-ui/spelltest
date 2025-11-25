@@ -66,6 +66,12 @@ if "current_mode" not in st.session_state:
 if "audio_file" not in st.session_state:
     st.session_state.audio_file = None
 
+# Multiple choice specific
+if "mc_options" not in st.session_state:
+    st.session_state.mc_options = None
+if "mc_selection" not in st.session_state:
+    st.session_state.mc_selection = None
+
 # ------------------ HEADER ------------------------
 st.markdown("""
     <h1 style='text-align:center; color:#ff66a6;'>
@@ -250,6 +256,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
