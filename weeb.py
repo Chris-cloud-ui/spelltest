@@ -170,15 +170,14 @@ else:
                 st.session_state.user_word_value = user_word  # Keep visible
 
         else:
-            # Show Next Word button outside form
-            if st.button("Next Word"):
-                st.session_state.index += 1
-                st.session_state.current_mode = None
-                st.session_state.submitted = False
-                st.session_state.user_word_value = ""
-                if st.session_state.index >= len(st.session_state.words):
-                    st.session_state.done = True
-                st.rerun()
+            
+            st.session_state.index += 1
+            st.session_state.current_mode = None
+            st.session_state.submitted = False
+            st.session_state.user_word_value = ""
+            if st.session_state.index >= len(st.session_state.words):
+                st.session_state.done = True
+            st.rerun()
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
@@ -243,6 +242,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
