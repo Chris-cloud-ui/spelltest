@@ -8,6 +8,7 @@ from gtts import gTTS
 import pyphen
 import io
 import tempfile
+from streamlit_javascript import st_javascript
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -245,6 +246,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
