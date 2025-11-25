@@ -12,20 +12,6 @@ import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 from random import randint
 
-st_javascript("""
-if (!window.hasKeyboardListener) {
-    window.hasKeyboardListener = true;
-    window.lastLetter = null;
-
-    window.addEventListener("message", (event) => {
-        if (event.data.letter) {
-            window.lastLetter = event.data.letter;
-            localStorage.setItem("lastLetter", event.data.letter);
-        }
-    });
-}
-""")
-
 st.set_page_config(
     page_title="Slay Spells",
     page_icon="🧙‍♀️",
@@ -112,82 +98,46 @@ else:
     current_word=current_word_details["word"]
 
     st.markdown(f"### 🔊 Listen and spell the word:")
-    # st.audio(f"https://api.streamelements.com/kappa/v2/speech?voice=Brian&text={current_word}")
-    #  st.write(f"Spell: {current_word}")
 
     dic = pyphen.Pyphen(lang='en')
 
     syllables = dic.inserted(current_word).split('-')
-    # st.write(f"Spell: {syllables}")
     if "syll" in current_word_details:
         syllables = current_word_details["syll"]
 
-    tts = gTTS("Can you spell " + current_word + " ", lang="en", tld="co.uk", slow=False)
-    tts.save("newtemp.mp3")
-    result = AudioSegment.from_mp3("newtemp.mp3")
-    if len(syllables)>1:
-        
-        for s in syllables:
-            tts = gTTS(s, lang="en", tld="co.uk", slow=True)
-            tts.save("newtemp.mp3")
-            audio = AudioSegment.from_mp3("newtemp.mp3")
-            result += audio + silence
+    base_tts = gTTS(f"Can you spell {current_word}", lang="en", tld="co.uk", slow=False)
 
-    result.export(temp_filename, format="mp3")
-    os.remove("newtemp.mp3")
+	# Convert to AudioSegment from bytes
+	base_fp = io.BytesIO()
+	base_tts.write_to_fp(base_fp)
+	base_fp.seek(0)
+	result = AudioSegment.from_file(base_fp, format="mp3")
 
-    display(Audio(temp_filename, autoplay=True))
+	# Add slow syllables
+	if len(syllables) > 1:
+		silence = Silence(duration=400).to_audio_segment()
+		for s in syllables:
+			syl_tts = gTTS(s, lang="en", tld="co.uk", slow=True)
+			syl_fp = io.BytesIO()
+			syl_tts.write_to_fp(syl_fp)
+			syl_fp.seek(0)
+
+			audio = AudioSegment.from_file(syl_fp, format="mp3")
+			result += silence + audio
+
+	# Save the final combined audio to a temporary mp3 file
+	with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+		temp_filename = tmp.name
+		result.export(temp_filename, format="mp3")
+
+	# Play via Streamlit
+	st.audio(temp_filename)
 
 
 
-    
-    question = gTTS(text="Spell: " + current_word, lang='en', tld='co.uk', slow=False)
-    # question_file = f"{current_word}.mp3"
-    # question.save(question_file)
-    if len(syllables)>1:
-        help_text = " ".join(syllables)
-        
-        #helptext = gTTS(text=help_text, lang='en', tld='co.uk', slow=True)
-        # 
-        # --- Save to BytesIO ---
-        #question_fp = io.BytesIO()
-        #question.write_to_fp(question_fp)
-        #quest=question_fp.seek(0)
-
-        #help_fp = io.BytesIO()
-        #helptext.write_to_fp(help_fp)
-        #hell=help_fp.seek(0)
-        
-        
-        #help_fp.seek(0)
-    
-        # # --- Load as AudioSegment and combine ---
-        #audio_question = AudioSegment.from_file(quest, format="mp3")
-        #audio_help = AudioSegment.from_file(hell, format="mp3")
-        #combined = audio_question + audio_help
-    
-        # --- Export combined to BytesIO ---
-        #combined_buffer = io.BytesIO()
-        #combined.export(combined_buffer, format="mp3")
-        #combined_buffer.seek(0)
-    
-        # --- Play in Streamlit ---
-        #st.audio(combined_buffer, format='audio/mp3')
-        
-    else:
-        st.write(current_word)
-        #question_fp = io.BytesIO()
-        #question.save(question_fp)
-        #question_fp.seek(0)
-        #st.audio(question_fp, format='audio/mp3')
-        
-
-    # st.write("Spell the word by tapping letters:")
-    # query = st.text_input("Enter your query:", placeholder="Query...", autocomplete="off")
     # Initialize answer
     if "answer" not in st.session_state:
         st.session_state.answer = ""
-    # st.write("Your spelling:", st.session_state.answer)
 
     # Function to check the answer
     if "score" not in st.session_state:
@@ -213,14 +163,7 @@ else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
         st.session_state.answer = user_word
     st.write("Your spelling:", st.session_state.answer)
-    # Update session state
-    #if user_input:
-    #    st.session_state.answer = user_input
     
-    # Label showing typed letters
-    # st.markdown(f"**You typed:** {st.session_state.answer}")
-    if "answer" not in st.session_state:
-        st.session_state.answer = ""
     
     
     
@@ -228,87 +171,6 @@ else:
     st.session_state.current_word = st.session_state.words[st.session_state.index]["word"]
 
 
-    
-    # components.html(html, height=150)
-    
-    
-
-
-    #keyboard_html = """
-    #<script>
-    #function sendLetter(letter) {
-    #    window.top.postMessage({letter: letter}, "*");
-    #}
-    #</script>
-    
-    #<div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:400px;">
-    #"""
-    
-    # Add letter buttons
-    #for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-    #    keyboard_html += f"""
-    #        <button onclick="sendLetter('{c}')" 
-    #            style="flex:1 0 20%; padding:12px; font-size:20px;">
-    #            {c}
-    #        </button>
-    #    """
-    
-    #keyboard_html += """
-    #    <button onclick="sendLetter('BACK')" style="flex:1 0 45%; padding:12px; background:#f88;">⬅️ Backspace</button>
-    #    <button onclick="sendLetter('SUBMIT')" style="flex:1 0 45%; padding:12px; background:#9f9;">Submit</button>
-    #</div>
-    #"""
-
-    #components.html(keyboard_html, height=500)
-    
-    # --- LISTEN FOR POSTMESSAGES ---
-    #clicked = st_javascript("""
-    #return localStorage.getItem("lastLetter");
-    #""")
-    
-    
-
-    #letter = st_javascript("window.clicked")
-    #if clicked:
-    #     if clicked == "BACK":
-    #        st.session_state.answer = st.session_state.answer[:-1]
-    #    elif clicked == "SUBMIT":
-    #        if st.session_state.answer.upper() == current_word.upper():
-    #            st.success("🌟 Correct!")
-    #            st.session_state.score += 1
-    #        else:
-    #            st.error(f"❌ Not quite. It was **{current_word}**.")
-    #        
-    #        st.session_state.answer = ""
-    #        st.session_state.index += 1
-    #        
-    #        if st.session_state.index >= len(st.session_state.words):
-    #            st.session_state.done = True
-   
-    #        st.rerun()
-    #
-    #    else:  # a letter
-    #        st.session_state.answer += clicked
-
-    
-    
-
-
-    # Backspace
-    # cols = st.columns([1,1,1,1])
-    # if cols[0].button("⬅️ Backspace"):
-    #     st.session_state.answer = st.session_state.answer[:-1]
-    # if cols[1].button("Submit"):
-    #    if st.session_state.answer.upper() == current_word.upper():
-    #        st.success("🌟 Correct!")
-    #        st.session_state.score += 1
-    #    else:
-    #        st.error(f"❌ Not quite. It was **{current_word}**.")
-    #    st.session_state.answer = ""  # reset
-    #    st.session_state.index += 1
-    
-    #    if st.session_state.index >= len(st.session_state.words):
-    #        st.session_state.done = True
 
     if st.button("Next Word"):
         st.session_state.answer = ""  # reset input
@@ -316,20 +178,13 @@ else:
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
         st.rerun()  # refresh the app with next word
-       
-    
-    # Show current spelling
-    # st.write("Your spelling:", st.session_state.answer)
-    #st.session_state.answer = ""
-    
+
 
     if st.session_state.index >= len(st.session_state.words):
         st.success("🎉 All words completed! Restarting...")
         st.session_state.current_word_index = 0
         random.shuffle(st.session_state.words)
-    
-   
-    # --- Optional: Button to show next word ---
+
     
 
 # ------------------ HISTORY PANEL ----------------------
@@ -346,7 +201,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
-
 
 
 
