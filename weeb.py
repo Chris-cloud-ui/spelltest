@@ -2,12 +2,11 @@ import streamlit as st
 import yaml
 import json
 import os
-from datetime import datetime
 import random
+from datetime import datetime
 from gtts import gTTS
-import io
-import tempfile
 import pyphen
+import io
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -43,42 +42,52 @@ if st.sidebar.button("🔄 Reset Test"):
     st.rerun()
 
 # ------------------ SESSION STATE INIT ------------------
-if "index" not in st.session_state:
-    st.session_state.index = 0
-if "score" not in st.session_state:
-    st.session_state.score = 0
-if "done" not in st.session_state:
-    st.session_state.done = False
+if "index" not in st.session_state: st.session_state.index = 0
+if "score" not in st.session_state: st.session_state.score = 0
+if "done" not in st.session_state: st.session_state.done = False
 if "words" not in st.session_state:
     words = WORD_LISTS[list_choice][:]
-    if shuffle:
-        random.shuffle(words)
+    if shuffle: random.shuffle(words)
     st.session_state.words = words
-if "mode" not in st.session_state:
-    st.session_state.mode = None  # "text" or "mc"
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-if "mc_submitted" not in st.session_state:
-    st.session_state.mc_submitted = None
-if "mc_clicked" not in st.session_state:
-    st.session_state.mc_clicked = None
+if "submitted" not in st.session_state: st.session_state.submitted = False
+if "answer" not in st.session_state: st.session_state.answer = ""
 
 # ------------------ HEADER ------------------------
 st.markdown("""
-    <h1 style='text-align:center; color:#ff66a6;'>
-        🧙‍♀️ Slay Spells
-    </h1>
-    <p style='text-align:center; font-size:20px; color:#555;'>
-        Practise your spells
-    </p>
+<h1 style='text-align:center; color:#ff66a6;'>🧙‍♀️ Slay Spells</h1>
+<p style='text-align:center; font-size:20px; color:#555;'>Practise your spells</p>
 """, unsafe_allow_html=True)
+
+# ------------------ AUDIO HELPERS ------------------
+AUDIO_DIR = "audio"
+os.makedirs(AUDIO_DIR, exist_ok=True)
+
+def get_audio_for_word(word, syllables=None):
+    safe_name = word.replace(" ", "_").lower()
+    filename = os.path.join(AUDIO_DIR, f"{safe_name}.mp3")
+    if os.path.exists(filename):
+        return filename
+    # Generate MP3
+    final_bytes = b""
+    def tts_bytes(text, slow=False):
+        fp = io.BytesIO()
+        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()
+    final_bytes += tts_bytes(f"Can you spell {word}?")
+    if syllables and len(syllables) > 1:
+        for s in syllables:
+            final_bytes += tts_bytes(s, slow=True)
+    with open(filename, "wb") as f:
+        f.write(final_bytes)
+    return filename
 
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
     total = len(st.session_state.words)
     score = st.session_state.score
     st.success(f"🎉 All done! You scored **{score} / {total}**")
-
     save_history({
         "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "list": list_choice,
@@ -86,103 +95,77 @@ if st.session_state.done:
         "total": total
     })
     st.balloons()
-
 else:
-    current_word_details = st.session_state.words[st.session_state.index]
-    current_word = current_word_details["word"]
+    word_entry = st.session_state.words[st.session_state.index]
+    current_word = word_entry["word"]
 
-    # Decide mode if not already
-    if st.session_state.mode is None:
-        if "spell" in current_word_details and random.choice([True, False]):
-            st.session_state.mode = "mc"
-        else:
-            st.session_state.mode = "text"
+    # Decide randomly: text input or multiple choice
+    is_multiple_choice = "spell" in word_entry and random.choice([True, False])
 
-    # ---------------- TEXT INPUT MODE ----------------
-    if st.session_state.mode == "text":
-        st.markdown(f"### 🔊 Listen and spell the word:")
+    if is_multiple_choice:
+        st.markdown("❓ **Choose the correct spelling:**")
+        options = [current_word] + word_entry["spell"]
+        random.shuffle(options)
 
-        dic = pyphen.Pyphen(lang='en')
-        syllables = dic.inserted(current_word).split('-')
-        if "syll" in current_word_details:
-            syllables = current_word_details["syll"]
+        # Track selected button
+        if "selected_option" not in st.session_state: st.session_state.selected_option = None
 
-        # Generate audio
-        def tts_bytes(text, slow=False):
-            fp = io.BytesIO()
-            gTTS(text=text, lang="en", tld="co.uk", slow=slow).write_to_fp(fp)
-            fp.seek(0)
-            return fp.read()
-
-        final_mp3 = tts_bytes(f"Can you spell {current_word}?")
-        if len(syllables) > 1:
-            for s in syllables:
-                final_mp3 += tts_bytes(s, slow=True)
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-            tmp.write(final_mp3)
-            temp_filename = tmp.name
-        st.audio(temp_filename)
-
-        # Text input form
-        with st.form(key="spell_form"):
-            user_word = st.text_input(
-                "Type the word:",
-                value="",
-                placeholder="Type here",
-                autocomplete="off",
-                key=f"user_word_{st.session_state.index}"
-            )
-            button_label = "Next Word" if st.session_state.submitted else "Submit"
-            submitted = st.form_submit_button(button_label)
-
-        if submitted:
-            if not st.session_state.submitted:
-                if user_word.upper() == current_word.upper():
-                    st.success("🌟 Correct!")
-                    st.session_state.score += 1
+        # Show buttons
+        for i, opt in enumerate(options):
+            if st.session_state.selected_option == i:
+                if opt == current_word:
+                    style = "background-color:green;color:white;"
+                    label = f"✔️ {opt}"
                 else:
-                    st.error(f"❌ Not quite. It was **{current_word}**.")
-                st.session_state.submitted = True
+                    style = "background-color:red;color:white;"
+                    label = f"❌ {opt}"
             else:
+                style = "width:100%;padding:12px;margin-bottom:4px;"
+                label = opt
+            clicked = st.button(label, key=f"mc_{i}", help=None)
+            if clicked and st.session_state.selected_option is None:
+                st.session_state.selected_option = i
+                if options[i] == current_word:
+                    st.session_state.score += 1
+        # Move to next word
+        if st.session_state.selected_option is not None:
+            if st.button("Next Word"):
+                st.session_state.selected_option = None
                 st.session_state.submitted = False
-                st.session_state.mode = None
                 st.session_state.index += 1
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
                 st.rerun()
 
-    # ---------------- MULTIPLE CHOICE MODE ----------------
-    elif st.session_state.mode == "mc":
-        st.markdown("### ❓ Choose the correct spelling:")
+    else:
+        # TEXT INPUT MODE
+        dic = pyphen.Pyphen(lang="en")
+        syllables = dic.inserted(current_word).split("-")
+        if "syll" in word_entry: syllables = word_entry["syll"]
+        mp3_file = get_audio_for_word(current_word, syllables)
+        st.audio(mp3_file)
 
-        options = [current_word] + current_word_details["spell"]
-        random.shuffle(options)
+        with st.form(key="spell_form"):
+            user_word = st.text_input("Type the word:", key="user_word", placeholder="Type here", autocomplete="off")
+            button_label = "Next Word" if st.session_state.submitted else "Submit"
+            submitted = st.form_submit_button(button_label)
 
-        for opt in options:
-            if st.session_state.mc_submitted is None:
-                if st.button(opt, key=f"mc_{opt}", help="Tap to select"):
-                    st.session_state.mc_clicked = opt
-                    if opt == current_word:
-                        st.session_state.mc_submitted = "correct"
-                        st.session_state.score += 1
-                    else:
-                        st.session_state.mc_submitted = "wrong"
-            else:
-                if opt == st.session_state.mc_clicked:
-                    if st.session_state.mc_submitted == "correct":
-                        st.success(f"✅ {opt}")
-                    else:
-                        st.error(f"❌ {opt}")
+        if submitted:
+            if not st.session_state.submitted:
+                # Check answer
+                if user_word.upper() == current_word.upper():
+                    st.success("🌟 Correct!")
+                    st.session_state.score += 1
                 else:
-                    st.button(opt, key=f"mc_disabled_{opt}", disabled=True)
-
-        if st.session_state.mc_submitted:
-            if st.button("Next Word"):
+                    st.error(f"❌ Not quite. It was **{current_word}**.")
+                st.session_state.answer = user_word
+                st.session_state.submitted = True
+            else:
+                # NEXT WORD
+                st.session_state.user_word = ""  # Reset text box
+                st.session_state.submitted = False
+                st.session_state.answer = ""
                 st.session_state.index += 1
-                st.session_state.mode = None
-                st.session_state.mc_submitted = None
-                st.session_state.mc_clicked = None
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
                 st.rerun()
@@ -198,6 +181,4 @@ else:
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
             ⭐ Score: **{entry['score']} / {entry['total']}**
-            <br><br>
         """, unsafe_allow_html=True)
-
