@@ -146,6 +146,8 @@ else:
         
         if "user_word_value" not in st.session_state:
             st.session_state.user_word_value = ""
+        if "submitted" not in st.session_state:
+            st.session_state.submitted = False
             
         # Form for text input
         with st.form(key="text_form"):
@@ -242,6 +244,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
