@@ -200,7 +200,7 @@ else:
     
         # Trigger input reset for next render
         #st.session_state.reset_input = True
-        st.session_state.user_word = ""  # reset input
+        #st.session_state.user_word = ""  # reset input
         # Refresh app
         st.rerun()
     else:
@@ -224,6 +224,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
