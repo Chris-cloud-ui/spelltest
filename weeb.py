@@ -45,7 +45,7 @@ shuffle = st.sidebar.checkbox("Shuffle words", value=True)
 st.sidebar.markdown("---")
 if st.sidebar.button("🔄 Reset Test"):
     st.session_state.clear()
-    st.experimental_rerun()
+    st.rerun()
 
 # ------------------ SESSION STATE INIT ------------------
 if "index" not in st.session_state:
@@ -145,7 +145,7 @@ else:
                 st.session_state.index += 1
                 st.session_state.text_submitted = False
                 st.session_state.mode = None
-                st.experimental_rerun()
+                st.rerun()
 
     else:  # multiple choice mode
         st.markdown("### ❓ Choose the correct spelling:")
@@ -221,4 +221,5 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
