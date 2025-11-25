@@ -173,7 +173,7 @@ else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
     
         # Clear text box
-        st.session_state.user_word = ""
+        st.session_state["user_word"] = ""
     
         # Move to next word
         st.session_state.index += 1
@@ -200,4 +200,5 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
