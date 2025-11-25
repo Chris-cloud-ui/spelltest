@@ -66,6 +66,10 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+if "user_word" not in st.session_state:
+    st.session_state.user_word = ""
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
 
 # ------------------ HEADER ------------------------
 st.markdown("""
@@ -149,20 +153,42 @@ else:
     with st.form(key="spell_form"):
         user_word = st.text_input(
             "Type the word:", 
-            value="", 
+            key="user_word",     
             placeholder="Type here", 
             autocomplete="off"
         )
-        submitted = st.form_submit_button("Submit")
+        # Change caption depending on state
+        button_label = "Next Word" if st.session_state.submitted else "Submit"
+        submitted = st.form_submit_button(button_label)
     
     if submitted:
-        if user_word.upper() == current_word.upper():
-            st.success("🌟 Correct!")
-            st.session_state.score += 1
+        if not st.session_state.submitted:
+            # First click → treat as submission
+            if user_word.upper() == current_word.upper():
+                st.success("🌟 Correct!")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Not quite. It was **{current_word}**.")
+    
+            st.session_state.answer = user_word
+            st.session_state.submitted = True   # Switch button to NEXT WORD
+    
         else:
-            st.error(f"❌ Not quite. It was **{current_word}**.")
-        st.session_state.answer = user_word
-    st.write("Your spelling:", st.session_state.answer)
+            # Button now says NEXT WORD
+            st.session_state.user_word = ""
+            st.session_state.submitted = False  # Reset button label
+            st.session_state.index += 1
+    
+            if st.session_state.index >= len(st.session_state.words):
+                st.session_state.done = True
+    
+            st.rerun()   # Load the next word
+    #if user_word.upper() == current_word.upper():
+    #    st.success("🌟 Correct!")
+    #    st.session_state.score += 1
+    #else:
+    #    st.error(f"❌ Not quite. It was **{current_word}**.")
+    #st.session_state.answer = user_word
     
     
     
@@ -201,6 +227,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
