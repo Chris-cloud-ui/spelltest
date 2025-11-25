@@ -152,37 +152,24 @@ else:
         options = [current_word] + current_word_details.get("spell", [])
         random.shuffle(options)
     
-        if "mc_choice" not in st.session_state:
-            st.session_state.mc_choice = None
         if "mc_done" not in st.session_state:
             st.session_state.mc_done = False
         
-        def mc_click(option):
-            st.session_state.mc_choice = option
-            st.session_state.mc_done = True
-            if option == current_word:
-                st.session_state.score += 1
+        st.markdown("### ❓ Choose the correct spelling:")
         
-        # Render buttons with colors
-        for opt in options:
-            if st.session_state.mc_done:
-                if opt == current_word and st.session_state.mc_choice != current_word:
-                    color = "success"   # green for correct answer
-                    label = f"✅ {opt}"
-                elif opt == st.session_state.mc_choice:
-                    if opt == current_word:
-                        color = "success"
-                        label = f"✅ {opt}"
-                    else:
-                        color = "danger"
-                        label = f"❌ {opt}"
-                else:
-                    color = "primary"
-                    label = opt
-                st.button(label, key=f"mc_{opt}", disabled=True)
+        with st.form("mc_form"):
+            choice = st.radio("", options, index=0)
+            submitted = st.form_submit_button("Submit")
+        
+        if submitted and not st.session_state.mc_done:
+            st.session_state.mc_done = True
+            if choice == current_word:
+                st.success(f"✅ Correct! ({choice})")
+                # Increment score
             else:
-                if st.button(opt, key=f"mc_{opt}"):
-                    mc_click(opt)
+                st.error(f"❌ Not quite. Correct: {current_word}")
+            # Move to next word after a short delay or on next click
+            # st.session_state.index += 1
 
     # ------------------ FEEDBACK ------------------
     if st.session_state.last_result:
@@ -213,5 +200,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
