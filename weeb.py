@@ -167,7 +167,7 @@ else:
                     st.session_state.score += 1
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                st.info(st.session_state.index)
+                st.info("Current score: " + st.session_state.score + "/" + st.session_state.index)
                 st.session_state.submitted = True
                 if st.button("Next Word"):
                     st.session_state.index += 1
@@ -203,43 +203,76 @@ else:
             st.session_state.mc_selection = None
     
         # Use radio buttons inside a form
-        with st.form(key="mc_form"):
-            st.session_state.mc_selection = st.radio(
-                "", st.session_state.mc_options, index=0
-            )
-            submitted = st.form_submit_button("Submit")
-    
-        if submitted and not st.session_state.submitted:
-            # Check answer
-            selected_option = st.session_state.mc_selection
-            if selected_option == correct:
-                st.success("🌟 Correct!")
-                st.session_state.score += 1
-            else:
-                st.error("❌ It was " + current_word)
-            st.session_state.submitted = True
-            if st.button("Next Word"):
-                #st.session_state.index += 1
-                st.session_state.current_mode = None
-                #st.session_state.submitted = False
-                st.session_state.mc_options = None
-                st.session_state.mc_selection = None
-        
-                if st.session_state.index >= len(st.session_state.words):
-                    st.session_state.done = True
-        
-                st.rerun()
-    
-        elif submitted and st.session_state.submitted:
-            # Move to next word
+        if not st.session_state.submitted:
+            with st.form(key="mc_form"):
+                st.session_state.mc_selection = st.radio(
+                    "", st.session_state.mc_options, index=0
+                )
+                submitted = st.form_submit_button("Submit")
+            if submitted:
+                selected_option = st.session_state.mc_selection
+                if selected_option == correct:
+                    st.success("🌟 Correct!")
+                    st.session_state.score += 1
+                else:
+                    st.error("❌ It was " + current_word)
+                st.info("Current score: " + st.session_state.score + "/" + st.session_state.index)
+                st.session_state.submitted = True
+                if st.button("Next Word"):
+                    st.session_state.index += 1
+                    st.session_state.current_mode = None
+                    st.session_state.submitted = False
+                    st.session_state.mc_options = None
+                    st.session_state.mc_selection = None
+            
+                    if st.session_state.index >= len(st.session_state.words):
+                        st.session_state.done = True
+            
+                    st.rerun()
+        else:
             st.session_state.index += 1
             st.session_state.current_mode = None
             st.session_state.submitted = False
+            st.session_state.user_word_value = ""
             st.session_state.mc_options = None
             st.session_state.mc_selection = None
             if st.session_state.index >= len(st.session_state.words):
                 st.session_state.done = True
+            
             st.rerun()
+        
+        #if submitted and not st.session_state.submitted:
+        #    # Check answer
+        #    selected_option = st.session_state.mc_selection
+        #    if selected_option == correct:
+        #        st.success("🌟 Correct!")
+        #        st.session_state.score += 1
+        #    else:
+        #        st.error("❌ It was " + current_word)
+        #    st.info("Current score: " + st.session_state.score + "/" + st.session_state.index)
+        #    st.session_state.submitted = True
+        #    if st.button("Next Word"):
+        #        #st.session_state.index += 1
+        #        st.session_state.current_mode = None
+        #        #st.session_state.submitted = False
+        #        st.session_state.mc_options = None
+        #        st.session_state.mc_selection = None
+        
+        #        if st.session_state.index >= len(st.session_state.words):
+        #            st.session_state.done = True
+        
+        #        st.rerun()
+    
+        #elif submitted and st.session_state.submitted:
+        #    # Move to next word
+        #    st.session_state.index += 1
+        #    st.session_state.current_mode = None
+        #    st.session_state.submitted = False
+        #    st.session_state.mc_options = None
+        #    st.session_state.mc_selection = None
+        #    if st.session_state.index >= len(st.session_state.words):
+        #        st.session_state.done = True
+        #    st.rerun()
 
 
 
@@ -264,6 +297,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
