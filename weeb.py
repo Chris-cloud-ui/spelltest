@@ -178,16 +178,16 @@ else:
                         st.session_state.done = True
             
                     st.rerun()
-        else:
-            st.session_state.index += 1
-            st.session_state.current_mode = None
-            st.session_state.submitted = False
-            st.session_state.user_word_value = ""
+        #else:
+        #    st.session_state.index += 1
+        #    st.session_state.current_mode = None
+        #    st.session_state.submitted = False
+        #    st.session_state.user_word_value = ""
             
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
+        #    if st.session_state.index >= len(st.session_state.words):
+        #        st.session_state.done = True
             
-            st.rerun()
+        #   st.rerun()
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
@@ -217,17 +217,28 @@ else:
             else:
                 st.error("❌ It was " + current_word)
             st.session_state.submitted = True
+            if st.button("Next Word"):
+                st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.mc_options = None
+                st.session_state.mc_selection = None
+        
+                if st.session_state.index >= len(st.session_state.words):
+                    st.session_state.done = True
+        
+                st.rerun()
     
-        elif submitted and st.session_state.submitted:
-            # Move to next word
-            st.session_state.index += 1
-            st.session_state.current_mode = None
-            st.session_state.submitted = False
-            st.session_state.mc_options = None
-            st.session_state.mc_selection = None
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
-            st.rerun()
+        #elif submitted and st.session_state.submitted:
+        #    # Move to next word
+        #    st.session_state.index += 1
+        #    st.session_state.current_mode = None
+        #    st.session_state.submitted = False
+        #    st.session_state.mc_options = None
+        #    st.session_state.mc_selection = None
+        #    if st.session_state.index >= len(st.session_state.words):
+        #        st.session_state.done = True
+        #    st.rerun()
 
 
 
@@ -252,6 +263,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
