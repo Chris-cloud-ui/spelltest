@@ -2,11 +2,11 @@ import streamlit as st
 import yaml
 import json
 import os
-import random
 from datetime import datetime
+import random
 from gtts import gTTS
-import pyphen
 import io
+import tempfile
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -19,7 +19,6 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-# ------------------ HISTORY ---------------------
 HISTORY_FILE = "history.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
@@ -34,7 +33,10 @@ def save_history(entry):
 
 # ------------------ SIDEBAR ----------------------
 st.sidebar.title("⚙️ Settings")
-list_choice = st.sidebar.selectbox("Choose a word list:", list(WORD_LISTS.keys()))
+list_choice = st.sidebar.selectbox(
+    "Choose a word list:",
+    list(WORD_LISTS.keys())
+)
 shuffle = st.sidebar.checkbox("Shuffle words", value=True)
 st.sidebar.markdown("---")
 if st.sidebar.button("🔄 Reset Test"):
@@ -42,46 +44,35 @@ if st.sidebar.button("🔄 Reset Test"):
     st.rerun()
 
 # ------------------ SESSION STATE INIT ------------------
-if "index" not in st.session_state: st.session_state.index = 0
-if "score" not in st.session_state: st.session_state.score = 0
-if "done" not in st.session_state: st.session_state.done = False
+if "index" not in st.session_state:
+    st.session_state.index = 0
+if "score" not in st.session_state:
+    st.session_state.score = 0
+if "done" not in st.session_state:
+    st.session_state.done = False
 if "words" not in st.session_state:
     words = WORD_LISTS[list_choice][:]
-    if shuffle: random.shuffle(words)
+    if shuffle:
+        random.shuffle(words)
     st.session_state.words = words
-if "submitted" not in st.session_state: st.session_state.submitted = False
-if "answer" not in st.session_state: st.session_state.answer = ""
+
+# Per-word state
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+if "current_mode" not in st.session_state:
+    st.session_state.current_mode = None
+if "audio_file" not in st.session_state:
+    st.session_state.audio_file = None
 
 # ------------------ HEADER ------------------------
 st.markdown("""
-<h1 style='text-align:center; color:#ff66a6;'>🧙‍♀️ Slay Spells</h1>
-<p style='text-align:center; font-size:20px; color:#555;'>Practise your spells</p>
+    <h1 style='text-align:center; color:#ff66a6;'>
+        🧙‍♀️ Slay Spells
+    </h1>
+    <p style='text-align:center; font-size:20px; color:#555;'>
+        Practise your spells
+    </p>
 """, unsafe_allow_html=True)
-
-# ------------------ AUDIO HELPERS ------------------
-AUDIO_DIR = "audio"
-os.makedirs(AUDIO_DIR, exist_ok=True)
-
-def get_audio_for_word(word, syllables=None):
-    safe_name = word.replace(" ", "_").lower()
-    filename = os.path.join(AUDIO_DIR, f"{safe_name}.mp3")
-    if os.path.exists(filename):
-        return filename
-    # Generate MP3
-    final_bytes = b""
-    def tts_bytes(text, slow=False):
-        fp = io.BytesIO()
-        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
-        tts.write_to_fp(fp)
-        fp.seek(0)
-        return fp.read()
-    final_bytes += tts_bytes(f"Can you spell {word}?")
-    if syllables and len(syllables) > 1:
-        for s in syllables:
-            final_bytes += tts_bytes(s, slow=True)
-    with open(filename, "wb") as f:
-        f.write(final_bytes)
-    return filename
 
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
@@ -96,59 +87,40 @@ if st.session_state.done:
     })
     st.balloons()
 else:
-    word_entry = st.session_state.words[st.session_state.index]
-    current_word = word_entry["word"]
+    current_word_details = st.session_state.words[st.session_state.index]
+    current_word = current_word_details["word"]
 
-    # Decide randomly: text input or multiple choice
-    is_multiple_choice = "spell" in word_entry and random.choice([True, False])
+    # Pick mode once per word
+    if st.session_state.current_mode is None:
+        st.session_state.current_mode = random.choice(["text", "mc"])
+        st.session_state.submitted = False
+        st.session_state.audio_file = None
 
-    if is_multiple_choice:
-        st.markdown("❓ **Choose the correct spelling:**")
-        options = [current_word] + word_entry["spell"]
-        random.shuffle(options)
+    # ------------------ TEXT INPUT MODE ------------------
+    if st.session_state.current_mode == "text":
+        st.markdown(f"### 🔊 Listen and spell the word:")
 
-        # Track selected button
-        if "selected_option" not in st.session_state: st.session_state.selected_option = None
+        # Generate MP3 once per word if not cached
+        if st.session_state.audio_file is None:
+            tts_fp = io.BytesIO()
+            tts = gTTS(f"Can you spell {current_word}?", lang="en", tld="co.uk", slow=False)
+            tts.write_to_fp(tts_fp)
+            tts_fp.seek(0)
+            st.session_state.audio_file = tts_fp.read()
 
-        # Show buttons
-        for i, opt in enumerate(options):
-            if st.session_state.selected_option == i:
-                if opt == current_word:
-                    style = "background-color:green;color:white;"
-                    label = f"✔️ {opt}"
-                else:
-                    style = "background-color:red;color:white;"
-                    label = f"❌ {opt}"
-            else:
-                style = "width:100%;padding:12px;margin-bottom:4px;"
-                label = opt
-            clicked = st.button(label, key=f"mc_{i}", help=None)
-            if clicked and st.session_state.selected_option is None:
-                st.session_state.selected_option = i
-                if options[i] == current_word:
-                    st.session_state.score += 1
-        # Move to next word
-        if st.session_state.selected_option is not None:
-            if st.button("Next Word"):
-                st.session_state.selected_option = None
-                st.session_state.submitted = False
-                st.session_state.index += 1
-                if st.session_state.index >= len(st.session_state.words):
-                    st.session_state.done = True
-                st.rerun()
+        st.audio(st.session_state.audio_file, format="audio/mp3")
 
-    else:
-        # TEXT INPUT MODE
-        dic = pyphen.Pyphen(lang="en")
-        syllables = dic.inserted(current_word).split("-")
-        if "syll" in word_entry: syllables = word_entry["syll"]
-        mp3_file = get_audio_for_word(current_word, syllables)
-        st.audio(mp3_file)
-
-        with st.form(key="spell_form"):
-            user_word = st.text_input("Type the word:", key="user_word", placeholder="Type here", autocomplete="off")
-            button_label = "Next Word" if st.session_state.submitted else "Submit"
-            submitted = st.form_submit_button(button_label)
+        # Form for text input
+        with st.form(key="text_form"):
+            user_word = st.text_input(
+                "Type the word:",
+                key="user_word",
+                placeholder="Type here",
+                autocomplete="off"
+            )
+            # Change label depending on state
+            btn_label = "Next Word" if st.session_state.submitted else "Submit"
+            submitted = st.form_submit_button(btn_label)
 
         if submitted:
             if not st.session_state.submitted:
@@ -158,17 +130,47 @@ else:
                     st.session_state.score += 1
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                st.session_state.answer = user_word
                 st.session_state.submitted = True
             else:
-                # NEXT WORD
-                st.session_state.user_word = ""  # Reset text box
-                st.session_state.submitted = False
-                st.session_state.answer = ""
+                # Next word
                 st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.user_word = ""
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
                 st.rerun()
+
+    # ------------------ MULTIPLE CHOICE MODE ------------------
+    else:
+        st.markdown(f"### ❓ Choose the correct spelling:")
+        # Build options
+        correct = current_word
+        options = [correct]
+        if "spell" in current_word_details:
+            options += current_word_details["spell"]
+        random.shuffle(options)
+
+        # Use form to capture selection
+        with st.form(key="mc_form"):
+            choice = st.radio("", options, index=0)
+            submitted = st.form_submit_button("Submit")
+
+        if submitted and not st.session_state.submitted:
+            if choice == correct:
+                st.success(f"✅ Correct!")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Not quite.")
+            st.session_state.submitted = True
+        elif submitted and st.session_state.submitted:
+            # Move to next word
+            st.session_state.index += 1
+            st.session_state.current_mode = None
+            st.session_state.submitted = False
+            if st.session_state.index >= len(st.session_state.words):
+                st.session_state.done = True
+            st.rerun()
 
 # ------------------ HISTORY PANEL ----------------------
 st.markdown("---")
@@ -181,4 +183,5 @@ else:
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
             ⭐ Score: **{entry['score']} / {entry['total']}**
+            <br><br>
         """, unsafe_allow_html=True)
