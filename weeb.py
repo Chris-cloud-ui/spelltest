@@ -9,10 +9,6 @@ import pyphen
 import io
 import tempfile
 
-
-# -----------------------------------------------------
-# PAGE CONFIG
-# -----------------------------------------------------
 st.set_page_config(
     page_title="Slay Spells",
     page_icon="🧙‍♀️",
@@ -20,23 +16,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-
-# -----------------------------------------------------
-# LOAD WORD LISTS
-# -----------------------------------------------------
+# ------------------ LOAD WORDS ------------------
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-
-# -----------------------------------------------------
-# HISTORY FILE
-# -----------------------------------------------------
+# ------------------ HISTORY ---------------------
 HISTORY_FILE = "history.json"
-
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
-
 with open(HISTORY_FILE, "r") as f:
     history = json.load(f)
 
@@ -45,177 +33,162 @@ def save_history(entry):
     with open(HISTORY_FILE, "w") as f:
         json.dump(history, f, indent=2)
 
-
-# -----------------------------------------------------
-# SIDEBAR SETTINGS
-# -----------------------------------------------------
+# ------------------ SIDEBAR ----------------------
 st.sidebar.title("⚙️ Settings")
-
 list_choice = st.sidebar.selectbox(
     "Choose a word list:",
     list(WORD_LISTS.keys())
 )
-
-shuffle_words = st.sidebar.checkbox("Shuffle words", value=True)
+shuffle = st.sidebar.checkbox("Shuffle words", value=True)
 
 st.sidebar.markdown("---")
 if st.sidebar.button("🔄 Reset Test"):
     st.session_state.clear()
     st.rerun()
 
-
-# -----------------------------------------------------
-# SESSION STATE INIT
-# -----------------------------------------------------
-if "last_result_msg" not in st.session_state:
-    st.session_state.last_result_msg = ""
-if "last_result_type" not in st.session_state:
-    st.session_state.last_result_type = ""  # "success" or "error"
-if "user_word" not in st.session_state:
-    st.session_state.user_word = ""
+# ------------------ SESSION STATE INIT ------------------
 if "index" not in st.session_state:
     st.session_state.index = 0
 if "score" not in st.session_state:
     st.session_state.score = 0
 if "done" not in st.session_state:
     st.session_state.done = False
-
-
-# Load & shuffle words only once
 if "words" not in st.session_state:
     words = WORD_LISTS[list_choice][:]
-    if shuffle_words:
+    if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+if "last_result" not in st.session_state:
+    st.session_state.last_result = None
+if "show_next" not in st.session_state:
+    st.session_state.show_next = False
+if "mode" not in st.session_state:
+    st.session_state.mode = None
 
-
-# -----------------------------------------------------
-# HEADER
-# -----------------------------------------------------
+# ------------------ HEADER ------------------------
 st.markdown("""
-    <h1 style='text-align:center; color:#ff66a6;'>🧙‍♀️ Slay Spells</h1>
-    <p style='text-align:center; font-size:20px; color:#555;'>Practise your spells</p>
+    <h1 style='text-align:center; color:#ff66a6;'>
+        🧙‍♀️ Slay Spells
+    </h1>
+    <p style='text-align:center; font-size:20px; color:#555;'>
+        Practise your spells
+    </p>
 """, unsafe_allow_html=True)
 
-
-# -----------------------------------------------------
-# MAIN GAME LOGIC
-# -----------------------------------------------------
+# ------------------ MAIN APP ----------------------
 if st.session_state.done:
     total = len(st.session_state.words)
     score = st.session_state.score
-
     st.success(f"🎉 All done! You scored **{score} / {total}**")
-
+    
+    # Save to history
     save_history({
         "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "list": list_choice,
         "score": score,
         "total": total
     })
-
     st.balloons()
-
 else:
-    # CURRENT WORD
-    word_info = st.session_state.words[st.session_state.index]
-    current_word = word_info["word"]
+    current_word_details = st.session_state.words[st.session_state.index]
+    current_word = current_word_details["word"]
 
-    st.markdown("### 🔊 Listen and spell the word:")
-
-    # ----------------------------------------
-    # Generate Audio (No pydub required)
-    # ----------------------------------------
+    st.markdown(f"### 🔊 Listen and spell the word:")
+    
+    # ------------------ TTS ------------------
     dic = pyphen.Pyphen(lang='en')
-    syllables = word_info.get("syll", dic.inserted(current_word).split("-"))
+    syllables = dic.inserted(current_word).split('-')
+    if "syll" in current_word_details:
+        syllables = current_word_details["syll"]
 
-    # Convert text → mp3 bytes
-    def tts_mp3(text, slow=False):
+    def tts_bytes(text, slow=False):
         fp = io.BytesIO()
-        gTTS(text=text, lang="en", tld="co.uk", slow=slow).write_to_fp(fp)
+        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
+        tts.write_to_fp(fp)
         fp.seek(0)
         return fp.read()
 
-    audio_bytes = b""
-    audio_bytes += tts_mp3(f"Can you spell {current_word}? ", slow=False)
-
+    final_mp3 = b""
+    final_mp3 += tts_bytes(f"Can you spell {current_word}?", slow=False)
     if len(syllables) > 1:
         for s in syllables:
-            audio_bytes += tts_mp3(s, slow=True)
-
-    # Write out final mp3 file
+            final_mp3 += tts_bytes(s, slow=True)
+    
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-        tmp.write(audio_bytes)
-        audio_filename = tmp.name
+        tmp.write(final_mp3)
+        temp_filename = tmp.name
+    st.audio(temp_filename)
 
-    st.audio(audio_filename)
-
-    # Initialize reset flag
-    if "reset_input" not in st.session_state:
-        st.session_state.reset_input = False
-        
-    # -----------------------------------------------------
-    # SPELLING INPUT FORM
-    # -----------------------------------------------------
-    
-    # Display last result (success/error)
-    if st.session_state.last_result_msg:
-        if st.session_state.last_result_type == "success":
-            st.success(st.session_state.last_result_msg)
-        elif st.session_state.last_result_type == "error":
-            st.error(st.session_state.last_result_msg)
-
-    current_word = st.session_state.words[st.session_state.index]["word"]
-    
-    with st.form("spell_form"):
-        user_input = st.text_input(
-            "Type the word:",
-            value="",
-            placeholder="Type here",
-            autocomplete="off"
-        )
-        pressed = st.form_submit_button("Submit")
-
-    # -----------------------------------------------------
-    # FORM BUTTON LOGIC
-    # -----------------------------------------------------
-    if pressed:
-        
-
-        # Check spelling
-        if user_input.upper() == current_word.upper():
-            st.session_state.last_result_msg = f"🌟 Correct! It was **{current_word}**"
-            st.session_state.last_result_type = "success"
-            st.session_state.score += 1
+    # ------------------ MODE SELECTION ------------------
+    if st.session_state.mode is None:
+        if "spell" in current_word_details and random.random() < 0.5:
+            st.session_state.mode = "mc"
         else:
-            st.session_state.last_result_msg = f"❌ Not quite. It was **{current_word}**"
-            st.session_state.last_result_type = "error"
+            st.session_state.mode = "text"
     
-        # Clear text box
-        # st.session_state["user_word"] = ""
+    st.write("### Spell the word:")
     
-        # Move to next word
-        st.session_state.index += 1
-        if st.session_state.index >= len(st.session_state.words):
-            st.session_state.done = True
-    
-        # Trigger input reset for next render
-        #st.session_state.reset_input = True
-        #st.session_state.user_word = ""  # reset input
-        # Refresh app
-        st.rerun()
+    # ------------------ MULTIPLE CHOICE MODE ------------------
+    if st.session_state.mode == "mc":
+        options = [current_word] + current_word_details.get("spell", [])
+        random.shuffle(options)
+        col1, col2, col3 = st.columns(3)
+        for i, opt in enumerate(options):
+            col = [col1, col2, col3][i % 3]
+            if col.button(opt, disabled=st.session_state.submitted):
+                if not st.session_state.submitted:
+                    if opt == current_word:
+                        st.session_state.last_result = f"🌟 Correct! It was {current_word}"
+                        st.session_state.score += 1
+                    else:
+                        st.session_state.last_result = f"❌ Not quite. It was {current_word}"
+                    st.session_state.submitted = True
+                    st.session_state.show_next = True
+
+    # ------------------ TEXT INPUT MODE ------------------
     else:
-        # Ensure value persists while typing
-        st.session_state.reset_input = False
+        with st.form(key=f"text_form_{st.session_state.index}"):
+            user_word = st.text_input(
+                "Type the word:",
+                key=f"user_word_{st.session_state.index}",
+                placeholder="Type here",
+                autocomplete="off",
+                disabled=st.session_state.submitted
+            )
+            button_label = "Next Word" if st.session_state.submitted else "Submit"
+            submitted = st.form_submit_button(button_label)
 
+        if submitted and not st.session_state.submitted:
+            if user_word.upper() == current_word.upper():
+                st.session_state.last_result = f"🌟 Correct!"
+                st.session_state.score += 1
+            else:
+                st.session_state.last_result = f"❌ Not quite. It was {current_word}"
+            st.session_state.submitted = True
+            st.session_state.show_next = True
 
-# -----------------------------------------------------
-# HISTORY PANEL
-# -----------------------------------------------------
+    # ------------------ FEEDBACK ------------------
+    if st.session_state.last_result:
+        st.write(st.session_state.last_result)
+
+    # ------------------ NEXT WORD ------------------
+    if st.session_state.show_next:
+        if st.button("Next Word"):
+            st.session_state.submitted = False
+            st.session_state.show_next = False
+            st.session_state.last_result = None
+            st.session_state.mode = None
+            st.session_state.index += 1
+            if st.session_state.index >= len(st.session_state.words):
+                st.session_state.done = True
+            st.experimental_rerun()
+
+# ------------------ HISTORY PANEL ----------------------
 st.markdown("---")
 st.subheader("📊 Past Results")
-
-if not history:
+if len(history) == 0:
     st.info("No history yet. Complete a test to see stats!")
 else:
     for entry in reversed(history[-10:]):
@@ -225,13 +198,3 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
