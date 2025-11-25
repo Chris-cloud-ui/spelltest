@@ -67,20 +67,16 @@ if st.sidebar.button("🔄 Reset Test"):
 # -----------------------------------------------------
 # SESSION STATE INIT
 # -----------------------------------------------------
+if "last_result_msg" not in st.session_state:
+    st.session_state.last_result_msg = ""
+if "last_result_type" not in st.session_state:
+    st.session_state.last_result_type = ""  # "success" or "error"
+if "user_word" not in st.session_state:
+    st.session_state.user_word = ""
 if "index" not in st.session_state:
     st.session_state.index = 0
 if "score" not in st.session_state:
     st.session_state.score = 0
-if "done" not in st.session_state:
-    st.session_state.done = False
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-if "user_word" not in st.session_state:
-    st.session_state.user_word = ""
-if "last_result" not in st.session_state:
-    st.session_state.last_result = None
-if "reset_input" not in st.session_state:
-    st.session_state.reset_input = False
 
 
 # Load & shuffle words only once
@@ -161,13 +157,16 @@ else:
     # -----------------------------------------------------
     current_word = st.session_state.words[st.session_state.index]["word"]
     # Display last result (success/error)
-    if st.session_state.last_result:
-        st.session_state.last_result  # This could be a st.success or st.error object
+    if st.session_state.last_result_msg:
+        if st.session_state.last_result_type == "success":
+            st.success(st.session_state.last_result_msg)
+        elif st.session_state.last_result_type == "error":
+            st.error(st.session_state.last_result_msg)
     
     with st.form("spell_form"):
         user_input = st.text_input(
             "Type the word:",
-            value="" if st.session_state.reset_input else st.session_state.get("user_word", ""),
+            value="",
             key="user_word",
             placeholder="Type here",
             autocomplete="off"
@@ -182,10 +181,12 @@ else:
 
         # Check spelling
         if user_input.upper() == current_word.upper():
-            st.success("🌟 Correct!")
+            st.session_state.last_result_msg = f"🌟 Correct! It was **{current_word}**"
+            st.session_state.last_result_type = "success"
             st.session_state.score += 1
         else:
-            st.error(f"❌ Not quite. It was **{current_word}**.")
+            st.session_state.last_result_msg = f"❌ Not quite. It was **{current_word}**"
+            st.session_state.last_result_type = "error"
     
         # Clear text box
         # st.session_state["user_word"] = ""
@@ -196,8 +197,8 @@ else:
             st.session_state.done = True
     
         # Trigger input reset for next render
-        st.session_state.reset_input = True
-    
+        #st.session_state.reset_input = True
+        st.session_state.user_word = ""  # reset input
         # Refresh app
         st.rerun()
     else:
@@ -221,6 +222,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
