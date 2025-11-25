@@ -187,7 +187,7 @@ else:
             if st.session_state.index >= len(st.session_state.words):
                 st.session_state.done = True
             
-           st.rerun()
+            st.rerun()
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
@@ -263,6 +263,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
