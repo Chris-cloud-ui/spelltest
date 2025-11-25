@@ -178,7 +178,7 @@ else:
             if st.session_state.index >= len(st.session_state.words):
                 st.session_state.done = True
             st.session_state.user_word_value = "2"
-            user_word.value=""
+            
             st.rerun()
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
@@ -244,6 +244,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
