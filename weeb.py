@@ -11,8 +11,7 @@ from pydub import AudioSegment
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 from random import randint
-import pydub.utils
-pydub.utils.audioop = None
+
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -107,32 +106,31 @@ else:
     if "syll" in current_word_details:
         syllables = current_word_details["syll"]
 
-    base_tts = gTTS(f"Can you spell {current_word}", lang="en", tld="co.uk", slow=False)
-
-    # Convert to AudioSegment from bytes
-    base_fp = io.BytesIO()
-    base_tts.write_to_fp(base_fp)
-    base_fp.seek(0)
-    result = AudioSegment.from_file(base_fp, format="mp3")
-
-    # Add slow syllables
+    # --- Helper to generate MP3 as bytes ---
+    def tts_bytes(text, slow=False):
+        fp = io.BytesIO()
+        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()   # return raw mp3 bytes
+    
+    # --- Build the final MP3 ---
+    final_mp3 = b""
+    
+    # 1. Main question
+    final_mp3 += tts_bytes(f"Can you spell {current_word}?", slow=False)
+    
+    # 2. Syllables (slow)
     if len(syllables) > 1:
-        silence = Silence(duration=400).to_audio_segment()
         for s in syllables:
-            syl_tts = gTTS(s, lang="en", tld="co.uk", slow=True)
-            syl_fp = io.BytesIO()
-            syl_tts.write_to_fp(syl_fp)
-            syl_fp.seek(0)
-
-            audio = AudioSegment.from_file(syl_fp, format="mp3")
-            result += silence + audio
-
-    # Save the final combined audio to a temporary mp3 file
+            final_mp3 += tts_bytes(s, slow=True)
+    
+    # 3. Save to temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+        tmp.write(final_mp3)
         temp_filename = tmp.name
-        result.export(temp_filename, format="mp3")
-
-    # Play via Streamlit
+    
+    # 4. Play in Streamlit
     st.audio(temp_filename)
 
 
@@ -203,6 +201,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
