@@ -107,24 +107,6 @@ def get_audio_for_word(word, syllables=None):
         f.write(final_bytes)
     return filename
 
-# ------------------ PLAY CHEER SOUND ------------------
-def play_cheer():
-    cheer_file = os.path.join(AUDIO_DIR, "cheer.mp3")
-    if not os.path.exists(cheer_file):
-        # generate if missing
-        tts = gTTS("Hooray!", lang="en", tld="co.uk", slow=False)
-        tts.save(cheer_file)
-    st.audio(cheer_file)
-
-# ------------------ PLAY BOO SOUND ------------------
-def play_boo():
-    boo_file = os.path.join(AUDIO_DIR, "boo.mp3")
-    if not os.path.exists(boo_file):
-        # generate if missing
-        tts = gTTS("Boo!", lang="en", tld="co.uk", slow=False)
-        tts.save(boo_file)
-    st.audio(boo_file)
-
 
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
@@ -183,10 +165,8 @@ else:
                 if user_word.upper() == current_word.upper():
                     st.success("🌟 Correct!")
                     st.session_state.score += 1
-                    play_cheer()
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                    play_boo()
                 st.session_state.submitted = True
                 st.session_state.user_word_value = user_word  # Keep visible
             else:
@@ -224,10 +204,8 @@ else:
             if selected_option == correct:
                 st.success("🌟 Correct!")
                 st.session_state.score += 1
-                play_cheer()
             else:
                 st.error("❌ Not quite.")
-                play_boo()
             st.session_state.submitted = True
     
         elif submitted and st.session_state.submitted:
@@ -264,6 +242,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
