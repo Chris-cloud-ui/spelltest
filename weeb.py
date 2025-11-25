@@ -168,10 +168,10 @@ else:
                     st.snow()
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                
+                st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
-                    st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+                    
                     st.session_state.index += 1
                     st.session_state.current_mode = None
                     st.session_state.submitted = False
@@ -219,10 +219,10 @@ else:
                     st.snow()
                 else:
                     st.error("❌ It was " + current_word)
-                
+                st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
-                    st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+                    
                     st.session_state.index += 1
                     st.session_state.current_mode = None
                     st.session_state.submitted = False
@@ -301,6 +301,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
