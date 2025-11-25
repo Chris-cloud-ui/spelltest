@@ -157,19 +157,20 @@ else:
     # -----------------------------------------------------
     # SPELLING INPUT FORM
     # -----------------------------------------------------
-    current_word = st.session_state.words[st.session_state.index]["word"]
+    
     # Display last result (success/error)
     if st.session_state.last_result_msg:
         if st.session_state.last_result_type == "success":
             st.success(st.session_state.last_result_msg)
         elif st.session_state.last_result_type == "error":
             st.error(st.session_state.last_result_msg)
+
+    current_word = st.session_state.words[st.session_state.index]["word"]
     
     with st.form("spell_form"):
         user_input = st.text_input(
             "Type the word:",
             value="",
-            key="user_word",
             placeholder="Type here",
             autocomplete="off"
         )
@@ -224,6 +225,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
