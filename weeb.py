@@ -83,8 +83,10 @@ def get_audio_for_word(word, syllables=None):
     safe_name = word.replace(" ", "_").lower()
     filename = os.path.join(AUDIO_DIR, f"{safe_name}.mp3")
     if os.path.exists(filename):
+        st.info("Found mp3")
         return filename
     # Generate MP3
+    st.info("Generating mp3")
     final_bytes = b""
     def tts_bytes(text, slow=False):
         fp = io.BytesIO()
@@ -224,6 +226,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
