@@ -155,8 +155,6 @@ else:
         if "mc_done" not in st.session_state:
             st.session_state.mc_done = False
         
-        st.markdown("### ❓ Choose the correct spelling:")
-        
         with st.form("mc_form"):
             choice = st.radio("", options, index=0)
             submitted = st.form_submit_button("Submit")
@@ -200,6 +198,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
