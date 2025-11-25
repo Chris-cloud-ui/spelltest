@@ -8,9 +8,6 @@ from gtts import gTTS
 import pyphen
 import io
 import tempfile
-import streamlit.components.v1 as components
-from streamlit_javascript import st_javascript
-from random import randint
 
 
 st.set_page_config(
@@ -197,15 +194,6 @@ else:
     st.session_state.current_word = st.session_state.words[st.session_state.index]["word"]
 
 
-
-    if st.button("Next Word"):
-        st.session_state.answer = ""  # reset input
-        st.session_state.index += 1
-        if st.session_state.index >= len(st.session_state.words):
-            st.session_state.done = True
-        st.rerun()  # refresh the app with next word
-
-
     if st.session_state.index >= len(st.session_state.words):
         st.success("🎉 All words completed! Restarting...")
         st.session_state.current_word_index = 0
@@ -227,6 +215,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
