@@ -150,20 +150,17 @@ else:
             st.session_state.submitted = False
             
         # Form for text input
-        with st.form(key="text_form"):
-            user_word = st.text_input(
-                "Type the word:",
-                value=st.session_state.user_word_value,  
-                placeholder="Type here",
-                autocomplete="off"
-            )
-            # Change label depending on state
-            btn_label = "Next Word" if st.session_state.submitted else "Submit"
-            submitted = st.form_submit_button(btn_label)
+        if not st.session_state.submitted:
+            with st.form(key="text_form"):
+                user_word = st.text_input(
+                    "Type the word:",
+                    value=st.session_state.user_word_value,  
+                    placeholder="Type here",
+                    autocomplete="off"
+                )
+                submitted = st.form_submit_button(btn_label)
 
-        if submitted:
-            if not st.session_state.submitted:
-                # Check answer
+            if submitted:
                 if user_word.upper() == current_word.upper():
                     st.success("🌟 Correct!")
                     st.session_state.score += 1
@@ -171,12 +168,14 @@ else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
                 st.session_state.submitted = True
                 st.session_state.user_word_value = user_word  # Keep visible
-            else:
-                # Next word
+
+        else:
+            # Show Next Word button outside form
+            if st.button("Next Word"):
                 st.session_state.index += 1
                 st.session_state.current_mode = None
                 st.session_state.submitted = False
-                st.session_state.user_word_value = ""  # Clear text safely
+                st.session_state.user_word_value = ""
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
                 st.rerun()
@@ -244,6 +243,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
