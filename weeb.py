@@ -2,24 +2,31 @@ import streamlit as st
 import yaml
 import json
 import os
-import random
 from datetime import datetime
+import random
 from gtts import gTTS
 import io
 import tempfile
+import pyphen
+from streamlit_javascript import st_javascript
 
-st.set_page_config(page_title="Slay Spells", page_icon="🧙‍♀️", layout="centered")
+st.set_page_config(
+    page_title="Slay Spells",
+    page_icon="🧙‍♀️",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
 
-# Load words
-with open("words.yaml") as f:
+# ------------------ LOAD WORDS ------------------
+with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
+# ------------------ HISTORY ---------------------
 HISTORY_FILE = "history.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
-
-with open(HISTORY_FILE) as f:
+with open(HISTORY_FILE, "r") as f:
     history = json.load(f)
 
 def save_history(entry):
@@ -27,15 +34,17 @@ def save_history(entry):
     with open(HISTORY_FILE, "w") as f:
         json.dump(history, f, indent=2)
 
-# Sidebar
+# ------------------ SIDEBAR ----------------------
 st.sidebar.title("⚙️ Settings")
 list_choice = st.sidebar.selectbox("Choose a word list:", list(WORD_LISTS.keys()))
 shuffle = st.sidebar.checkbox("Shuffle words", value=True)
+
+st.sidebar.markdown("---")
 if st.sidebar.button("🔄 Reset Test"):
     st.session_state.clear()
     st.rerun()
 
-# Session state
+# ------------------ SESSION STATE INIT ------------------
 if "index" not in st.session_state:
     st.session_state.index = 0
 if "score" not in st.session_state:
@@ -47,18 +56,26 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-if "mc_done" not in st.session_state:
-    st.session_state.mc_done = False
+if "mc_submitted" not in st.session_state:
+    st.session_state.mc_submitted = False
+if "mc_choice" not in st.session_state:
+    st.session_state.mc_choice = None
+if "text_submitted" not in st.session_state:
+    st.session_state.text_submitted = False
+if "user_word" not in st.session_state:
+    st.session_state.user_word = ""
 
-# Header
+# ------------------ HEADER ------------------------
 st.markdown("""
-<h1 style='text-align:center; color:#ff66a6;'>🧙‍♀️ Slay Spells</h1>
-<p style='text-align:center; font-size:20px; color:#555;'>Practise your spells</p>
+    <h1 style='text-align:center; color:#ff66a6;'>
+        🧙‍♀️ Slay Spells
+    </h1>
+    <p style='text-align:center; font-size:20px; color:#555;'>
+        Practise your spells
+    </p>
 """, unsafe_allow_html=True)
 
-# Done?
+# ------------------ MAIN APP ----------------------
 if st.session_state.done:
     total = len(st.session_state.words)
     score = st.session_state.score
@@ -71,95 +88,145 @@ if st.session_state.done:
     })
     st.balloons()
 else:
-    word_data = st.session_state.words[st.session_state.index]
-    current_word = word_data["word"]
+    current_word_details = st.session_state.words[st.session_state.index]
+    current_word = current_word_details["word"]
 
-    # Decide quiz type
-    use_mc = "spell" in word_data and random.choice([True, False])
+    # Randomly choose input type if not already chosen
+    if "mode" not in st.session_state:
+        if "spell" in current_word_details and random.choice([True, False]):
+            st.session_state.mode = "mc"
+        else:
+            st.session_state.mode = "text"
 
-    if not use_mc:
-        # Text input quiz with audio
-        st.markdown("### 🔊 Listen and spell the word:")
+    # ---------------- TEXT INPUT MODE ----------------
+    if st.session_state.mode == "text":
+        st.markdown(f"### 🔊 Listen and spell the word:")
 
-        # Generate audio
+        # --- Audio TTS ---
+        dic = pyphen.Pyphen(lang='en')
+        syllables = dic.inserted(current_word).split('-')
+        if "syll" in current_word_details:
+            syllables = current_word_details["syll"]
+
         def tts_bytes(text, slow=False):
             fp = io.BytesIO()
             tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
             tts.write_to_fp(fp)
             fp.seek(0)
             return fp.read()
-
-        final_audio = tts_bytes(f"Can you spell {current_word}?")
-        if "syll" in word_data:
-            for s in word_data["syll"]:
-                final_audio += tts_bytes(s, slow=True)
-
+        
+        final_mp3 = b""
+        final_mp3 += tts_bytes(f"Can you spell {current_word}?", slow=False)
+        if len(syllables) > 1:
+            for s in syllables:
+                final_mp3 += tts_bytes(s, slow=True)
+        
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-            tmp.write(final_audio)
-            temp_file = tmp.name
-        st.audio(temp_file)
+            tmp.write(final_mp3)
+            temp_filename = tmp.name
+        
+        st.audio(temp_filename)
 
-        # Text input form
-        with st.form("text_form"):
-            user_word = st.text_input("Type the word:", key="user_word", placeholder="Type here", autocomplete="off")
-            button_label = "Next Word" if st.session_state.submitted else "Submit"
+        # --- Text input form ---
+        with st.form(key="spell_form"):
+            user_word = st.text_input(
+                "Type the word:",
+                key="user_word",
+                placeholder="Type here",
+                autocomplete="off"
+            )
+            button_label = "Next Word" if st.session_state.text_submitted else "Submit"
             submitted = st.form_submit_button(button_label)
 
         if submitted:
-            if not st.session_state.submitted:
-                # First click = check
+            if not st.session_state.text_submitted:
+                # Check answer
                 if user_word.upper() == current_word.upper():
-                    st.success("✅ Correct!")
+                    st.success("🌟 Correct!")
                     st.session_state.score += 1
                 else:
-                    st.error(f"❌ Not quite. Correct: {current_word}")
-                st.session_state.submitted = True
+                    st.error(f"❌ Not quite. It was **{current_word}**.")
+                st.session_state.text_submitted = True
             else:
                 # Next word
-                st.session_state.user_word = ""  # text cleared automatically on rerun
-                st.session_state.submitted = False
+                st.session_state.text_submitted = False
+                st.session_state.user_word = ""
                 st.session_state.index += 1
+                st.session_state.mode = None
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
-                st.rerun()
-    else:
-        # Multiple choice
+                st.experimental_rerun()
+        st.write("Your spelling:", st.session_state.user_word)
+
+    # ---------------- MULTIPLE CHOICE MODE ----------------
+    elif st.session_state.mode == "mc":
         st.markdown("### ❓ Choose the correct spelling:")
-        choices = [current_word] + word_data["spell"]
-        random.shuffle(choices)
 
-        if "mc_choice" not in st.session_state:
-            st.session_state.mc_choice = None
+        if "options" not in st.session_state:
+            options = [current_word] + current_word_details.get("spell", [])
+            random.shuffle(options)
+            st.session_state.options = options
 
-        # Use HTML buttons for styling
-        buttons_html = "<div style='display:flex; flex-direction:column; gap:10px;'>"
-        for i, opt in enumerate(choices):
-            color = "#007bff"
-            if st.session_state.mc_done:
-                if opt == current_word:
-                    color = "green"
-                elif st.session_state.mc_choice == opt:
-                    color = "red"
-            buttons_html += f"""
-            <form action=''>
-                <input type='submit' value='{opt}' style='background-color:{color}; color:white; font-size:20px; width:100%; padding:10px;' onclick="fetch('/?mc_choice={opt}', {{method:'POST'}})">
-            </form>
-            """
-        buttons_html += "</div>"
-        st.markdown(buttons_html, unsafe_allow_html=True)
-
-        # Check if choice made via session_state
-        if st.session_state.mc_done:
-            if st.session_state.mc_choice == current_word:
-                st.success("✅ Correct!")
-                st.session_state.score += 1
+        def mc_button(label):
+            if st.session_state.mc_submitted:
+                if label == current_word:
+                    color = "#4CAF50"  # green
+                    icon = " ✅"
+                elif label == st.session_state.mc_choice:
+                    color = "#F44336"  # red
+                    icon = " ❌"
+                else:
+                    color = "#007BFF"  # blue
+                    icon = ""
             else:
-                st.error(f"❌ Not quite. Correct: {current_word}")
+                color = "#007BFF"
+                icon = ""
+            html = f"""
+            <div style="margin-bottom:10px;">
+                <button onclick="window.parent.postMessage({{'mc_choice':'{label}'}}, '*')" 
+                    style="width:100%; background-color:{color}; color:white; border:none; padding:12px; font-size:18px; border-radius:6px;">
+                    {label}{icon}
+                </button>
+            </div>
+            """
+            st.markdown(html, unsafe_allow_html=True)
 
+        for opt in st.session_state.options:
+            mc_button(opt)
+
+        clicked = st_javascript("""
+        return new Promise((resolve) => {
+            window.addEventListener('message', (event) => {resolve(event.data.mc_choice)}, {once:true});
+        });
+        """)
+
+        if clicked and not st.session_state.mc_submitted:
+            st.session_state.mc_choice = clicked
+            st.session_state.mc_submitted = True
+            if clicked == current_word:
+                st.session_state.score += 1
+
+        if st.session_state.mc_submitted:
             if st.button("Next Word"):
-                st.session_state.mc_done = False
+                st.session_state.mc_submitted = False
                 st.session_state.mc_choice = None
+                st.session_state.options = None
                 st.session_state.index += 1
+                st.session_state.mode = None
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
-                st.rerun()
+                st.experimental_rerun()
+
+# ------------------ HISTORY PANEL ----------------------
+st.markdown("---")
+st.subheader("📊 Past Results")
+if len(history) == 0:
+    st.info("No history yet. Complete a test to see stats!")
+else:
+    for entry in reversed(history[-10:]):
+        st.markdown(f"""
+            🗓 **{entry['date']}**  
+            📚 List: *{entry['list']}*  
+            ⭐ Score: **{entry['score']} / {entry['total']}**
+            <br><br>
+        """, unsafe_allow_html=True)
