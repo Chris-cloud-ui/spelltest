@@ -7,7 +7,7 @@ import random
 from gtts import gTTS
 import pyphen
 import io
-from pydub import AudioSegment
+import tempfile
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 from random import randint
@@ -201,6 +201,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
