@@ -119,7 +119,10 @@ else:
 
     # Pick mode once per word
     if st.session_state.current_mode is None:
-        st.session_state.current_mode = random.choice(["text", "mc"])
+        if "spell" in current_word_details:
+            st.session_state.current_mode = random.choice(["text", "mc"])
+        else:
+            st.session_state.current_mode = "text"
         st.session_state.submitted = False
         st.session_state.audio_file = None
 
@@ -221,6 +224,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
