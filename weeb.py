@@ -153,7 +153,7 @@ else:
         if not st.session_state.submitted:
             with st.form(key="text_form"):
                 user_word = st.text_input(
-                    "Type the word:",
+                    "🪄",
                     value="", #st.session_state.user_word_value,  
                     key=current_word,
                     placeholder="Type here",
@@ -244,6 +244,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
