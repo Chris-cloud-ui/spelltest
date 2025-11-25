@@ -206,7 +206,7 @@ else:
                 st.session_state.mode = None
                 st.session_state.mc_submitted = False
                 st.session_state.mc_clicked = None
-                st.experimental_rerun()
+                st.rerun()
 
 # ------------------ HISTORY PANEL ----------------------
 st.markdown("---")
@@ -221,3 +221,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
