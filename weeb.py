@@ -165,6 +165,7 @@ else:
                 if user_word.upper() == current_word.upper():
                     st.success("🌟 Correct!")
                     st.session_state.score += 1
+                    st.snow()
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
@@ -214,6 +215,7 @@ else:
                 if selected_option == correct:
                     st.success("🌟 Correct!")
                     st.session_state.score += 1
+                    st.snow()
                 else:
                     st.error("❌ It was " + current_word)
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
@@ -297,6 +299,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
