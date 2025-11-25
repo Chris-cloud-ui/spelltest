@@ -167,6 +167,7 @@ else:
                     st.session_state.score += 1
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
+                st.info(st.session_state.index)
                 st.session_state.submitted = True
                 if st.button("Next Word"):
                     st.session_state.index += 1
@@ -263,6 +264,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
