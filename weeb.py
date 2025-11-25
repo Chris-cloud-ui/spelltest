@@ -77,6 +77,10 @@ if "submitted" not in st.session_state:
     st.session_state.submitted = False
 if "user_word" not in st.session_state:
     st.session_state.user_word = ""
+if "last_result" not in st.session_state:
+    st.session_state.last_result = None
+if "reset_input" not in st.session_state:
+    st.session_state.reset_input = False
 
 
 # Load & shuffle words only once
@@ -155,6 +159,11 @@ else:
     # -----------------------------------------------------
     # SPELLING INPUT FORM
     # -----------------------------------------------------
+    current_word = st.session_state.words[st.session_state.index]["word"]
+    # Display last result (success/error)
+    if st.session_state.last_result:
+        st.session_state.last_result  # This could be a st.success or st.error object
+    
     with st.form("spell_form"):
         user_input = st.text_input(
             "Type the word:",
@@ -169,8 +178,8 @@ else:
     # FORM BUTTON LOGIC
     # -----------------------------------------------------
     if pressed:
-        current_word = st.session_state.words[st.session_state.index]["word"]
         
+
         # Check spelling
         if user_input.upper() == current_word.upper():
             st.success("🌟 Correct!")
@@ -179,7 +188,7 @@ else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
     
         # Clear text box
-        #st.session_state["user_word"] = ""
+        st.session_state["user_word"] = ""
     
         # Move to next word
         st.session_state.index += 1
@@ -212,6 +221,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
