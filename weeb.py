@@ -107,31 +107,31 @@ else:
 
     base_tts = gTTS(f"Can you spell {current_word}", lang="en", tld="co.uk", slow=False)
 
-	# Convert to AudioSegment from bytes
-	base_fp = io.BytesIO()
-	base_tts.write_to_fp(base_fp)
-	base_fp.seek(0)
-	result = AudioSegment.from_file(base_fp, format="mp3")
-	
-	# Add slow syllables
-	if len(syllables) > 1:
-		silence = Silence(duration=400).to_audio_segment()
-		for s in syllables:
-			syl_tts = gTTS(s, lang="en", tld="co.uk", slow=True)
-			syl_fp = io.BytesIO()
-			syl_tts.write_to_fp(syl_fp)
-			syl_fp.seek(0)
-	
-			audio = AudioSegment.from_file(syl_fp, format="mp3")
-			result += silence + audio
-		
-	# Save the final combined audio to a temporary mp3 file
-	with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-		temp_filename = tmp.name
-		result.export(temp_filename, format="mp3")
-	
-	# Play via Streamlit
-	st.audio(temp_filename)
+    # Convert to AudioSegment from bytes
+    base_fp = io.BytesIO()
+    base_tts.write_to_fp(base_fp)
+    base_fp.seek(0)
+    result = AudioSegment.from_file(base_fp, format="mp3")
+
+    # Add slow syllables
+    if len(syllables) > 1:
+        silence = Silence(duration=400).to_audio_segment()
+        for s in syllables:
+            syl_tts = gTTS(s, lang="en", tld="co.uk", slow=True)
+            syl_fp = io.BytesIO()
+            syl_tts.write_to_fp(syl_fp)
+            syl_fp.seek(0)
+
+            audio = AudioSegment.from_file(syl_fp, format="mp3")
+            result += silence + audio
+
+    # Save the final combined audio to a temporary mp3 file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+        temp_filename = tmp.name
+        result.export(temp_filename, format="mp3")
+
+    # Play via Streamlit
+    st.audio(temp_filename)
 
 
 
@@ -201,7 +201,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
-
 
 
 
