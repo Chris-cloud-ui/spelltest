@@ -159,7 +159,7 @@ else:
                     autocomplete="off"
                 )
                 submitted = st.form_submit_button("Submit")
-
+                st.session_state.submitted = True
             if submitted:
                 if user_word.upper() == current_word.upper():
                     st.success("🌟 Correct!")
@@ -168,7 +168,7 @@ else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
                 st.session_state.submitted = True
                 st.session_state.user_word_value = "" # user_word  # Keep visible
-                st.session_state.user_word.value= ""
+
         else:
             
             st.session_state.index += 1
@@ -242,6 +242,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
