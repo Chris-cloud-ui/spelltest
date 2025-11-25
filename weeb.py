@@ -138,7 +138,7 @@ else:
 
         if submitted and not st.session_state.submitted:
             if user_word.upper() == current_word.upper():
-                st.session_state.last_result = f"🌟 Correct!"
+                st.session_state.last_result = f"🌟 Correct! It was {current_word}"
                 st.session_state.score += 1
             else:
                 st.session_state.last_result = f"❌ Not quite. It was {current_word}"
@@ -148,20 +148,66 @@ else:
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
         st.markdown("### ❓ Choose the correct spelling:")
+
         options = [current_word] + current_word_details.get("spell", [])
         random.shuffle(options)
-        col1, col2, col3 = st.columns(3)
-        for i, opt in enumerate(options):
-            col = [col1, col2, col3][i % 3]
-            if col.button(opt, disabled=st.session_state.submitted):
-                if not st.session_state.submitted:
-                    if opt == current_word:
-                        st.session_state.last_result = f"🌟 Correct! It was {current_word}"
-                        st.session_state.score += 1
+    
+        # Determine button colors and icons
+        if "mc_choice" not in st.session_state:
+            st.session_state.mc_choice = None  # which button was clicked
+    
+        # Function to render styled button
+        def mc_button(option):
+            clicked = False
+            color = "#1f77b4"  # blue
+            text = option
+            if st.session_state.mc_choice:
+                if st.session_state.mc_choice == option:
+                    if option == current_word:
+                        color = "#28a745"  # green
+                        text = f"✅ {option}"
                     else:
-                        st.session_state.last_result = f"❌ Not quite. It was {current_word}"
-                    st.session_state.submitted = True
-                    st.session_state.show_next = True
+                        color = "#dc3545"  # red
+                        text = f"❌ {option}"
+                elif option == current_word and st.session_state.mc_choice != current_word:
+                    # show correct answer in green after a wrong selection
+                    color = "#28a745"
+                    text = f"✅ {option}"
+    
+            # Render button with HTML
+            button_html = f"""
+            <form action="/" method="post">
+            <button type="submit" name="mc_option" value="{option}"
+                style="
+                    width: 100%;
+                    background-color: {color};
+                    color: white;
+                    padding: 10px;
+                    margin: 5px 0;
+                    border: none;
+                    font-size: 18px;
+                    border-radius: 5px;
+                "
+                {"disabled" if st.session_state.submitted else ""}
+            >{text}</button>
+            </form>
+            """
+            st.markdown(button_html, unsafe_allow_html=True)
+    
+        # Render buttons
+        for opt in options:
+            mc_button(opt)
+    
+        # Capture which button was clicked via query params
+        import urllib.parse
+        query_params = st.experimental_get_query_params()
+        mc_option = query_params.get("mc_option", [None])[0]
+        if mc_option and not st.session_state.submitted:
+            st.session_state.mc_choice = mc_option
+            st.session_state.submitted = True
+            if mc_option == current_word:
+                st.session_state.score += 1
+            st.experimental_set_query_params()  # reset query params
 
     # ------------------ FEEDBACK ------------------
     if st.session_state.last_result:
@@ -192,3 +238,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
