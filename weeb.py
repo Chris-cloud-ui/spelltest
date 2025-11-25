@@ -207,7 +207,7 @@ else:
                 st.success("🌟 Correct!")
                 st.session_state.score += 1
             else:
-                st.error("❌ It was **{current_word}**.")
+                st.error("❌ It was " + current_word)
             st.session_state.submitted = True
     
         elif submitted and st.session_state.submitted:
@@ -244,6 +244,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
