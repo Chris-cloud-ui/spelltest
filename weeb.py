@@ -218,9 +218,9 @@ else:
                 st.error("❌ It was " + current_word)
             st.session_state.submitted = True
             if st.button("Next Word"):
-                st.session_state.index += 1
+                #st.session_state.index += 1
                 st.session_state.current_mode = None
-                st.session_state.submitted = False
+                #st.session_state.submitted = False
                 st.session_state.mc_options = None
                 st.session_state.mc_selection = None
         
@@ -263,6 +263,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
