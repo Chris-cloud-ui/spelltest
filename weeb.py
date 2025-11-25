@@ -86,8 +86,11 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 def get_audio_for_word(word, syllables=None):
     safe_name = word.replace(" ", "_").lower()
     filename = os.path.join(AUDIO_DIR, f"{safe_name}.mp3")
-    if os.path.exists(filename):
-        return filename
+    if safe_name == "criticise":
+        st.info("Redo")
+    else:
+        if os.path.exists(filename):
+            return filename
     # Generate MP3
     final_bytes = b""
     def tts_bytes(text, slow=False):
@@ -303,6 +306,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
