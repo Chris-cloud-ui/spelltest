@@ -12,6 +12,8 @@ import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 from random import randint
 
+pydub.utils.audioop = None
+
 st.set_page_config(
     page_title="Slay Spells",
     page_icon="🧙‍♀️",
@@ -201,6 +203,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
