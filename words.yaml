@@ -28,6 +28,7 @@ thisweek:
   - word: thumb
     spell: ["thum","thump"]
   - word: accompany
+    syll: ["ack","come","panny"]
     spell: ["acompany","accumpany"]
   - word: criticise
     syll: ["crit","ee","size"]
@@ -38,6 +39,7 @@ grade2:
   - word: giraffe
   - word: chocolate
   - word: butterfly
+
 
 
 
