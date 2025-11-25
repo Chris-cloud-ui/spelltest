@@ -165,10 +165,11 @@ else:
                 if user_word.upper() == current_word.upper():
                     st.success("🌟 Correct!")
                     st.session_state.score += 1
-                    st.snow()
+                    #st.snow()
+                    st.toast("Yu iz spellin gud ", icon="🪄")
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                    st.toast("Your edited image was saved!", icon="😍")
+                    st.toast("What just happened ?", icon="😞")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
@@ -220,6 +221,7 @@ else:
                     st.snow()
                 else:
                     st.error("❌ It was " + current_word)
+                    st.toast("What just happened ?", icon="💔")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
@@ -302,6 +304,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
