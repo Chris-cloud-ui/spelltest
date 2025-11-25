@@ -77,6 +77,8 @@ if "index" not in st.session_state:
     st.session_state.index = 0
 if "score" not in st.session_state:
     st.session_state.score = 0
+if "done" not in st.session_state:
+    st.session_state.done = False
 
 
 # Load & shuffle words only once
@@ -222,6 +224,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
