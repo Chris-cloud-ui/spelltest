@@ -167,7 +167,7 @@ else:
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
                 st.session_state.submitted = True
-                st.session_state.user_word_value = user_word  # Keep visible
+                st.session_state.user_word_value = "" # user_word  # Keep visible
 
         else:
             
@@ -242,6 +242,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
