@@ -129,7 +129,7 @@ else:
 
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
-        if "syll" in word_entry: syllables = word_entry["syll"]
+        if "syll" in current_word_details: syllables = current_word_details["syll"]
         mp3_file = get_audio_for_word(current_word, syllables)
         st.audio(mp3_file)
 
@@ -221,6 +221,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
