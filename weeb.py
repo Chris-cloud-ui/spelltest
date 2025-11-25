@@ -148,13 +148,17 @@ else:
 
     st.audio(audio_filename)
 
-
+    # Initialize reset flag
+    if "reset_input" not in st.session_state:
+        st.session_state.reset_input = False
+        
     # -----------------------------------------------------
     # SPELLING INPUT FORM
     # -----------------------------------------------------
     with st.form("spell_form"):
         user_input = st.text_input(
             "Type the word:",
+            value="" if st.session_state.reset_input else st.session_state.get("user_word", ""),
             key="user_word",
             placeholder="Type here",
             autocomplete="off"
@@ -165,6 +169,8 @@ else:
     # FORM BUTTON LOGIC
     # -----------------------------------------------------
     if pressed:
+        current_word = st.session_state.words[st.session_state.index]["word"]
+        
         # Check spelling
         if user_input.upper() == current_word.upper():
             st.success("🌟 Correct!")
@@ -173,15 +179,21 @@ else:
             st.error(f"❌ Not quite. It was **{current_word}**.")
     
         # Clear text box
-        st.session_state["user_word"] = ""
+        #st.session_state["user_word"] = ""
     
         # Move to next word
         st.session_state.index += 1
         if st.session_state.index >= len(st.session_state.words):
             st.session_state.done = True
     
-        # Immediately refresh app with next word
+        # Trigger input reset for next render
+        st.session_state.reset_input = True
+    
+        # Refresh app
         st.experimental_rerun()
+    else:
+        # Ensure value persists while typing
+        st.session_state.reset_input = False
 
 
 # -----------------------------------------------------
@@ -200,5 +212,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
