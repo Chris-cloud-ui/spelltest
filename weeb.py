@@ -190,7 +190,7 @@ else:
         st.session_state.reset_input = True
     
         # Refresh app
-        st.experimental_rerun()
+        st.rerun()
     else:
         # Ensure value persists while typing
         st.session_state.reset_input = False
@@ -212,6 +212,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
