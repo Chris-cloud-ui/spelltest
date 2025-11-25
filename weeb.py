@@ -5,9 +5,9 @@ import os
 from datetime import datetime
 import random
 from gtts import gTTS
-import pyphen
 import io
 import tempfile
+import pyphen
 
 st.set_page_config(
     page_title="Slay Spells",
@@ -35,16 +35,12 @@ def save_history(entry):
 
 # ------------------ SIDEBAR ----------------------
 st.sidebar.title("⚙️ Settings")
-list_choice = st.sidebar.selectbox(
-    "Choose a word list:",
-    list(WORD_LISTS.keys())
-)
+list_choice = st.sidebar.selectbox("Choose a word list:", list(WORD_LISTS.keys()))
 shuffle = st.sidebar.checkbox("Shuffle words", value=True)
-
 st.sidebar.markdown("---")
 if st.sidebar.button("🔄 Reset Test"):
     st.session_state.clear()
-    st.rerun()
+    st.experimental_rerun()
 
 # ------------------ SESSION STATE INIT ------------------
 if "index" not in st.session_state:
@@ -58,23 +54,20 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
-if "last_result" not in st.session_state:
-    st.session_state.last_result = None
 if "show_next" not in st.session_state:
     st.session_state.show_next = False
+if "last_result" not in st.session_state:
+    st.session_state.last_result = None
 if "mode" not in st.session_state:
-    st.session_state.mode = None
+    st.session_state.mode = None  # "text" or "mc"
 
 # ------------------ HEADER ------------------------
 st.markdown("""
-    <h1 style='text-align:center; color:#ff66a6;'>
-        🧙‍♀️ Slay Spells
-    </h1>
-    <p style='text-align:center; font-size:20px; color:#555;'>
-        Practise your spells
-    </p>
+<h1 style='text-align:center; color:#ff66a6;'>🧙‍♀️ Slay Spells</h1>
+<p style='text-align:center; font-size:20px; color:#555;'>Practise your spells</p>
 """, unsafe_allow_html=True)
 
 # ------------------ MAIN APP ----------------------
@@ -91,35 +84,10 @@ if st.session_state.done:
         "total": total
     })
     st.balloons()
+
 else:
     current_word_details = st.session_state.words[st.session_state.index]
     current_word = current_word_details["word"]
-
-    st.markdown(f"### 🔊 Listen and spell the word:")
-    
-    # ------------------ TTS ------------------
-    dic = pyphen.Pyphen(lang='en')
-    syllables = dic.inserted(current_word).split('-')
-    if "syll" in current_word_details:
-        syllables = current_word_details["syll"]
-
-    def tts_bytes(text, slow=False):
-        fp = io.BytesIO()
-        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
-        tts.write_to_fp(fp)
-        fp.seek(0)
-        return fp.read()
-
-    final_mp3 = b""
-    final_mp3 += tts_bytes(f"Can you spell {current_word}?", slow=False)
-    if len(syllables) > 1:
-        for s in syllables:
-            final_mp3 += tts_bytes(s, slow=True)
-    
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-        tmp.write(final_mp3)
-        temp_filename = tmp.name
-    st.audio(temp_filename)
 
     # ------------------ MODE SELECTION ------------------
     if st.session_state.mode is None:
@@ -127,28 +95,36 @@ else:
             st.session_state.mode = "mc"
         else:
             st.session_state.mode = "text"
-    
-    st.write("### Spell the word:")
-    
-    # ------------------ MULTIPLE CHOICE MODE ------------------
-    if st.session_state.mode == "mc":
-        options = [current_word] + current_word_details.get("spell", [])
-        random.shuffle(options)
-        col1, col2, col3 = st.columns(3)
-        for i, opt in enumerate(options):
-            col = [col1, col2, col3][i % 3]
-            if col.button(opt, disabled=st.session_state.submitted):
-                if not st.session_state.submitted:
-                    if opt == current_word:
-                        st.session_state.last_result = f"🌟 Correct! It was {current_word}"
-                        st.session_state.score += 1
-                    else:
-                        st.session_state.last_result = f"❌ Not quite. It was {current_word}"
-                    st.session_state.submitted = True
-                    st.session_state.show_next = True
 
     # ------------------ TEXT INPUT MODE ------------------
-    else:
+    if st.session_state.mode == "text":
+        st.markdown("### 🔊 Listen and spell the word:")
+
+        # Generate audio
+        dic = pyphen.Pyphen(lang='en')
+        syllables = dic.inserted(current_word).split('-')
+        if "syll" in current_word_details:
+            syllables = current_word_details["syll"]
+
+        def tts_bytes(text, slow=False):
+            fp = io.BytesIO()
+            tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
+            tts.write_to_fp(fp)
+            fp.seek(0)
+            return fp.read()
+
+        final_mp3 = b""
+        final_mp3 += tts_bytes(f"Can you spell {current_word}?", slow=False)
+        if len(syllables) > 1:
+            for s in syllables:
+                final_mp3 += tts_bytes(s, slow=True)
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+            tmp.write(final_mp3)
+            temp_filename = tmp.name
+        st.audio(temp_filename)
+
+        # Text input form
         with st.form(key=f"text_form_{st.session_state.index}"):
             user_word = st.text_input(
                 "Type the word:",
@@ -168,6 +144,24 @@ else:
                 st.session_state.last_result = f"❌ Not quite. It was {current_word}"
             st.session_state.submitted = True
             st.session_state.show_next = True
+
+    # ------------------ MULTIPLE CHOICE MODE ------------------
+    else:
+        st.markdown("### ❓ Choose the correct spelling:")
+        options = [current_word] + current_word_details.get("spell", [])
+        random.shuffle(options)
+        col1, col2, col3 = st.columns(3)
+        for i, opt in enumerate(options):
+            col = [col1, col2, col3][i % 3]
+            if col.button(opt, disabled=st.session_state.submitted):
+                if not st.session_state.submitted:
+                    if opt == current_word:
+                        st.session_state.last_result = f"🌟 Correct! It was {current_word}"
+                        st.session_state.score += 1
+                    else:
+                        st.session_state.last_result = f"❌ Not quite. It was {current_word}"
+                    st.session_state.submitted = True
+                    st.session_state.show_next = True
 
     # ------------------ FEEDBACK ------------------
     if st.session_state.last_result:
@@ -198,4 +192,3 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
-
