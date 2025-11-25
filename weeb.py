@@ -168,7 +168,7 @@ else:
                     st.snow()
                 else:
                     st.error(f"❌ Not quite. It was **{current_word}**.")
-                    st.toast()
+                    st.toast("Your edited image was saved!", icon="😍")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
@@ -302,6 +302,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
