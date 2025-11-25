@@ -74,6 +74,32 @@ st.markdown("""
     </p>
 """, unsafe_allow_html=True)
 
+# ------------------ AUDIO HELPERS ------------------
+AUDIO_DIR = "audio"
+os.makedirs(AUDIO_DIR, exist_ok=True)
+
+def get_audio_for_word(word, syllables=None):
+    safe_name = word.replace(" ", "_").lower()
+    filename = os.path.join(AUDIO_DIR, f"{safe_name}.mp3")
+    if os.path.exists(filename):
+        return filename
+    # Generate MP3
+    final_bytes = b""
+    def tts_bytes(text, slow=False):
+        fp = io.BytesIO()
+        tts = gTTS(text=text, lang="en", tld="co.uk", slow=slow)
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()
+    final_bytes += tts_bytes(f"Can you spell {word}?")
+    if syllables and len(syllables) > 1:
+        for s in syllables:
+            final_bytes += tts_bytes(s, slow=True)
+    with open(filename, "wb") as f:
+        f.write(final_bytes)
+    return filename
+
+
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
     total = len(st.session_state.words)
@@ -100,15 +126,21 @@ else:
     if st.session_state.current_mode == "text":
         st.markdown(f"### 🔊 Listen and spell the word:")
 
-        # Generate MP3 once per word if not cached
-        if st.session_state.audio_file is None:
-            tts_fp = io.BytesIO()
-            tts = gTTS(f"Can you spell {current_word}?", lang="en", tld="co.uk", slow=False)
-            tts.write_to_fp(tts_fp)
-            tts_fp.seek(0)
-            st.session_state.audio_file = tts_fp.read()
+        dic = pyphen.Pyphen(lang="en")
+        syllables = dic.inserted(current_word).split("-")
+        if "syll" in word_entry: syllables = word_entry["syll"]
+        mp3_file = get_audio_for_word(current_word, syllables)
+        st.audio(mp3_file)
 
-        st.audio(st.session_state.audio_file, format="audio/mp3")
+        # Generate MP3 once per word if not cached
+        #if st.session_state.audio_file is None:
+        #    tts_fp = io.BytesIO()
+        #    tts = gTTS(f"Can you spell {current_word}?", lang="en", tld="co.uk", slow=False)
+        #    tts.write_to_fp(tts_fp)
+        #    tts_fp.seek(0)
+        #    st.session_state.audio_file = tts_fp.read()
+
+        # st.audio(st.session_state.audio_file, format="audio/mp3")
         
         if "user_word_value" not in st.session_state:
             st.session_state.user_word_value = ""
@@ -188,4 +220,5 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
