@@ -109,12 +109,15 @@ else:
             st.session_state.audio_file = tts_fp.read()
 
         st.audio(st.session_state.audio_file, format="audio/mp3")
-
+        
+        if "user_word_value" not in st.session_state:
+            st.session_state.user_word_value = ""
+            
         # Form for text input
         with st.form(key="text_form"):
             user_word = st.text_input(
                 "Type the word:",
-                key="user_word",
+                value=st.session_state.user_word_value,  # <- controls content
                 placeholder="Type here",
                 autocomplete="off"
             )
@@ -136,7 +139,7 @@ else:
                 st.session_state.index += 1
                 st.session_state.current_mode = None
                 st.session_state.submitted = False
-                st.session_state.user_word = ""
+                st.session_state.user_word_value = ""  # Clear text safely
                 if st.session_state.index >= len(st.session_state.words):
                     st.session_state.done = True
                 st.rerun()
@@ -185,3 +188,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
