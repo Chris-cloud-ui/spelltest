@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import random
 from gtts import gTTS
+import pyphen
 import io
 import tempfile
 
@@ -220,5 +221,6 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
