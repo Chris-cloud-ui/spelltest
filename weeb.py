@@ -182,10 +182,14 @@ else:
         if "spell" in current_word_details:
             options += current_word_details["spell"]
         
-        # Shuffle only once per word
-        if "mc_options" not in st.session_state:
+        # Shuffle only once per word and store in session_state
+        if st.session_state.mc_options is None:
             random.shuffle(options)
             st.session_state.mc_options = options
+    
+        # Track which button was clicked
+        if st.session_state.mc_selection is None:
+            st.session_state.mc_selection = None
 
 
         # Render buttons manually with HTML + JS for styling
@@ -246,6 +250,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
