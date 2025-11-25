@@ -77,9 +77,6 @@ st.markdown("""
     <h1 style='text-align:center; color:#ff66a6;'>
         🧙‍♀️ Slay Spells
     </h1>
-    <p style='text-align:center; font-size:20px; color:#555;'>
-        Practise your spells
-    </p>
 """, unsafe_allow_html=True)
 
 # ------------------ AUDIO HELPERS ------------------
@@ -306,6 +303,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
