@@ -153,43 +153,35 @@ else:
     # SPELLING INPUT FORM
     # -----------------------------------------------------
     with st.form("spell_form"):
-
-        # dynamic button caption
-        button_text = "Next Word" if st.session_state.submitted else "Submit"
-
         user_input = st.text_input(
             "Type the word:",
             key="user_word",
             placeholder="Type here",
             autocomplete="off"
         )
-
-        pressed = st.form_submit_button(button_text)
+        pressed = st.form_submit_button("Submit")
 
     # -----------------------------------------------------
     # FORM BUTTON LOGIC
     # -----------------------------------------------------
     if pressed:
-        if not st.session_state.submitted:
-            # FIRST PRESS: evaluate spelling
-            if user_input.upper() == current_word.upper():
-                st.success("🌟 Correct!")
-                st.session_state.score += 1
-            else:
-                st.error(f"❌ Not quite. It was **{current_word}**.")
-
-            st.session_state.submitted = True
-
+        # Check spelling
+        if user_input.upper() == current_word.upper():
+            st.success("🌟 Correct!")
+            st.session_state.score += 1
         else:
-            # SECOND PRESS: move to next word
-            st.session_state.user_word = ""
-            st.session_state.submitted = False
-            st.session_state.index += 1
-
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
-
-            st.rerun()
+            st.error(f"❌ Not quite. It was **{current_word}**.")
+    
+        # Clear text box
+        st.session_state.user_word = ""
+    
+        # Move to next word
+        st.session_state.index += 1
+        if st.session_state.index >= len(st.session_state.words):
+            st.session_state.done = True
+    
+        # Immediately refresh app with next word
+        st.experimental_rerun()
 
 
 # -----------------------------------------------------
@@ -208,3 +200,4 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
