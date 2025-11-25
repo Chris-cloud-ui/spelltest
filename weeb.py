@@ -11,7 +11,7 @@ from pydub import AudioSegment
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
 from random import randint
-
+import pydub.utils
 pydub.utils.audioop = None
 
 st.set_page_config(
@@ -203,6 +203,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
