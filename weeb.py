@@ -158,7 +158,7 @@ else:
                     placeholder="Type here",
                     autocomplete="off"
                 )
-                submitted = st.form_submit_button(btn_label)
+                submitted = st.form_submit_button("Submit")
 
             if submitted:
                 if user_word.upper() == current_word.upper():
@@ -243,6 +243,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
