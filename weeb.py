@@ -314,9 +314,11 @@ else:
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
             ⭐ Score: **{entry['score']} / {entry['total']}**
-            🔤 Misspellings: **{entry['misspellings']}**  
+            <br>
+            🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
