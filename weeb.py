@@ -72,6 +72,10 @@ if "mc_options" not in st.session_state:
 if "mc_selection" not in st.session_state:
     st.session_state.mc_selection = None
 
+# Misspelt words
+if "misspelt" not in st.session_state:
+    st.session_state.misspelt = ""
+    
 # ------------------ HEADER ------------------------
 st.markdown("""
     <h1 style='text-align:center; color:#ff66a6;'>
@@ -113,12 +117,14 @@ def get_audio_for_word(word, syllables=None):
 if st.session_state.done:
     total = len(st.session_state.words)
     score = st.session_state.score
+    misspellings = st.session_state.misspelt
     st.success(f"🎉 All done! You scored **{score} / {total}**")
     save_history({
         "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "list": list_choice,
         "score": score,
-        "total": total
+        "total": total,
+        "misspellings": misspellings 
     })
     st.balloons()
 else:
@@ -170,7 +176,9 @@ else:
                     st.toast("Correct", icon="🪄")
                 else:
                     #st.error(f"Not quite. It was **{current_word}**.")
+                    st.session_state.misspelt += current_word + " "
                     st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
+                    
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
                 if st.button("Next Word"):
@@ -224,6 +232,7 @@ else:
                 else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
+                    st.session_state.misspelt += current_word + " "
                     st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
@@ -307,6 +316,7 @@ else:
             ⭐ Score: **{entry['score']} / {entry['total']}**
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
