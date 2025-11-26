@@ -27,7 +27,7 @@ thisweek:
   - word: crumb
     spell: ["crum","crumm"]
   - word: thumb
-    spell: ["thum","thump"]
+    spell: ["thum","thumm"]
   - word: accompany
     syll: ["ack","come","panny"]
     spell: ["acompany","accumpany"]
@@ -35,11 +35,25 @@ thisweek:
     syll: ["crit","e","size"]
     spell: ["crittisize","critticise"]
 
-grade2:
-  - word: elephant
-  - word: giraffe
-  - word: chocolate
-  - word: butterfly
+older:
+  - word: profit
+    syll: ["related","to","money"]
+  - word: repress
+  - word: react
+  - word: resign
+  - word: recover
+  - word: prophet
+    syll: ["related","to","religion"]
+  - word: reserve
+  - word: convenient
+  - word: curiosity
+  - word: conscious
+    spell: ["concious","consious"]
+  - word: nuisance
+    spell: ["newsance","nusance"]
+  - word: opportunity
+    spell: ["oportunity","oppotunity"]
+
 
 
 
