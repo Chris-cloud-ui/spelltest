@@ -115,19 +115,20 @@ def get_audio_for_word(word, syllables=None):
 
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
-    total = len(st.session_state.words)
-    score = st.session_state.score
-    misspellings = st.session_state.misspelt
-    st.success(f"🎉 All done! You scored **{score} / {total}**")
-    save_history({
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "list": list_choice,
-        "score": score,
-        "total": total,
-        "misspellings": misspellings 
-    })
-    st.balloons()
-    st.session_state.done = False
+    if len(st.session_state.words) > 0:
+        total = len(st.session_state.words)
+        score = st.session_state.score
+        misspellings = st.session_state.misspelt
+        st.success(f"🎉 All done! You scored **{score} / {total}**")
+        save_history({
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "list": list_choice,
+            "score": score,
+            "total": total,
+            "misspellings": misspellings 
+        })
+        st.balloons()
+        st.session_state.words = []
 else:
     current_word_details = st.session_state.words[st.session_state.index]
     current_word = current_word_details["word"]
@@ -319,6 +320,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
