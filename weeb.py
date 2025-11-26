@@ -127,6 +127,7 @@ if st.session_state.done:
         "misspellings": misspellings 
     })
     st.balloons()
+    st.session_state.done = False
 else:
     current_word_details = st.session_state.words[st.session_state.index]
     current_word = current_word_details["word"]
@@ -318,6 +319,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
