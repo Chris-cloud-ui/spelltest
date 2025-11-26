@@ -6,9 +6,9 @@ thisweek:
     syll: ["hand","ker","chief"]
     spell: ["hankerchief","hankachief"]
   - word: government
-    spell: ["guverment","goverment"]
+    spell: ["govenment","goverment"]
   - word: environment
-    spell: ["endviroment","enviroment"]
+    spell: ["environement","enviroment"]
   - word: castle
     spell: ["cassle","cassel"]
   - word: raspberry
@@ -22,6 +22,7 @@ thisweek:
   - word: wrapper
   - word: answer
     syll: ["answer"]
+    spell: ["anser","awnser"]
   - word: doubt
     spell: ["dowt","dought"]
   - word: crumb
@@ -30,29 +31,32 @@ thisweek:
     spell: ["thum","thumm"]
   - word: accompany
     syll: ["ack","come","panny"]
-    spell: ["acompany","accumpany"]
+    spell: ["acompany","acompanny"]
   - word: criticise
     syll: ["crit","e","size"]
-    spell: ["crittisize","critticise"]
-
-older:
+    spell: ["critisise","criticize"]
   - word: profit
     syll: ["related","to","money"]
   - word: repress
   - word: react
   - word: resign
+    spell: ["resine","reasign"]
   - word: recover
   - word: prophet
     syll: ["related","to","religion"]
   - word: reserve
+    spell: ["resserve","reserv"]
   - word: convenient
+    spell: ["convinent","conveniant"]
   - word: curiosity
+    spell: ["curiousity", "curiosty"] 
   - word: conscious
     spell: ["concious","consious"]
   - word: nuisance
-    spell: ["newsance","nusance"]
+    spell: ["nuiscance","nuissance"]
   - word: opportunity
     spell: ["oportunity","oppotunity"]
+
 
 
 
