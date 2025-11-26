@@ -21,7 +21,7 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-HISTORY_FILE = "wordhistory.json"
+HISTORY_FILE = "word_history.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -178,7 +178,7 @@ else:
                     st.toast("Correct", icon="🪄")
                 else:
                     #st.error(f"Not quite. It was **{current_word}**.")
-                    st.session_state.misspelt += "<br>           " + current_word + " (" + user_word + ")"
+                    st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
                     st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
                     
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
@@ -234,7 +234,7 @@ else:
                 else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
-                    st.session_state.misspelt += "<br>           " + current_word + " (" + selected_option + ")"
+                    st.session_state.misspelt += "<br>           " + current_word + " (selected: " + selected_option + ")"
                     st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
@@ -320,6 +320,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
