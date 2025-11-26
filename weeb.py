@@ -21,7 +21,7 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-HISTORY_FILE = "history1.json"
+HISTORY_FILE = "history2.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -314,9 +314,10 @@ else:
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
             ⭐ Score: **{entry['score']} / {entry['total']}**
-            ❌🔤 Misspellings: **{entry['misspellings']}**  
+            🔤 Misspellings: **{entry['misspellings']}**  
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
