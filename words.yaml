@@ -18,7 +18,7 @@ thisweek:
     spell: ["cubboard","cuboard"]
   - word: February
     syll: ["february"]
-    spell: ["febuary","februay"]
+    spell: ["Febuary","Februay"]
   - word: wrapper
   - word: answer
     syll: ["answer"]
@@ -56,6 +56,7 @@ thisweek:
     spell: ["nuiscance","nuissance"]
   - word: opportunity
     spell: ["oportunity","oppotunity"]
+
 
 
 
