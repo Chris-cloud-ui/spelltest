@@ -14,22 +14,30 @@ hugo:
     spell: ["droping","droppin"]
 cait:
   - word: circulation
+    syll: ["circumference"]
   - word: telegraph
   - word: translate
   - word: circumference
+    syll: ["circumference"]
   - word: telephone
   - word: transfer
   - word: circle
+    syll: ["circumference"]
   - word: television
   - word: transmit
   - word: circular
+    syll: ["circular"]
   - word: telescope
   - word: transport
   - word: circus
+    syll: ["circumference"]
   - word: telepathy
+    syll: ["circumference"]
   - word: transplant
   - word: signature
+    syll: ["circumference"]
   - word: sufficient
+    syll: ["circumference"]
 thisweek:
   - word: handbag
   - word: handsome
@@ -88,6 +96,7 @@ thisweek:
     spell: ["nuiscance","nuissance"]
   - word: opportunity
     spell: ["oportunity","oppotunity"]
+
 
 
 
