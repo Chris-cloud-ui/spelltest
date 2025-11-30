@@ -171,9 +171,7 @@ else:
                 submitted = st.form_submit_button("Submit")
                 
             if submitted:
-                if len(user_word) == 0:
-                    submitted == False
-                else:
+                if len(user_word) > 0:
                     if user_word.upper() == current_word.upper():
                         #st.success("🌟 Correct!")
                         st.session_state.score += 1
@@ -198,9 +196,7 @@ else:
                 
                         st.rerun()
         else:
-            if len(user_word) == 0:
-                submitted == False
-            else:
+            if len(user_word) > 0:
                 st.session_state.index += 1
                 st.session_state.current_mode = None
                 st.session_state.submitted = False
@@ -326,6 +322,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
