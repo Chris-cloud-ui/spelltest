@@ -1,3 +1,35 @@
+hugo:
+  - word: foxes
+    spell: ["foxs","foxxes"]
+  - word: humming
+  - word: wishes
+    spell: ["wishis","wishs"]
+  - word: fizzes
+  - word: jumping
+  - word: brushes
+    spell: ["brushs","brushis"]
+  - word: fixing
+    spell: ["fixxing","fixinge"]
+  - word: dropping
+    spell: ["droping","droppin"]
+cait:
+  - word: circulation
+  - word: telegraph
+  - word: translate
+  - word: circumference
+  - word: telephone
+  - word: transfer
+  - word: circle
+  - word: television
+  - word: transmit
+  - word: circular
+  - word: telescope
+  - word: transport
+  - word: circus
+  - word: telepathy
+  - word: transplant
+  - word: signature
+  - word: sufficient
 thisweek:
   - word: handbag
   - word: handsome
@@ -56,6 +88,7 @@ thisweek:
     spell: ["nuiscance","nuissance"]
   - word: opportunity
     spell: ["oportunity","oppotunity"]
+
 
 
 
