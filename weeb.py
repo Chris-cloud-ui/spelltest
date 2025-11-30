@@ -171,39 +171,45 @@ else:
                 submitted = st.form_submit_button("Submit")
                 
             if submitted:
-                if user_word.upper() == current_word.upper():
-                    #st.success("🌟 Correct!")
-                    st.session_state.score += 1
-                    #st.snow()
-                    st.toast("Correct", icon="🪄")
+                if len(user_word) == 0:
+                    submitted == False
                 else:
-                    #st.error(f"Not quite. It was **{current_word}**.")
-                    st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
-                    st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
-                    
-                st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
-                st.session_state.submitted = True
-                if st.button("Next Word"):
-                    
-                    st.session_state.index += 1
-                    st.session_state.current_mode = None
-                    st.session_state.submitted = False
-                    st.session_state.user_word_value = ""
-                 
-                    if st.session_state.index >= len(st.session_state.words):
-                        st.session_state.done = True
-            
-                    st.rerun()
+                    if user_word.upper() == current_word.upper():
+                        #st.success("🌟 Correct!")
+                        st.session_state.score += 1
+                        #st.snow()
+                        st.toast("Correct", icon="🪄")
+                    else:
+                        #st.error(f"Not quite. It was **{current_word}**.")
+                        st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                        st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
+                        
+                    st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+                    st.session_state.submitted = True
+                    if st.button("Next Word"):
+                        i
+                        st.session_state.index += 1
+                        st.session_state.current_mode = None
+                        st.session_state.submitted = False
+                        st.session_state.user_word_value = ""
+                     
+                        if st.session_state.index >= len(st.session_state.words):
+                            st.session_state.done = True
+                
+                        st.rerun()
         else:
-            st.session_state.index += 1
-            st.session_state.current_mode = None
-            st.session_state.submitted = False
-            st.session_state.user_word_value = ""
-            
-            if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
-            
-            st.rerun()
+            if len(user_word) == 0:
+                submitted == False
+            else:
+                st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.user_word_value = ""
+                
+                if st.session_state.index >= len(st.session_state.words):
+                    st.session_state.done = True
+                
+                st.rerun()
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
@@ -320,6 +326,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
