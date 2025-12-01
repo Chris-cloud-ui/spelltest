@@ -59,6 +59,8 @@ if "words" not in st.session_state:
     st.session_state.words = words
 if "redo_words" not in st.session_state:
     st.session_state.redo_words = []
+if "in_round_2" not in st.session_state:
+    st.session_state.in_round_2 = False
 
 # Per-word state
 if "submitted" not in st.session_state:
@@ -436,6 +438,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
