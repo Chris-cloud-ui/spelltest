@@ -57,6 +57,8 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+if "redo_words" not in st.session_state:
+    redo_words = []
 
 # Per-word state
 if "submitted" not in st.session_state:
@@ -144,7 +146,9 @@ else:
 
     # ------------------ TEXT INPUT MODE ------------------
     if st.session_state.current_mode == "text":
-        st.markdown(f"### 🔊 Listen and spell the word (:")
+        qnum = st.session_state.index + 1
+        total = len(st.session_state.words)
+        st.markdown(f"### 🔊 Listen and spell the word ({qnum} of {total})")
 
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
@@ -168,10 +172,11 @@ else:
                     placeholder="Type here",
                     autocomplete="off"
                 )
-                submitted = st.form_submit_button("Submit")
+                submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
                 
             if submitted:
                 if len(user_word) > 0:
+                    
                     if user_word.upper() == current_word.upper():
                         #st.success("🌟 Correct!")
                         st.session_state.score += 1
@@ -180,12 +185,13 @@ else:
                     else:
                         #st.error(f"Not quite. It was **{current_word}**.")
                         st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                        st.session_state.redo_words.append(current_word_details)
                         st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
                         
                     st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                     st.session_state.submitted = True
                     if st.button("Next Word"):
-                        i
+
                         st.session_state.index += 1
                         st.session_state.current_mode = None
                         st.session_state.submitted = False
@@ -224,7 +230,7 @@ else:
                 st.session_state.mc_selection = st.radio(
                     "", st.session_state.mc_options, index=0
                 )
-                submitted = st.form_submit_button("Submit")
+                submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 selected_option = st.session_state.mc_selection
                 if selected_option == correct:
@@ -236,6 +242,7 @@ else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
                     st.session_state.misspelt += "<br>           " + current_word + " (selected: " + selected_option + ")"
+                    st.session_state.redo_words.append(current_word_details)
                     st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
@@ -321,6 +328,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
