@@ -170,8 +170,11 @@ else:
                     placeholder="Type here",
                     autocomplete="off"
                 )
-                submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
-                
+                #submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
+                if not st.session_state.submitted:
+                    submitted = st.form_submit_button("Submit")
+                else:
+                    submitted = False  # form button not shown
             if submitted:
                 if len(user_word) > 0:
                     
@@ -324,6 +327,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
