@@ -268,7 +268,7 @@ else:
         
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
-    if st.session_state.current_mode == "mc":
+    elif st.session_state.current_mode == "mc":
         if st.session_state.in_round_2:
             st.markdown(f"#### ❓ Let's correct the misspelled words! ####")
             st.error(f"Fix {qnum} of {total}")
@@ -376,29 +376,31 @@ else:
             with st.form(key="mc_form"):
                 for i, letter in enumerate(current_word):
                     if i in missing_indices:
-                        user_letters[i] = st.text_input(
-                            f"Letter {i+1}", 
-                            max_chars=1, 
+                        user_letters[i] = st.selectbox(
+                            f"Letter {i+1}",
+                            options=letters,
                             key=f"letter_{i}"
                         )
                         display_word += "_"
                     else:
                         display_word += letter
-                st.session_state.mc_selection = st.radio(
-                    "", st.session_state.mc_options, index=0
-                )
                 st.write("Word to fill:", display_word)
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 st.session_state.submitted = True
-                selected = st.session_state.mc_selection
-                if selected.upper() == current_word.upper():
+                correct = True
+                for i in missing_indices:
+                    if user_letters[i].upper() != word[i]:
+                        correct = False
+                        break
+                
+                if correct:
                     st.session_state.score += 1
                     st.session_state.correct = True
                 else:
                     st.session_state.correct = False
                     if not st.session_state.in_round_2:
-                        st.session_state.misspelt += "<br>           " + current_word + f" (selected: {selected})"
+                        st.session_state.misspelt += "<br>           " + current_word + f" (todo)"
                     st.session_state.redo_words.append(current_word_details)
                 st.rerun()
 
@@ -415,8 +417,6 @@ else:
                 st.session_state.index += 1
                 st.session_state.current_mode = None
                 st.session_state.submitted = False
-                st.session_state.mc_options = None
-                st.session_state.mc_selection = None
              
                 if st.session_state.index >= len(st.session_state.words):
                     # ---------- ROUND 1 FINISHED ----------
@@ -486,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
