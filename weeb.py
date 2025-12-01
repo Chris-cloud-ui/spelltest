@@ -161,8 +161,9 @@ else:
         
         
         if st.session_state.in_round_2:
-            st.error(f"Fix {qnum} of {total}")
+            
             st.markdown(f"#### 🔊 Let's correct the misspelled words! ####")
+            st.error(f"Fix {qnum} of {total}")
         else:
             st.info(f"Question {qnum} of {total}")
             st.markdown(f"### 🔊 Listen and spell:")
@@ -378,6 +379,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
