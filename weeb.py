@@ -362,7 +362,7 @@ else:
             st.info(f"Question {qnum} of {total}")
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
-    
+        missing_indices = sorted(random.sample(range(len(current_word)), 3))
         user_letters = {}
         display_word = ""
         
@@ -484,6 +484,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
