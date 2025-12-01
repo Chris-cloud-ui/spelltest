@@ -156,9 +156,9 @@ else:
     # Pick mode once per word
     if st.session_state.current_mode is None:
         if "spell" in current_word_details:
-            st.session_state.current_mode = random.choice(["text", "mc"])
+            st.session_state.current_mode = random.choice(["text", "mc", "ww"])
         else:
-            st.session_state.current_mode = "text"
+            st.session_state.current_mode = random.choice(["text", "ww"])
         st.session_state.submitted = False
         st.session_state.audio_file = None
 
@@ -268,7 +268,7 @@ else:
         
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
-    else:
+    if st.session_state.current_mode == "mc":
         if st.session_state.in_round_2:
             st.markdown(f"#### ❓ Let's correct the misspelled words! ####")
             st.error(f"Fix {qnum} of {total}")
@@ -283,6 +283,101 @@ else:
             random.shuffle(options)
             st.session_state.mc_options = options
             st.session_state.mc_selection = None
+    
+        # Use radio buttons inside a form
+        if not st.session_state.submitted:
+            st.audio(mp3_file)
+            with st.form(key="mc_form"):
+                st.session_state.mc_selection = st.radio(
+                    "", st.session_state.mc_options, index=0
+                )
+                submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
+            if submitted:
+                st.session_state.submitted = True
+                selected = st.session_state.mc_selection
+                if selected.upper() == current_word.upper():
+                    st.session_state.score += 1
+                    st.session_state.correct = True
+                else:
+                    st.session_state.correct = False
+                    if not st.session_state.in_round_2:
+                        st.session_state.misspelt += "<br>           " + current_word + f" (selected: {selected})"
+                    st.session_state.redo_words.append(current_word_details)
+                st.rerun()
+
+        else:
+            if st.session_state.correct:
+                st.success(f"Correct. It was **{current_word}**.", icon="🪄")
+            else:
+                st.error(f"Not quite. It was **{current_word}**.", icon="❌")
+                    
+            st.info("Current score: " + str(st.session_state.score) + " out of " + str(st.session_state.index + 1))
+
+            if st.button("Next Word"):
+
+                st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.mc_options = None
+                st.session_state.mc_selection = None
+             
+                if st.session_state.index >= len(st.session_state.words):
+                    # ---------- ROUND 1 FINISHED ----------
+                    if not st.session_state.in_round_2:
+                        st.session_state.scoretwo = st.session_state.score
+                        if len(st.session_state.redo_words) > 0:
+                            # Start Round 2
+                            st.session_state.words = st.session_state.redo_words[:]
+                            st.session_state.redo_words = []
+                            st.session_state.in_round_2 = True
+                
+                            # Option A — keep Round 1 score
+                            # (do nothing to score)
+                
+                            # Option B — reset score for Round 2
+                            st.session_state.score = 0
+                
+                            st.session_state.index = 0
+                            st.session_state.current_mode = None
+                            st.session_state.submitted = False
+                
+                            st.success("✨ Round 2: Let's correct the misspelled words!")
+                            st.rerun()
+                
+                        else:
+                            st.session_state.done = True
+                
+                    # ---------- ROUND 2 FINISHED ----------
+                    else:
+                        st.session_state.done = True
+        
+                st.rerun()
+    # ------------------ MULTIPLE CHOICE MODE ------------------
+    else:
+        if st.session_state.in_round_2:
+            st.markdown(f"#### ❓ Let's correct the misspelled words! ####")
+            st.error(f"Fix {qnum} of {total}")
+        else:
+            st.markdown(f"### ❓ Fill the missing letters:")
+            st.info(f"Question {qnum} of {total}")
+        correct = current_word
+        options = [correct] + current_word_details.get("spell", [])
+    
+        user_letters = {}
+        display_word = ""
+        
+        for i, letter in enumerate(word):
+            if i in missing_indices:
+                user_letters[i] = st.text_input(
+                    f"Letter {i+1}", 
+                    max_chars=1, 
+                    key=f"letter_{i}"
+                )
+                display_word += "_"
+            else:
+                display_word += letter
+        
+        st.write("Word to fill:", display_word)
     
         # Use radio buttons inside a form
         if not st.session_state.submitted:
@@ -389,6 +484,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
