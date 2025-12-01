@@ -368,7 +368,7 @@ else:
         
         
         
-        st.write("Word to fill:", display_word)
+        
     
         # Use radio buttons inside a form
         if not st.session_state.submitted:
@@ -387,6 +387,7 @@ else:
                 st.session_state.mc_selection = st.radio(
                     "", st.session_state.mc_options, index=0
                 )
+                st.write("Word to fill:", display_word)
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 st.session_state.submitted = True
@@ -485,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
