@@ -57,8 +57,6 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
-if "redo_words" not in st.session_state:
-    redo_words = []
 
 # Per-word state
 if "submitted" not in st.session_state:
@@ -185,7 +183,6 @@ else:
                     else:
                         #st.error(f"Not quite. It was **{current_word}**.")
                         st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
-                        st.session_state.redo_words.append(current_word_details)
                         st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
                         
                     st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
@@ -242,7 +239,6 @@ else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
                     st.session_state.misspelt += "<br>           " + current_word + " (selected: " + selected_option + ")"
-                    st.session_state.redo_words.append(current_word_details)
                     st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
@@ -328,6 +324,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
