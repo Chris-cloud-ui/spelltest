@@ -377,12 +377,22 @@ else:
             with st.form(key="mc_form"):
                 for i, letter in enumerate(current_word):
                     if i in missing_indices:
+                        key = f"letter_{i}"
+                        # Initialize session_state if not present
+                        if key not in st.session_state:
+                            st.session_state[key] = ""  # empty default
+                
+                        # Dropdown with persisted value
                         user_letters[i] = st.selectbox(
                             f"Letter {i+1}",
                             options=letters,
-                            key=f"letter_{i}"
+                            index=letters.index(st.session_state[key]) if st.session_state[key] in letters else 0,
+                            key=key
                         )
-                        display_word += " _ "
+                        # Update session_state
+                        st.session_state[key] = user_letters[i]
+                
+                        display_word += "_"
                     else:
                         display_word += letter
                 st.success(f"Word to fill: {display_word}")
@@ -391,9 +401,7 @@ else:
                 st.session_state.submitted = True
                 correct = True
                 for i in missing_indices:
-                    if user_letters[i].upper() != current_word[i].upper():
-                        st.info(user_letters[i].upper())
-                        st.info(current_word[i].upper())
+                    if st.session_state[f"letter_{i}"].upper() != word[i]:
                         correct = False
                         break
                 
@@ -489,6 +497,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
