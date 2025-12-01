@@ -162,6 +162,11 @@ else:
         st.session_state.submitted = False
         st.session_state.audio_file = None
 
+    dic = pyphen.Pyphen(lang="en")
+    syllables = dic.inserted(current_word).split("-")
+    if "syll" in current_word_details: 
+        syllables = current_word_details["syll"]
+    mp3_file = get_audio_for_word(current_word, syllables)
     # ------------------ TEXT INPUT MODE ------------------
     if st.session_state.current_mode == "text":
         
@@ -174,11 +179,7 @@ else:
         else:
             st.markdown(f"### 🔊 Listen and spell:")
             st.info(f"Question {qnum} of {total}")
-        dic = pyphen.Pyphen(lang="en")
-        syllables = dic.inserted(current_word).split("-")
-        if "syll" in current_word_details: 
-            syllables = current_word_details["syll"]
-        mp3_file = get_audio_for_word(current_word, syllables)
+        
         
         
         if "user_word_value" not in st.session_state:
@@ -285,6 +286,7 @@ else:
     
         # Use radio buttons inside a form
         if not st.session_state.submitted:
+            st.audio(mp3_file)
             with st.form(key="mc_form"):
                 st.session_state.mc_selection = st.radio(
                     "", st.session_state.mc_options, index=0
@@ -387,6 +389,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
