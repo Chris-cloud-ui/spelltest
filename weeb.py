@@ -179,7 +179,7 @@ else:
         if "syll" in current_word_details: 
             syllables = current_word_details["syll"]
         mp3_file = get_audio_for_word(current_word, syllables)
-        st.audio(mp3_file)
+        
         
         if "user_word_value" not in st.session_state:
             st.session_state.user_word_value = ""
@@ -188,6 +188,7 @@ else:
             
         # Form for text input
         if not st.session_state.submitted:
+            st.audio(mp3_file)
             with st.form(key="text_form"):
                 user_word = st.text_input(
                     "🪄",
@@ -386,6 +387,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
