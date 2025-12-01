@@ -57,6 +57,8 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+if "redo_words" not in st.session_state:
+    st.session_state.redo_words = []
 
 # Per-word state
 if "submitted" not in st.session_state:
@@ -434,6 +436,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
