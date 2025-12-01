@@ -170,11 +170,8 @@ else:
                     placeholder="Type here",
                     autocomplete="off"
                 )
-                #submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
-                if not st.session_state.submitted:
-                    submitted = st.form_submit_button("Submit")
-                else:
-                    submitted = False  # form button not shown
+                submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
+                
             if submitted:
                 if len(user_word) > 0:
                     
@@ -186,6 +183,7 @@ else:
                     else:
                         #st.error(f"Not quite. It was **{current_word}**.")
                         st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                        st.session_state.redo_words.append(current_word_details)
                         st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
                         
                     st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
@@ -198,7 +196,34 @@ else:
                         st.session_state.user_word_value = ""
                      
                         if st.session_state.index >= len(st.session_state.words):
-                            st.session_state.done = True
+                            # ---------- ROUND 1 FINISHED ----------
+                            if not st.session_state.in_round_2:
+                        
+                                if len(st.session_state.redo_words) > 0:
+                                    # Start Round 2
+                                    st.session_state.words = st.session_state.redo_words[:]
+                                    st.session_state.redo_words = []
+                                    st.session_state.in_round_2 = True
+                        
+                                    # Option A — keep Round 1 score
+                                    # (do nothing to score)
+                        
+                                    # Option B — reset score for Round 2
+                                    # st.session_state.score = 0
+                        
+                                    st.session_state.index = 0
+                                    st.session_state.current_mode = None
+                                    st.session_state.submitted = False
+                        
+                                    st.success("✨ Round 2: Let's correct the misspelled words!")
+                                    st.rerun()
+                        
+                                else:
+                                    st.session_state.done = True
+                        
+                            # ---------- ROUND 2 FINISHED ----------
+                            else:
+                                st.session_state.done = True
                 
                         st.rerun()
         else:
@@ -208,7 +233,34 @@ else:
             st.session_state.user_word_value = ""
             
             if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
+                # ---------- ROUND 1 FINISHED ----------
+                if not st.session_state.in_round_2:
+            
+                    if len(st.session_state.redo_words) > 0:
+                        # Start Round 2
+                        st.session_state.words = st.session_state.redo_words[:]
+                        st.session_state.redo_words = []
+                        st.session_state.in_round_2 = True
+            
+                        # Option A — keep Round 1 score
+                        # (do nothing to score)
+            
+                        # Option B — reset score for Round 2
+                        # st.session_state.score = 0
+            
+                        st.session_state.index = 0
+                        st.session_state.current_mode = None
+                        st.session_state.submitted = False
+            
+                        st.success("✨ Round 2: Let's correct the misspelled words!")
+                        st.rerun()
+            
+                    else:
+                        st.session_state.done = True
+            
+                # ---------- ROUND 2 FINISHED ----------
+                else:
+                    st.session_state.done = True
             
             st.rerun()
 
@@ -242,6 +294,7 @@ else:
                     #st.error("❌ It was " + current_word)
                     #st.toast("What just happened ?", icon="💔")
                     st.session_state.misspelt += "<br>           " + current_word + " (selected: " + selected_option + ")"
+                    st.session_state.redo_words.append(current_word_details)
                     st.toast("Incorrect: it was " + current_word, icon="❌")
                 st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
@@ -254,7 +307,34 @@ else:
                     st.session_state.mc_selection = None
             
                     if st.session_state.index >= len(st.session_state.words):
-                        st.session_state.done = True
+                        # ---------- ROUND 1 FINISHED ----------
+                        if not st.session_state.in_round_2:
+                    
+                            if len(st.session_state.redo_words) > 0:
+                                # Start Round 2
+                                st.session_state.words = st.session_state.redo_words[:]
+                                st.session_state.redo_words = []
+                                st.session_state.in_round_2 = True
+                    
+                                # Option A — keep Round 1 score
+                                # (do nothing to score)
+                    
+                                # Option B — reset score for Round 2
+                                # st.session_state.score = 0
+                    
+                                st.session_state.index = 0
+                                st.session_state.current_mode = None
+                                st.session_state.submitted = False
+                    
+                                st.success("✨ Round 2: Let's correct the misspelled words!")
+                                st.rerun()
+                    
+                            else:
+                                st.session_state.done = True
+                    
+                        # ---------- ROUND 2 FINISHED ----------
+                        else:
+                            st.session_state.done = True
             
                     st.rerun()
         else:
@@ -265,7 +345,34 @@ else:
             st.session_state.mc_options = None
             st.session_state.mc_selection = None
             if st.session_state.index >= len(st.session_state.words):
-                st.session_state.done = True
+                # ---------- ROUND 1 FINISHED ----------
+                if not st.session_state.in_round_2:
+            
+                    if len(st.session_state.redo_words) > 0:
+                        # Start Round 2
+                        st.session_state.words = st.session_state.redo_words[:]
+                        st.session_state.redo_words = []
+                        st.session_state.in_round_2 = True
+            
+                        # Option A — keep Round 1 score
+                        # (do nothing to score)
+            
+                        # Option B — reset score for Round 2
+                        # st.session_state.score = 0
+            
+                        st.session_state.index = 0
+                        st.session_state.current_mode = None
+                        st.session_state.submitted = False
+            
+                        st.success("✨ Round 2: Let's correct the misspelled words!")
+                        st.rerun()
+            
+                    else:
+                        st.session_state.done = True
+            
+                # ---------- ROUND 2 FINISHED ----------
+                else:
+                    st.session_state.done = True
             
             st.rerun()
         
@@ -327,6 +434,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
