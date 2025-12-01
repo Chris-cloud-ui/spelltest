@@ -366,7 +366,7 @@ else:
         user_letters = {}
         display_word = ""
         
-        for i, letter in enumerate(word):
+        for i, letter in enumerate(current_word):
             if i in missing_indices:
                 user_letters[i] = st.text_input(
                     f"Letter {i+1}", 
@@ -484,6 +484,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
