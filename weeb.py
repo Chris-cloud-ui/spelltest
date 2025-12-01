@@ -369,7 +369,7 @@ else:
         
         
         
-        letter=["A","B"]
+        letters=["A","B"]
         # Use radio buttons inside a form
         if not st.session_state.submitted:
             st.audio(mp3_file)
@@ -486,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
