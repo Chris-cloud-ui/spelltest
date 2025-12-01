@@ -405,7 +405,7 @@ else:
                     if not st.session_state.in_round_2:
                         st.session_state.misspelt += "<br>           " + current_word + f" (todo)"
                     st.session_state.redo_words.append(current_word_details)
-                st.rerun()
+                #st.rerun()
 
         else:
             if st.session_state.correct:
@@ -489,6 +489,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
