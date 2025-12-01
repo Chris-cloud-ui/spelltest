@@ -59,6 +59,7 @@ if "words" not in st.session_state:
     if shuffle:
         random.shuffle(words)
     st.session_state.words = words
+    st.session_state.originalwords = words
 if "redo_words" not in st.session_state:
     st.session_state.redo_words = []
 if "in_round_2" not in st.session_state:
@@ -122,17 +123,17 @@ def get_audio_for_word(word, syllables=None):
 # ------------------ MAIN APP ----------------------
 if st.session_state.done:
     if len(st.session_state.words) > 0:
-        total = len(st.session_state.words)
+        fixes = len(st.session_state.words)
         score = st.session_state.score
         scoretwo = st.session_state.scoretwo
-        index = st.session_state.index
+        total = len(st.session_state.originalwords)
         misspellings = st.session_state.misspelt
         st.success(f"🎉 All done! You scored **{score} / {total}**")
         save_history({
             "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "list": list_choice,
             "score": f"{scoretwo} / {total}",
-            "fixes": f"{score} / {index}",
+            "fixes": f"{score} / {fixes}",
             "misspellings": misspellings
         })
         st.balloons()
@@ -362,11 +363,13 @@ else:
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
             ⭐ Score: **{entry['score']}**
+            <br>
             🔧 Fixes: **{entry['fixes']}**
             <br>
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
