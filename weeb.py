@@ -132,7 +132,8 @@ if st.session_state.done:
 else:
     current_word_details = st.session_state.words[st.session_state.index]
     current_word = current_word_details["word"]
-
+    qnum = st.session_state.index + 1
+    total = len(st.session_state.words)
     # Pick mode once per word
     if st.session_state.current_mode is None:
         if "spell" in current_word_details:
@@ -144,8 +145,7 @@ else:
 
     # ------------------ TEXT INPUT MODE ------------------
     if st.session_state.current_mode == "text":
-        qnum = st.session_state.index + 1
-        total = len(st.session_state.words)
+        
         st.markdown(f"### 🔊 Listen and spell the word ({qnum} of {total})")
 
         dic = pyphen.Pyphen(lang="en")
@@ -266,7 +266,7 @@ else:
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
-        st.markdown(f"### ❓ Choose the correct spelling:")
+        st.markdown(f"### ❓ Choose the correct spelling ({qnum} of {total})")
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
     
@@ -434,6 +434,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
