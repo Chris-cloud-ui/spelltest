@@ -178,7 +178,7 @@ else:
                 
             if submitted:
                 if len(user_word) > 0:
-                    
+                    user_word = st.session_state.user_word_value
                     if user_word.upper() == current_word.upper():
                         #st.success("🌟 Correct!")
                         st.session_state.score += 1
@@ -189,8 +189,9 @@ else:
                         st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
                         st.session_state.redo_words.append(current_word_details)
                         st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
-                    user_word=""    
+                    
                     st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+                    
                     st.session_state.submitted = True
                     if st.button("Next Word"):
 
@@ -235,7 +236,7 @@ else:
             st.session_state.current_mode = None
             st.session_state.submitted = False
             st.session_state.user_word_value = ""
-            user_word = st.session_state.user_word_value
+            
             if st.session_state.index >= len(st.session_state.words):
                 # ---------- ROUND 1 FINISHED ----------
                 if not st.session_state.in_round_2:
@@ -438,6 +439,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
