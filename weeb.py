@@ -255,11 +255,10 @@ else:
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 st.session_state.submitted = True
-                st.session_state.user_word_value = user_word     # store answer
                 st.rerun()
 
         else:
-            user_word = st.session_state.user_word_value
+            user_word = st.session_state.mc_selection
             if user_word.upper() == current_word.upper():
                 st.session_state.score += 1
                 st.success("Correct", icon="🪄")
@@ -344,6 +343,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
