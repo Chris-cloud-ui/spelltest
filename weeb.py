@@ -159,10 +159,11 @@ else:
         
         
         st.info(f"Question {qnum} of {total}")
-        st.markdown(f"### 🔊 Listen and spell:")
+        
         if st.session_state.in_round_2:
-            st.markdown(f"#### ✨ Let's correct the misspelled words! ####")
-            
+            st.markdown(f"#### 🔊 Let's correct the misspelled words! ####")
+        else:
+            st.markdown(f"### 🔊 Listen and spell:")
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
         if "syll" in current_word_details: 
@@ -257,9 +258,11 @@ else:
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
         st.info(f"Question {qnum} of {total}")
-        st.markdown(f"### ❓ Choose the spelling:")
         if st.session_state.in_round_2:
-            st.error("✨ Let's correct the misspelled words!")
+            st.markdown(f"#### ❓ Let's correct the misspelled words! ####")
+        else:
+            st.markdown(f"### ❓ Choose the spelling:")
+
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
     
@@ -373,6 +376,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
