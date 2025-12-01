@@ -191,7 +191,7 @@ else:
                 st.session_state.redo_words.append(current_word_details)
                 st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
-            st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+            st.info("Current score: " + str(st.session_state.score) + " out of " + str(st.session_state.index + 1))
                     
             # st.session_state.submitted = True
             if st.button("Next Word"):
@@ -254,130 +254,70 @@ else:
                 )
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
-                selected_option = st.session_state.mc_selection
-                if selected_option == correct:
-                    #st.success("🌟 Correct!")
-                    st.session_state.score += 1
-                    #st.snow()
-                    st.toast("Correct", icon="🪄")
-                else:
-                    #st.error("❌ It was " + current_word)
-                    #st.toast("What just happened ?", icon="💔")
-                    st.session_state.misspelt += "<br>           " + current_word + " (selected: " + selected_option + ")"
-                    st.session_state.redo_words.append(current_word_details)
-                    st.toast("Incorrect: it was " + current_word, icon="❌")
-                st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                 st.session_state.submitted = True
-                if st.button("Next Word"):
+                st.session_state.user_word_value = user_word     # store answer
+                st.rerun()
+
+        else:
+            user_word = st.session_state.user_word_value
+            if user_word.upper() == current_word.upper():
+                st.session_state.score += 1
+                st.success("Correct", icon="🪄")
+            else:
+                st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                st.session_state.redo_words.append(current_word_details)
+                st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
-                    st.session_state.index += 1
-                    st.session_state.current_mode = None
-                    st.session_state.submitted = False
-                    st.session_state.mc_options = None
-                    st.session_state.mc_selection = None
-            
-                    if st.session_state.index >= len(st.session_state.words):
-                        # ---------- ROUND 1 FINISHED ----------
-                        if not st.session_state.in_round_2:
-                    
-                            if len(st.session_state.redo_words) > 0:
-                                # Start Round 2
-                                st.session_state.words = st.session_state.redo_words[:]
-                                st.session_state.redo_words = []
-                                st.session_state.in_round_2 = True
-                    
-                                # Option A — keep Round 1 score
-                                # (do nothing to score)
-                    
-                                # Option B — reset score for Round 2
-                                # st.session_state.score = 0
-                    
-                                st.session_state.index = 0
-                                st.session_state.current_mode = None
-                                st.session_state.submitted = False
-                    
-                                st.success("✨ Round 2: Let's correct the misspelled words!")
-                                st.rerun()
-                    
-                            else:
-                                st.session_state.done = True
-                    
-                        # ---------- ROUND 2 FINISHED ----------
+            st.info("Current score: " + str(st.session_state.score) + " out of " + str(st.session_state.index + 1))
+
+            if st.button("Next Word"):
+
+                st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.mc_options = None
+                st.session_state.mc_selection = None
+             
+                if st.session_state.index >= len(st.session_state.words):
+                    # ---------- ROUND 1 FINISHED ----------
+                    if not st.session_state.in_round_2:
+                
+                        if len(st.session_state.redo_words) > 0:
+                            # Start Round 2
+                            st.session_state.words = st.session_state.redo_words[:]
+                            st.session_state.redo_words = []
+                            st.session_state.in_round_2 = True
+                
+                            # Option A — keep Round 1 score
+                            # (do nothing to score)
+                
+                            # Option B — reset score for Round 2
+                            # st.session_state.score = 0
+                
+                            st.session_state.index = 0
+                            st.session_state.current_mode = None
+                            st.session_state.submitted = False
+                
+                            st.success("✨ Round 2: Let's correct the misspelled words!")
+                            st.rerun()
+                
                         else:
                             st.session_state.done = True
-            
-                    st.rerun()
-        else:
-            st.session_state.index += 1
-            st.session_state.current_mode = None
-            st.session_state.submitted = False
-            st.session_state.user_word_value = ""
-            st.session_state.mc_options = None
-            st.session_state.mc_selection = None
-            if st.session_state.index >= len(st.session_state.words):
-                # ---------- ROUND 1 FINISHED ----------
-                if not st.session_state.in_round_2:
-            
-                    if len(st.session_state.redo_words) > 0:
-                        # Start Round 2
-                        st.session_state.words = st.session_state.redo_words[:]
-                        st.session_state.redo_words = []
-                        st.session_state.in_round_2 = True
-            
-                        # Option A — keep Round 1 score
-                        # (do nothing to score)
-            
-                        # Option B — reset score for Round 2
-                        # st.session_state.score = 0
-            
-                        st.session_state.index = 0
-                        st.session_state.current_mode = None
-                        st.session_state.submitted = False
-            
-                        st.success("✨ Round 2: Let's correct the misspelled words!")
-                        st.rerun()
-            
+                
+                    # ---------- ROUND 2 FINISHED ----------
                     else:
                         st.session_state.done = True
+        
+                st.rerun()
             
-                # ---------- ROUND 2 FINISHED ----------
-                else:
-                    st.session_state.done = True
-            
-            st.rerun()
-        
-        #if submitted and not st.session_state.submitted:
-        #    # Check answer
-        #    selected_option = st.session_state.mc_selection
-        #    if selected_option == correct:
-        #        st.success("🌟 Correct!")
-        #        st.session_state.score += 1
-        #    else:
-        #        st.error("❌ It was " + current_word)
-        #    st.info("Current score: " + st.session_state.score + "/" + st.session_state.index)
-        #    st.session_state.submitted = True
-        #    if st.button("Next Word"):
-        #        #st.session_state.index += 1
-        #        st.session_state.current_mode = None
-        #        #st.session_state.submitted = False
-        #        st.session_state.mc_options = None
-        #        st.session_state.mc_selection = None
-        
-        #        if st.session_state.index >= len(st.session_state.words):
-        #            st.session_state.done = True
-        
-        #        st.rerun()
-    
-        #elif submitted and st.session_state.submitted:
-        #    # Move to next word
-        #    st.session_state.index += 1
-        #    st.session_state.current_mode = None
-        #    st.session_state.submitted = False
-        #    st.session_state.mc_options = None
-        #    st.session_state.mc_selection = None
-        #    if st.session_state.index >= len(st.session_state.words):
-        #        st.session_state.done = True
-        #    st.rerun()
+
+
+
+
+
+
+                
+               
 
 
 
@@ -404,6 +344,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
