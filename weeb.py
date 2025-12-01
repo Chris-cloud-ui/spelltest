@@ -149,7 +149,7 @@ else:
 
     # ------------------ TEXT INPUT MODE ------------------
     if st.session_state.current_mode == "text":
-        st.info("{qnum} of {total}")
+        st.info(f"{qnum} of {total}")
         st.markdown(f"### 🔊 Listen and spell the word:")
 
         dic = pyphen.Pyphen(lang="en")
@@ -354,6 +354,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
