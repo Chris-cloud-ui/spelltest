@@ -193,7 +193,7 @@ else:
         else:
             
             if st.session_state.correct:
-                st.success("Correct", icon="🪄")
+                st.success("Correct. It was **{current_word}**.", icon="🪄")
             else:
                 st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
@@ -274,7 +274,7 @@ else:
 
         else:
             if st.session_state.correct:
-                st.success("Correct", icon="🪄")
+                st.success("Correct. It was **{current_word}**.", icon="🪄")
             else:
                 st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
@@ -354,6 +354,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
