@@ -21,7 +21,7 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-HISTORY_FILE = "histoire.json"
+HISTORY_FILE = "histoirev.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -360,6 +360,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
