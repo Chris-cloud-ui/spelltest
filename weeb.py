@@ -158,11 +158,13 @@ else:
     if st.session_state.current_mode == "text":
         
         
-        st.info(f"Question {qnum} of {total}")
+        
         
         if st.session_state.in_round_2:
+            st.error(f"Fix {qnum} of {total}")
             st.markdown(f"#### 🔊 Let's correct the misspelled words! ####")
         else:
+            st.info(f"Question {qnum} of {total}")
             st.markdown(f"### 🔊 Listen and spell:")
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
@@ -376,6 +378,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
