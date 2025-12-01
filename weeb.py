@@ -64,6 +64,12 @@ if "redo_words" not in st.session_state:
     st.session_state.redo_words = []
 if "in_round_2" not in st.session_state:
     st.session_state.in_round_2 = False
+if "missing_1" not in st.session_state:
+    st.session_state.missing_1 = 0
+if "missing_2" not in st.session_state:
+    st.session_state.missing_2 = 0
+if "missing_3" not in st.session_state:
+    st.session_state.missing_3 = 0
 
 # Per-word state
 if "submitted" not in st.session_state:
@@ -156,10 +162,9 @@ else:
     # Pick mode once per word
     if st.session_state.current_mode is None:
         if "spell" in current_word_details:
-            st.session_state.current_mode = random.choice(["text", "mc", "ml"])
+            st.session_state.current_mode = random.choice(["text", "mc"])
         else:
-            st.session_state.current_mode = random.choice(["text", "ml"])
-        st.session_state.current_mode="ml"
+            st.session_state.current_mode = random.choice(["text"])
         st.session_state.submitted = False
         st.session_state.audio_file = None
 
@@ -374,23 +379,27 @@ else:
         # Use radio buttons inside a form
         if not st.session_state.submitted:
             st.audio(mp3_file)
+            
             with st.form(key="mc_form"):
                 for i, letter in enumerate(current_word):
                     if i in missing_indices:
-                        flump = f"letter_{i}"
-                        # Initialize session_state if not present
-                        if flump not in st.session_state:
-                            st.session_state[flump] = ""  # empty default
-                
+                        
+                        if i==0:
+                            test = st.session_state.missing_1
+                        elif i==1:
+                            test = st.session_state.missing_2
+                        else:
+                            test = st.session_state.missing_3
                         # Dropdown with persisted value
                         user_letters[i] = st.selectbox(
                             f"Letter {i+1}",
                             options=letters,
-                            index=letters.index(st.session_state[flump]) if st.session_state[flump] in letters else 0,
-                            key=flump
+                            
+                            index=letters.index(test) if test in letters else 0,
+                            key=test
                         )
                         # Update session_state
-                        st.session_state[flump] = user_letters[i]
+                        # st.session_state[flump] = user_letters[i]
                 
                         display_word += "_"
                     else:
@@ -400,6 +409,8 @@ else:
             if submitted:
                 st.session_state.submitted = True
                 correct = True
+                if st.session_state.missing_1 == 1:
+                    st.info ("ggg")
                 for i in missing_indices:
                     if st.session_state[f"letter_{i}"].upper() != word[i]:
                         correct = False
@@ -497,6 +508,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
