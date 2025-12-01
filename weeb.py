@@ -176,19 +176,25 @@ else:
                 )
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
                 
-            if submitted:
-                if len(user_word) > 0:
-                    st.session_state.submitted = True
-                    st.session_state.user_word_value = user_word     # store answer
-                    st.rerun()
+            if submitted and len(user_word) > 0:
+                st.session_state.submitted = True
+                st.session_state.user_word_value = user_word     # store answer
+
+                if user_word.upper() == current_word.upper():
+                    st.session_state.score += 1
+                    st.session_state.correct = True
+                    
+                else:
+                    st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                    st.session_state.redo_words.append(current_word_details)
+                    st.session_state.correct = False
+                    #
+                st.rerun()
         else:
-            user_word = st.session_state.user_word_value
-            if user_word.upper() == current_word.upper():
-                st.session_state.score += 1
+            
+            if st.session_state.correct:
                 st.success("Correct", icon="🪄")
             else:
-                st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
-                st.session_state.redo_words.append(current_word_details)
                 st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
             st.info("Current score: " + str(st.session_state.score) + " out of " + str(st.session_state.index + 1))
@@ -255,16 +261,20 @@ else:
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 st.session_state.submitted = True
+                selected = st.session_state.mc_selection
+                if selected.upper() == current_word.upper():
+                    st.session_state.score += 1
+                    st.session_state.correct = True
+                else:
+                    st.session_state.correct = False
+                    st.session_state.misspelt += "<br> " + current_word + f" (selected: {selected})"
+                    st.session_state.redo_words.append(current_word_details)
                 st.rerun()
 
         else:
-            user_word = st.session_state.mc_selection
-            if user_word.upper() == current_word.upper():
-                st.session_state.score += 1
+            if st.session_state.correct:
                 st.success("Correct", icon="🪄")
             else:
-                st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
-                st.session_state.redo_words.append(current_word_details)
                 st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
             st.info("Current score: " + str(st.session_state.score) + " out of " + str(st.session_state.index + 1))
@@ -343,6 +353,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
