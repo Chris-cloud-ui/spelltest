@@ -387,7 +387,7 @@ else:
                             f"Letter {i+1}",
                             options=letters,
                             index=letters.index(st.session_state[flump]) if st.session_state[flump] in letters else 0,
-                            flump=flump
+                            key=flump
                         )
                         # Update session_state
                         st.session_state[flump] = user_letters[i]
@@ -497,6 +497,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
