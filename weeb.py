@@ -381,7 +381,7 @@ else:
                             options=letters,
                             key=f"letter_{i}"
                         )
-                        display_word += "_"
+                        display_word += " _ "
                     else:
                         display_word += letter
                 st.write("Word to fill:", display_word)
@@ -486,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
