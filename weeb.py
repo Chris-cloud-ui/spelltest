@@ -154,7 +154,10 @@ else:
     # ------------------ TEXT INPUT MODE ------------------
     if st.session_state.current_mode == "text":
         st.info(f"Question {qnum} of {total}")
-        st.markdown(f"### 🔊 Listen and spell:")
+        if st.session_state.in_round_2:
+            st.markdown(f"### 🔊 TRY AGAIN:")
+        else:
+            st.markdown(f"### 🔊 Listen and spell:")
 
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
@@ -249,7 +252,10 @@ else:
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
         st.info(f"Question {qnum} of {total}")
-        st.markdown(f"### ❓ Choose the correct spelling:")
+        if st.session_state.in_round_2:
+            st.markdown(f"### ❓ TRY AGAIN:")
+        else:
+            st.markdown(f"### ❓ Choose the spelling:")
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
     
@@ -355,11 +361,13 @@ else:
         st.markdown(f"""
             🗓 **{entry['date']}**  
             📚 List: *{entry['list']}*  
-            ⭐ Score: **{entry['score']} / {entry['total']}**
+            ⭐ Score: **{entry['score']}**
+            🔧 Fixes: **{entry['fixes']}**
             <br>
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
