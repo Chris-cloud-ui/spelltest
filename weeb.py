@@ -178,96 +178,61 @@ else:
                 
             if submitted:
                 if len(user_word) > 0:
-                    user_word = st.session_state.user_word_value
-                    if user_word.upper() == current_word.upper():
-                        #st.success("🌟 Correct!")
-                        st.session_state.score += 1
-                        #st.snow()
-                        st.toast("Correct", icon="🪄")
-                    else:
-                        #st.error(f"Not quite. It was **{current_word}**.")
-                        st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
-                        st.session_state.redo_words.append(current_word_details)
-                        st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
-                    
-                    st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
-                    
                     st.session_state.submitted = True
-                    if st.button("Next Word"):
-
-                        st.session_state.index += 1
-                        st.session_state.current_mode = None
-                        st.session_state.submitted = False
-                        st.session_state.user_word_value = ""
-                     
-                        if st.session_state.index >= len(st.session_state.words):
-                            # ---------- ROUND 1 FINISHED ----------
-                            if not st.session_state.in_round_2:
-                        
-                                if len(st.session_state.redo_words) > 0:
-                                    # Start Round 2
-                                    st.session_state.words = st.session_state.redo_words[:]
-                                    st.session_state.redo_words = []
-                                    st.session_state.in_round_2 = True
-                        
-                                    # Option A — keep Round 1 score
-                                    # (do nothing to score)
-                        
-                                    # Option B — reset score for Round 2
-                                    # st.session_state.score = 0
-                        
-                                    st.session_state.index = 0
-                                    st.session_state.current_mode = None
-                                    st.session_state.submitted = False
-                        
-                                    st.success("✨ Round 2: Let's correct the misspelled words!")
-                                    st.rerun()
-                        
-                                else:
-                                    st.session_state.done = True
-                        
-                            # ---------- ROUND 2 FINISHED ----------
-                            else:
-                                st.session_state.done = True
-                
-                        st.rerun()
+                    st.session_state.user_word_value = user_word     # store answer
+                    st.rerun()
         else:
-            st.session_state.index += 1
-            st.session_state.current_mode = None
-            st.session_state.submitted = False
-            st.session_state.user_word_value = ""
-            
-            if st.session_state.index >= len(st.session_state.words):
-                # ---------- ROUND 1 FINISHED ----------
-                if not st.session_state.in_round_2:
-            
-                    if len(st.session_state.redo_words) > 0:
-                        # Start Round 2
-                        st.session_state.words = st.session_state.redo_words[:]
-                        st.session_state.redo_words = []
-                        st.session_state.in_round_2 = True
-            
-                        # Option A — keep Round 1 score
-                        # (do nothing to score)
-            
-                        # Option B — reset score for Round 2
-                        # st.session_state.score = 0
-            
-                        st.session_state.index = 0
-                        st.session_state.current_mode = None
-                        st.session_state.submitted = False
-            
-                        st.success("✨ Round 2: Let's correct the misspelled words!")
-                        st.rerun()
-            
+            user_word = st.session_state.user_word_value
+            if user_word.upper() == current_word.upper():
+                st.session_state.score += 1
+                st.toast("Correct", icon="🪄")
+            else:
+                st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                st.session_state.redo_words.append(current_word_details)
+                st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
+                    
+            st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
+                    
+            # st.session_state.submitted = True
+            if st.button("Next Word"):
+
+                st.session_state.index += 1
+                st.session_state.current_mode = None
+                st.session_state.submitted = False
+                st.session_state.user_word_value = ""
+             
+                if st.session_state.index >= len(st.session_state.words):
+                    # ---------- ROUND 1 FINISHED ----------
+                    if not st.session_state.in_round_2:
+                
+                        if len(st.session_state.redo_words) > 0:
+                            # Start Round 2
+                            st.session_state.words = st.session_state.redo_words[:]
+                            st.session_state.redo_words = []
+                            st.session_state.in_round_2 = True
+                
+                            # Option A — keep Round 1 score
+                            # (do nothing to score)
+                
+                            # Option B — reset score for Round 2
+                            # st.session_state.score = 0
+                
+                            st.session_state.index = 0
+                            st.session_state.current_mode = None
+                            st.session_state.submitted = False
+                
+                            st.success("✨ Round 2: Let's correct the misspelled words!")
+                            st.rerun()
+                
+                        else:
+                            st.session_state.done = True
+                
+                    # ---------- ROUND 2 FINISHED ----------
                     else:
                         st.session_state.done = True
-            
-                # ---------- ROUND 2 FINISHED ----------
-                else:
-                    st.session_state.done = True
-            
-            st.rerun()
+        
+                st.rerun()
+        
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
@@ -439,6 +404,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
