@@ -235,7 +235,7 @@ else:
             st.session_state.current_mode = None
             st.session_state.submitted = False
             st.session_state.user_word_value = ""
-            
+            user_word = st.session_state.user_word_value
             if st.session_state.index >= len(st.session_state.words):
                 # ---------- ROUND 1 FINISHED ----------
                 if not st.session_state.in_round_2:
@@ -438,6 +438,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
