@@ -189,7 +189,7 @@ else:
                         st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
                         st.session_state.redo_words.append(current_word_details)
                         st.toast(f"Not quite. It was **{current_word}**.", icon="❌")
-                    user_word.value=""    
+                    user_word=""    
                     st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                     st.session_state.submitted = True
                     if st.button("Next Word"):
@@ -438,6 +438,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
