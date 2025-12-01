@@ -156,9 +156,10 @@ else:
     # Pick mode once per word
     if st.session_state.current_mode is None:
         if "spell" in current_word_details:
-            st.session_state.current_mode = random.choice(["text", "mc", "ww"])
+            st.session_state.current_mode = random.choice(["text", "mc", "ml"])
         else:
-            st.session_state.current_mode = random.choice(["text", "ww"])
+            st.session_state.current_mode = random.choice(["text", "ml"])
+        st.session_state.current_mode="ml"
         st.session_state.submitted = False
         st.session_state.audio_file = None
 
@@ -486,6 +487,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
