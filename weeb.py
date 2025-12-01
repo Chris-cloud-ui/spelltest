@@ -193,7 +193,8 @@ else:
                     st.session_state.correct = True
                     
                 else:
-                    st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                    if not st.session_state.in_round_2:
+                        st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
                     st.session_state.redo_words.append(current_word_details)
                     st.session_state.correct = False
                     #
@@ -281,7 +282,8 @@ else:
                     st.session_state.correct = True
                 else:
                     st.session_state.correct = False
-                    st.session_state.misspelt += "<br> " + current_word + f" (selected: {selected})"
+                    if not st.session_state.in_round_2:
+                        st.session_state.misspelt += "<br>           " + current_word + f" (selected: {selected})"
                     st.session_state.redo_words.append(current_word_details)
                 st.rerun()
 
@@ -369,6 +371,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
