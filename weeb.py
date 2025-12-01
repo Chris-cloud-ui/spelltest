@@ -366,16 +366,7 @@ else:
         user_letters = {}
         display_word = ""
         
-        for i, letter in enumerate(current_word):
-            if i in missing_indices:
-                user_letters[i] = st.text_input(
-                    f"Letter {i+1}", 
-                    max_chars=1, 
-                    key=f"letter_{i}"
-                )
-                display_word += "_"
-            else:
-                display_word += letter
+        
         
         st.write("Word to fill:", display_word)
     
@@ -383,6 +374,16 @@ else:
         if not st.session_state.submitted:
             st.audio(mp3_file)
             with st.form(key="mc_form"):
+                for i, letter in enumerate(current_word):
+                    if i in missing_indices:
+                        user_letters[i] = st.text_input(
+                            f"Letter {i+1}", 
+                            max_chars=1, 
+                            key=f"letter_{i}"
+                        )
+                        display_word += "_"
+                    else:
+                        display_word += letter
                 st.session_state.mc_selection = st.radio(
                     "", st.session_state.mc_options, index=0
                 )
@@ -484,6 +485,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
