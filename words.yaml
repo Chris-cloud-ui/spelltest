@@ -26,6 +26,7 @@ cait:
   - word: television
     syll: ["circular"]
   - word: transmit
+    syll: ["trans","mitt"]
   - word: circular
     syll: ["circular"]
   - word: telescope
@@ -97,6 +98,7 @@ thisweek:
     spell: ["nuiscance","nuissance"]
   - word: opportunity
     spell: ["oportunity","oppotunity"]
+
 
 
 
