@@ -101,8 +101,8 @@ def get_audio_for_word(word, syllables=None):
     #if safe_name == "criticise":
     #    st.info("Redo")
     #else:
-    #if os.path.exists(filename):
-    #    return filename
+    if os.path.exists(filename):
+        return filename
     # Generate MP3
     final_bytes = b""
     def tts_bytes(text, slow=False):
@@ -387,6 +387,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
