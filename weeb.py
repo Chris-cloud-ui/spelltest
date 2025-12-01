@@ -50,6 +50,8 @@ if "index" not in st.session_state:
     st.session_state.index = 0
 if "score" not in st.session_state:
     st.session_state.score = 0
+if "scoretwo" not in st.session_state:
+    st.session_state.scoretwo = 0
 if "done" not in st.session_state:
     st.session_state.done = False
 if "words" not in st.session_state:
@@ -127,7 +129,7 @@ if st.session_state.done:
         save_history({
             "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "list": list_choice,
-            "score": score,
+            "score": scoretwo,
             "total": total,
             "misspellings": misspellings 
         })
@@ -210,8 +212,10 @@ else:
                 if st.session_state.index >= len(st.session_state.words):
                     # ---------- ROUND 1 FINISHED ----------
                     if not st.session_state.in_round_2:
-                
+                        
                         if len(st.session_state.redo_words) > 0:
+                            st.session_state.scoretwo = st.session_state.score
+                            
                             # Start Round 2
                             st.session_state.words = st.session_state.redo_words[:]
                             st.session_state.redo_words = []
@@ -221,7 +225,7 @@ else:
                             # (do nothing to score)
                 
                             # Option B — reset score for Round 2
-                            # st.session_state.score = 0
+                            st.session_state.score = 0
                 
                             st.session_state.index = 0
                             st.session_state.current_mode = None
@@ -291,7 +295,7 @@ else:
                 if st.session_state.index >= len(st.session_state.words):
                     # ---------- ROUND 1 FINISHED ----------
                     if not st.session_state.in_round_2:
-                
+                        st.session_state.scoretwo = st.session_state.score
                         if len(st.session_state.redo_words) > 0:
                             # Start Round 2
                             st.session_state.words = st.session_state.redo_words[:]
@@ -302,7 +306,7 @@ else:
                             # (do nothing to score)
                 
                             # Option B — reset score for Round 2
-                            # st.session_state.score = 0
+                            st.session_state.score = 0
                 
                             st.session_state.index = 0
                             st.session_state.current_mode = None
@@ -354,6 +358,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
