@@ -21,7 +21,7 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-HISTORY_FILE = "histoirev.json"
+HISTORY_FILE = "histoiring.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -128,7 +128,8 @@ if st.session_state.done:
         scoretwo = st.session_state.scoretwo
         total = len(st.session_state.originalwords)
         misspellings = st.session_state.misspelt
-        st.success(f"🎉 All done! You scored **{score} / {total}**")
+        st.success(f"📊 All done! You scored **{score} / {total}**")
+        st.success(f"🔧 All done! You scored **{score} / {total}**")
         save_history({
             "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "list": list_choice,
@@ -156,9 +157,8 @@ else:
     if st.session_state.current_mode == "text":
         st.info(f"Question {qnum} of {total}")
         if st.session_state.in_round_2:
-            st.markdown(f"### 🔊 TRY AGAIN:")
-        else:
-            st.markdown(f"### 🔊 Listen and spell:")
+            st.success("✨ Round 2: Let's correct the misspelled words!")
+        st.markdown(f"### 🔊 Listen and spell:")
 
         dic = pyphen.Pyphen(lang="en")
         syllables = dic.inserted(current_word).split("-")
@@ -194,7 +194,7 @@ else:
                     
                 else:
                     if not st.session_state.in_round_2:
-                        st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
+                        st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word.lower() + ")"
                     st.session_state.redo_words.append(current_word_details)
                     st.session_state.correct = False
                     #
@@ -255,9 +255,9 @@ else:
     else:
         st.info(f"Question {qnum} of {total}")
         if st.session_state.in_round_2:
-            st.markdown(f"### ❓ TRY AGAIN:")
-        else:
-            st.markdown(f"### ❓ Choose the spelling:")
+            if st.session_state.in_round_2:
+            st.success("✨ Round 2: Let's correct the misspelled words!")
+        st.markdown(f"### ❓ Choose the spelling:")
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
     
@@ -371,6 +371,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
