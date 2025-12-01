@@ -384,7 +384,7 @@ else:
                         display_word += " _ "
                     else:
                         display_word += letter
-                st.write("Word to fill:", display_word)
+                st.success("Word to fill:", display_word)
                 submitted = st.form_submit_button("Submit", disabled=st.session_state.submitted)
             if submitted:
                 st.session_state.submitted = True
@@ -486,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
