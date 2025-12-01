@@ -21,7 +21,7 @@ st.set_page_config(
 with open("words.yaml", "r") as f:
     WORD_LISTS = yaml.safe_load(f)
 
-HISTORY_FILE = "histoiring.json"
+HISTORY_FILE = "histoiring2.json"
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
         json.dump([], f)
@@ -128,8 +128,9 @@ if st.session_state.done:
         scoretwo = st.session_state.scoretwo
         total = len(st.session_state.originalwords)
         misspellings = st.session_state.misspelt
-        st.success(f"📊 All done! You scored **{score} / {total}**")
-        st.success(f"🔧 All done! You scored **{score} / {total}**")
+        st.success(f"📊 All done!")
+        st.success(f"⭐ You scored **{scoretwo} / {total}**")
+        st.success(f"🔧 You fixed **{score} / {fixes}**")
         save_history({
             "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "list": list_choice,
@@ -255,7 +256,6 @@ else:
     else:
         st.info(f"Question {qnum} of {total}")
         if st.session_state.in_round_2:
-            if st.session_state.in_round_2:
             st.success("✨ Round 2: Let's correct the misspelled words!")
         st.markdown(f"### ❓ Choose the spelling:")
         correct = current_word
@@ -371,6 +371,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
