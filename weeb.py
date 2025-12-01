@@ -129,13 +129,21 @@ if st.session_state.done:
         total = len(st.session_state.originalwords)
         misspellings = st.session_state.misspelt
         st.success(f"📊 All done!")
-        st.success(f"⭐ You scored **{scoretwo} / {total}**")
-        st.success(f"🔧 You fixed **{score} / {fixes}**")
+        if st.session_state.in_round_2:
+            st.success(f"⭐ You scored **{scoretwo} / {total}**")
+            st.success(f"🔧 You fixed **{score} / {fixes}**")
+            scoretext = f"{scoretwo} / {total}"
+            fixtext = f"{score} / {fixes}"
+        else:
+            st.success(f"⭐ You scored **{score} / {total}**")
+            scoretext = f"{score} / {total}"
+            fixtext = f"0 / 0"
+        
         save_history({
             "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "list": list_choice,
-            "score": f"{scoretwo} / {total}",
-            "fixes": f"{score} / {fixes}",
+            "score": scoretext,
+            "fixes": fixtext,
             "misspellings": misspellings
         })
         st.balloons()
@@ -378,6 +386,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
