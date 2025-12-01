@@ -352,7 +352,7 @@ else:
                         st.session_state.done = True
         
                 st.rerun()
-    # ------------------ MULTIPLE CHOICE MODE ------------------
+    # ------------------ MISSING LETTER MODE ------------------
     else:
         if st.session_state.in_round_2:
             st.markdown(f"#### ❓ Let's correct the misspelled words! ####")
@@ -390,7 +390,7 @@ else:
                 st.session_state.submitted = True
                 correct = True
                 for i in missing_indices:
-                    if user_letters[i].upper() != word[i]:
+                    if user_letters[i].upper() != current_word[i].upper():
                         correct = False
                         break
                 
@@ -486,6 +486,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
