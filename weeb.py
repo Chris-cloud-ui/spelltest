@@ -242,7 +242,7 @@ else:
 
     # ------------------ MULTIPLE CHOICE MODE ------------------
     else:
-         st.info(f"Question {qnum} of {total}")
+        st.info(f"Question {qnum} of {total}")
         st.markdown(f"### ❓ Choose the correct spelling:")
         correct = current_word
         options = [correct] + current_word_details.get("spell", [])
@@ -354,6 +354,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
