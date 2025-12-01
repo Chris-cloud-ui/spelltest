@@ -392,6 +392,8 @@ else:
                 correct = True
                 for i in missing_indices:
                     if user_letters[i].upper() != current_word[i].upper():
+                        st.info(user_letters[i].upper())
+                        st.info(current_word[i].upper())
                         correct = False
                         break
                 
@@ -487,6 +489,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
