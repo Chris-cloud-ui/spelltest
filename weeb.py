@@ -185,11 +185,11 @@ else:
             user_word = st.session_state.user_word_value
             if user_word.upper() == current_word.upper():
                 st.session_state.score += 1
-                st.info("Correct", icon="🪄")
+                st.success("Correct", icon="🪄")
             else:
                 st.session_state.misspelt += "<br>           " + current_word + " (typed: " + user_word + ")"
                 st.session_state.redo_words.append(current_word_details)
-                st.info(f"Not quite. It was **{current_word}**.", icon="❌")
+                st.error(f"Not quite. It was **{current_word}**.", icon="❌")
                     
             st.info("Current score: " + str(st.session_state.score) + "/" + str(st.session_state.index + 1))
                     
@@ -404,6 +404,7 @@ else:
             🔤 Misspellings: {entry['misspellings']} 
             <br><br>
         """, unsafe_allow_html=True)
+
 
 
 
